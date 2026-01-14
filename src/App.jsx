@@ -1,9 +1,12 @@
-import Header from './components/Header'
-import Hero from './components/Hero'
-import ProductCarousel from './components/ProductCarousel'
-import ProductGrid from './components/ProductGrid'
+import React, { useEffect } from "react";
+import Header from "./components/Header";
+import Hero from "./components/Hero";
+import ProductCarousel from "./components/ProductCarousel";
+import ProductGrid from "./components/ProductGrid";
+import Footer from "./components/Footer";
+import WhatsAppButton from "./components/WhatsAppButton";
 
-// Sample Product Data
+// --- FULL SAMPLE PRODUCT DATA RESTORED ---
 const sampleProducts = {
   latest: [
     { id: 1, name: "Elegant White Kemis Traditional Design", price: 2999, image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400", hoverImage: "https://images.unsplash.com/photo-1618932260643-eee4a2f652a6?w=400", isNew: true },
@@ -86,28 +89,59 @@ const sampleProducts = {
 };
 
 function App() {
+  // THE ANIMATION LOGIC: Watches for when you scroll to a section
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("active");
+        }
+      });
+    }, { threshold: 0.1 });
+
+    const hiddenElements = document.querySelectorAll(".reveal");
+    hiddenElements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Header />
-      <Hero />
       
-      {/* Latest Designs - Horizontal Scroll */}
-      <ProductCarousel 
-        title="Latest Designs" 
-        products={sampleProducts.latest}
-        viewAllLink="#"
-      />
+      <main className="flex-grow">
+        {/* --- HERO SECTION --- */}
+        <div className="reveal">
+          <Hero />
+        </div>
+
+        {/* --- 1. HORIZONTAL CAROUSEL --- */}
+        <div className="reveal">
+          <ProductCarousel 
+            title="Latest Designs" 
+            products={sampleProducts.latest} 
+            viewAllLink="#" 
+          />
+        </div>
+
+        {/* --- 2. GRID SECTIONS --- */}
+        <div className="reveal"><ProductGrid title="Simple Dresses" products={sampleProducts.simple} viewAllLink="#" /></div>
+        <div className="reveal"><ProductGrid title="Wedding Dresses" products={sampleProducts.wedding} viewAllLink="#" /></div>
+        <div className="reveal"><ProductGrid title="Chiffon" products={sampleProducts.chiffon} viewAllLink="#" /></div>
+        <div className="reveal"><ProductGrid title="Holidays" products={sampleProducts.holidays} viewAllLink="#" /></div>
+        <div className="reveal"><ProductGrid title="Group Outfits" products={sampleProducts.group} viewAllLink="#" /></div>
+        <div className="reveal"><ProductGrid title="Men's" products={sampleProducts.mens} viewAllLink="#" /></div>
+        <div className="reveal"><ProductGrid title="Couples" products={sampleProducts.couples} viewAllLink="#" /></div>
+      </main>
       
-      {/* All Category Grids */}
-      <ProductGrid title="Simple Dresses" products={sampleProducts.simple} viewAllLink="#" />
-      <ProductGrid title="Wedding Dresses" products={sampleProducts.wedding} viewAllLink="#" />
-      <ProductGrid title="Chiffon" products={sampleProducts.chiffon} viewAllLink="#" />
-      <ProductGrid title="Holidays" products={sampleProducts.holidays} viewAllLink="#" />
-      <ProductGrid title="Group Outfits" products={sampleProducts.group} viewAllLink="#" />
-      <ProductGrid title="Men's" products={sampleProducts.mens} viewAllLink="#" />
-      <ProductGrid title="Couples" products={sampleProducts.couples} viewAllLink="#" />
-    </>
-  )
+      {/* --- FOOTER --- */}
+      <div className="reveal">
+        <Footer />
+      </div>
+      
+      <WhatsAppButton />
+    </div>
+  );
 }
 
-export default App
+export default App;

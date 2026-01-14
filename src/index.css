@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/* --- 1. THEME VARIABLES --- */
 @theme {
   --color-brand: #d29e0e;
   --color-brand-dark: #b8860b;
@@ -9,24 +10,28 @@
   --font-body: "Inter", sans-serif;
 }
 
-/* Animations */
+/* --- 2. UTILITY CLASSES --- */
 @layer utilities {
+  /* Simple fade animation for hero elements */
   .animate-fade-in {
     animation: fadeIn 0.8s ease-in;
   }
   
+  /* One-time slide animation (useful for things visible on load) */
   .animate-slide-up {
     animation: slideUp 0.8s ease-out;
   }
+
+  /* Utility to hide scrollbars while keeping functionality */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
 
+/* --- 3. KEYFRAMES --- */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes slideUp {
@@ -38,4 +43,23 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* --- 4. SCROLL REVEAL ENGINE --- */
+/* This handles the "Individual Card Slide Up" logic.
+   Components use IntersectionObserver to add the '.active' class.
+*/
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  /* 'visibility: hidden' prevents clicking on items before they appear */
+  visibility: hidden; 
+  will-change: transform, opacity;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
 }
