@@ -8,6 +8,7 @@ import CartSidebar from './components/CartSidebar'
 import HomePage from './pages/HomePage'
 import ProductDetail from './pages/ProductDetail'
 import SearchResults from './pages/SearchResults'
+import CategoryPage from './pages/CategoryPage'
 
 function App() {
   return (
@@ -29,14 +30,19 @@ function App() {
                 {/* Search Results Page */}
                 <Route path="/search" element={<SearchResults />} />
                 
-                {/* Category Pages (for future) */}
-                <Route path="/dresses/simple" element={<div className="min-h-screen flex items-center justify-center text-2xl text-gray-600">Simple Dresses Page (Coming Soon)</div>} />
-                <Route path="/dresses/wedding" element={<div className="min-h-screen flex items-center justify-center text-2xl text-gray-600">Wedding Dresses Page (Coming Soon)</div>} />
-                <Route path="/dresses/chiffon" element={<div className="min-h-screen flex items-center justify-center text-2xl text-gray-600">Chiffon Page (Coming Soon)</div>} />
-                <Route path="/dresses/holiday" element={<div className="min-h-screen flex items-center justify-center text-2xl text-gray-600">Holiday Page (Coming Soon)</div>} />
-                <Route path="/dresses/group" element={<div className="min-h-screen flex items-center justify-center text-2xl text-gray-600">Group Outfits Page (Coming Soon)</div>} />
-                <Route path="/mens" element={<div className="min-h-screen flex items-center justify-center text-2xl text-gray-600">Men's Page (Coming Soon)</div>} />
-                <Route path="/couples" element={<div className="min-h-screen flex items-center justify-center text-2xl text-gray-600">Couples Page (Coming Soon)</div>} />
+                {/* Category Pages - Dresses */}
+                <Route path="/dresses/simple" element={<CategoryPage />} />
+                <Route path="/dresses/wedding" element={<CategoryPage />} />
+                <Route path="/dresses/chiffon" element={<CategoryPage />} />
+                <Route path="/dresses/holiday" element={<CategoryPage />} />
+                <Route path="/dresses/group" element={<CategoryPage />} />
+                
+                {/* Category Pages - Other */}
+                <Route path="/mens" element={<CategoryPage />} />
+                <Route path="/couples" element={<CategoryPage />} />
+                
+                {/* Dynamic category route (catches all) */}
+                <Route path="/dresses/:category" element={<CategoryPage />} />
                 
                 {/* Support Pages (for future) */}
                 <Route path="/about" element={<div className="min-h-screen flex items-center justify-center text-2xl text-gray-600">About Us Page (Coming Soon)</div>} />

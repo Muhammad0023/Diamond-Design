@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 
 const CartContext = createContext();
 
@@ -11,8 +11,20 @@ export function useCart() {
 }
 
 export function CartProvider({ children }) {
-  const [cartItems, setCartItems] = useState([]);
+  // 1. INITIALIZE FROM LOCAL STORAGE
+  // Instead of starting with [], we check if there's a saved cart first
+  const [cartItems, setCartItems] = useState(() => {
+    const savedCart = localStorage.getItem('diamond_cart');
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
+  
   const [isCartOpen, setIsCartOpen] = useState(false);
+
+  // 2. SAVE TO LOCAL STORAGE ON EVERY CHANGE
+  // This "Watcher" saves the cart every time you add, remove, or update items
+  useEffect(() => {
+    localStorage.setItem('diamond_cart', JSON.stringify(cartItems));
+  }, [cartItems]);
 
   // Add item to cart
   const addToCart = (product, size) => {
@@ -31,7 +43,7 @@ export function CartProvider({ children }) {
         ...product,
         size,
         quantity: 1,
-        cartItemId: `${product.id}-${size}-${Date.now()}` // Unique ID for cart item
+        cartItemId: `${product.id}-${size}-${Date.now()}` 
       };
       setCartItems([...cartItems, newItem]);
     }
@@ -64,6 +76,7 @@ export function CartProvider({ children }) {
   const clearCart = () => {
     setCartItems([]);
     setIsCartOpen(false);
+    localStorage.removeItem('diamond_cart'); // Clean up storage too
   };
 
   // Get cart total

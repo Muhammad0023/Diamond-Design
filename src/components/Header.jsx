@@ -2,22 +2,19 @@ import { useState, useEffect } from 'react';
 import { HiOutlineShoppingBag } from 'react-icons/hi';
 import { IoClose } from 'react-icons/io5';
 import { useCart } from '../context/CartContext';
-import SearchBar from './SearchBar'; // 🔍 Imported SearchBar
+import SearchBar from './SearchBar'; 
 import logo from '../assets/logo.png'; 
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDressesOpen, setIsDressesOpen] = useState(false);
-  
-  // 🛒 Functional Cart Context
-  const { getCartCount, toggleCart } = useCart();
-  
-  // ✨ Modern Scroll State (Design from updated code)
   const [scrolled, setScrolled] = useState(false);
+  
+  const { getCartCount, toggleCart } = useCart();
 
+  // Scroll logic for transparency and height changes
   useEffect(() => {
     const handleScroll = () => {
-      // Using the 20px threshold from your design code for a smoother feel
       setScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
@@ -28,17 +25,18 @@ export default function Header() {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  // Merged category structure with real links
   const dressCategories = [
-    'Simple Dresses',
-    'Wedding Dresses',
-    'Chiffon',
-    'Holidays',
-    'Group Outfits'
+    { name: 'Simple Dresses', url: '/dresses/simple' },
+    { name: 'Wedding Dresses', url: '/dresses/wedding' },
+    { name: 'Chiffon', url: '/dresses/chiffon' },
+    { name: 'Holidays', url: '/dresses/holiday' },
+    { name: 'Group Outfits', url: '/dresses/group' },
   ];
 
   return (
     <>
-      {/* --- HEADER (Visual Design: Transparent to White/Blur) --- */}
+      {/* --- HEADER (Modern Transparent to Blurred White) --- */}
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled 
           ? 'bg-white/80 backdrop-blur-md h-16 shadow-sm' 
@@ -47,7 +45,7 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
           <div className="flex items-center justify-between h-full relative">
             
-            {/* 1. LEFT SIDE: Hamburger & Nav */}
+            {/* 1. LEFT SIDE: Hamburger & Desktop Nav */}
             <div className="flex items-center space-x-6">
               <button
                 onClick={toggleMobileMenu}
@@ -61,11 +59,10 @@ export default function Header() {
 
               <div className="hidden md:block flex-shrink-0">
                 <a href="/">
-                  {/* Dynamic Logo Sizing from Design Code */}
                   <img 
                     src={logo} 
                     alt="Diamond Design" 
-                    className={`w-auto py-2 object-contain drop-shadow-sm transition-all duration-300 hover:scale-105 ${scrolled ? 'h-14' : 'h-20'}`} 
+                    className={`w-auto py-2 object-contain transition-all duration-300 hover:scale-105 ${scrolled ? 'h-14' : 'h-20'}`} 
                   />
                 </a>
               </div>
@@ -84,15 +81,15 @@ export default function Header() {
                   
                   <div className={`absolute left-0 mt-2 w-48 bg-white border border-gray-100 shadow-xl rounded-md transition-all duration-200 ${isDressesOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}`}>
                     {dressCategories.map((cat) => (
-                      <a key={cat} href="#" className="block px-4 py-3 text-sm text-gray-600 hover:bg-gray-50 hover:text-brand transition-colors">
-                        {cat}
+                      <a key={cat.url} href={cat.url} className="block px-4 py-3 text-sm text-gray-600 hover:bg-gray-50 hover:text-brand transition-colors">
+                        {cat.name}
                       </a>
                     ))}
                   </div>
                 </div>
 
-                <a href="/mens" className="text-sm font-medium text-gray-700 hover:text-brand">Men's</a>
-                <a href="/couples" className="text-sm font-medium text-gray-700 hover:text-brand">Couples</a>
+                <a href="/mens" className="text-sm font-medium text-gray-700 hover:text-brand transition-colors">Men's</a>
+                <a href="/couples" className="text-sm font-medium text-gray-700 hover:text-brand transition-colors">Couples</a>
               </nav>
             </div>
 
@@ -103,14 +100,14 @@ export default function Header() {
               </a>
             </div>
 
-            {/* 3. RIGHT SIDE: Integrated Search Functionality & Cart */}
+            {/* 3. RIGHT SIDE: Restored Original Search & Cart */}
             <div className="flex items-center gap-2 md:gap-4">
-              {/* Desktop Search Bar (Merged from Search Logic) */}
+              {/* Restored Original Desktop Search Bar */}
               <div className="hidden md:block">
                 <SearchBar />
               </div>
 
-              {/* Mobile Search Icon (Merged from Search Logic) */}
+              {/* Restored Original Mobile Search Icon/Trigger */}
               <div className="md:hidden">
                 <SearchBar isMobile={true} />
               </div>
@@ -132,7 +129,7 @@ export default function Header() {
         </div>
       </header>
 
-      {/* --- MOBILE SIDEBAR (Standard Layout) --- */}
+      {/* --- MOBILE SIDEBAR --- */}
       <div className={`fixed inset-0 z-[60] transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
         <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={toggleMobileMenu}></div>
 
@@ -160,8 +157,8 @@ export default function Header() {
                 <div className={`overflow-hidden transition-all duration-300 ${isDressesOpen ? 'max-h-80 opacity-100' : 'max-h-0 opacity-0'}`}>
                   <ul className="ml-4 space-y-4 border-l border-gray-100 pl-4 mt-2">
                     {dressCategories.map(cat => (
-                      <li key={cat}>
-                        <a href="#" className="text-gray-500 hover:text-brand block text-base font-sans" onClick={toggleMobileMenu}>{cat}</a>
+                      <li key={cat.url}>
+                        <a href={cat.url} className="text-gray-500 hover:text-brand block text-base font-sans" onClick={toggleMobileMenu}>{cat.name}</a>
                       </li>
                     ))}
                   </ul>
