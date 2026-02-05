@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import heroImage from '../assets/Hero.webP';
+import heroImage from '../assets/Hero.webp';
 
 export default function Hero() {
   // Animation variants for the text container
