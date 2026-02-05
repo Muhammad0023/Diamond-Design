@@ -1,6 +1,30 @@
 @import "tailwindcss";
 
-/* --- 1. THEME VARIABLES --- */
+/* --- 1. GLOBAL DEFAULTS --- */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom Minimalist Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f9f9f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d1d1; /* Soft gray base */
+  border-radius: 10px;
+  border: 2px solid #f9f9f9; /* Creates a "floating" effect */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d29e0e; /* Changes to your brand color on hover */
+}
+
+/* --- 2. THEME VARIABLES --- */
 @theme {
   --color-brand: #d29e0e;
   --color-brand-dark: #b8860b;
@@ -10,7 +34,7 @@
   --font-body: "Inter", sans-serif;
 }
 
-/* --- 2. UTILITY CLASSES --- */
+/* --- 3. UTILITY CLASSES --- */
 @layer utilities {
   /* Simple fade animation for hero elements */
   .animate-fade-in {
@@ -28,7 +52,7 @@
   }
 }
 
-/* --- 3. KEYFRAMES --- */
+/* --- 4. KEYFRAMES --- */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -45,15 +69,11 @@
   }
 }
 
-/* --- 4. SCROLL REVEAL ENGINE --- */
-/* This handles the "Individual Card Slide Up" logic.
-   Components use IntersectionObserver to add the '.active' class.
-*/
+/* --- 5. SCROLL REVEAL ENGINE --- */
 .reveal {
   opacity: 0;
   transform: translateY(30px);
   transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-  /* 'visibility: hidden' prevents clicking on items before they appear */
   visibility: hidden; 
   will-change: transform, opacity;
 }

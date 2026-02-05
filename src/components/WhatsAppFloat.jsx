@@ -1,4 +1,4 @@
-import { FaWhatsapp } from 'react-icons/fa';
+/* import { FaWhatsapp } from 'react-icons/fa';
 
 export default function WhatsAppFloat() {
   const handleWhatsAppClick = () => {
@@ -18,7 +18,7 @@ export default function WhatsAppFloat() {
     >
       <FaWhatsapp className="w-8 h-8" />
       
-      {/* Pulse rings effect */}
+      //  Pulse rings effect 
       <span className="absolute inline-flex h-full w-full rounded-full bg-[#25D366] opacity-75 animate-ping"></span>
     </button>
   );
@@ -41,3 +41,4 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+*/

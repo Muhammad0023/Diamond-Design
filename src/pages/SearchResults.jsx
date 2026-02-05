@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react'; // Swapped useEffect for useMemo
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useSearch } from '../context/SearchContext';
 import { HiOutlineSearch } from 'react-icons/hi';
@@ -9,35 +9,28 @@ export default function SearchResults() {
   const { performSearch, getSuggestion } = useSearch();
   
   const query = searchParams.get('q') || '';
-  const [results, setResults] = useState([]);
-  const [filteredResults, setFilteredResults] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('relevance');
-  const [suggestion, setSuggestion] = useState(null);
 
-  // Perform search when query changes
-  useEffect(() => {
-    if (query) {
-      const searchResults = performSearch(query);
-      setResults(searchResults);
-      setFilteredResults(searchResults);
-      
-      // Get suggestion if no results
-      if (searchResults.length === 0) {
-        const suggested = getSuggestion(query);
-        setSuggestion(suggested);
-      } else {
-        setSuggestion(null);
-      }
+  // 1. CALCULATE BASE RESULTS (Derived from Query)
+  // Instead of an Effect + State, we calculate this directly when query changes
+  const results = useMemo(() => {
+    if (!query) return [];
+    return performSearch(query);
+  }, [query, performSearch]);
+
+  // 2. CALCULATE SUGGESTION
+  const suggestion = useMemo(() => {
+    if (query && results.length === 0) {
+      return getSuggestion(query);
     }
-  }, [query]);
+    return null;
+  }, [query, results, getSuggestion]);
 
-  // Get unique categories from results
-  const categories = ['all', ...new Set(results.map(p => p.category))];
-
-  // Filter by category
-  useEffect(() => {
-    let filtered = results;
+  // 3. CALCULATE FILTERED & SORTED RESULTS
+  // This replaces your second useEffect and the 'filteredResults' state
+  const filteredResults = useMemo(() => {
+    let filtered = [...results];
 
     // Filter by category
     if (selectedCategory !== 'all') {
@@ -46,15 +39,18 @@ export default function SearchResults() {
 
     // Sort results
     if (sortBy === 'price-low') {
-      filtered = [...filtered].sort((a, b) => a.price - b.price);
+      filtered.sort((a, b) => a.price - b.price);
     } else if (sortBy === 'price-high') {
-      filtered = [...filtered].sort((a, b) => b.price - a.price);
+      filtered.sort((a, b) => b.price - a.price);
     } else if (sortBy === 'name') {
-      filtered = [...filtered].sort((a, b) => a.name.localeCompare(b.name));
+      filtered.sort((a, b) => a.name.localeCompare(b.name));
     }
 
-    setFilteredResults(filtered);
+    return filtered;
   }, [selectedCategory, sortBy, results]);
+
+  // Get unique categories from results
+  const categories = ['all', ...new Set(results.map(p => p.category))];
 
   const goToProduct = (id) => {
     navigate(`/product/${id}`);

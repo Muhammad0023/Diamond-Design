@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from 'react';
-import { sampleProducts } from '../pages/HomePage';
+import { useProducts } from './ProductsContext';
 
 const SearchContext = createContext();
 
@@ -11,21 +11,8 @@ export function useSearch() {
   return context;
 }
 
-// Get all products in a single array
-const getAllProducts = () => {
-  return [
-    ...sampleProducts.latest,
-    ...sampleProducts.simple,
-    ...sampleProducts.wedding,
-    ...sampleProducts.chiffon,
-    ...sampleProducts.holidays,
-    ...sampleProducts.group,
-    ...sampleProducts.mens,
-    ...sampleProducts.couples,
-  ];
-};
-
 export function SearchProvider({ children }) {
+  const { products } = useProducts();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -41,11 +28,10 @@ export function SearchProvider({ children }) {
       return [];
     }
 
-    const allProducts = getAllProducts();
     const searchTerm = query.toLowerCase().trim();
 
     // Search in product name and category
-    const results = allProducts.filter(product => {
+    const results = products.filter(product => {
       const nameMatch = product.name.toLowerCase().includes(searchTerm);
       const categoryMatch = product.category.toLowerCase().includes(searchTerm);
       return nameMatch || categoryMatch;
