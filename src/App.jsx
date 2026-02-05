@@ -15,7 +15,7 @@ import CategoryPage from './pages/CategoryPage'
 import LatestDesignsPage from './pages/LatestDesignsPage'
 import AdminLogin from './pages/admin/AdminLogin'
 import AdminDashboard from './pages/admin/AdminDashboard'
-import AddEditProduct from './pages/admin/AddEditProduct'
+import AddEditProduct from './pages/admin/AddEditProduct';
 import About from './pages/About';
 import Contact from './pages/Contact';
 
