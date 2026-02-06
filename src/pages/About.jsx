@@ -77,7 +77,7 @@ export default function About() {
             variants={itemVariants}
             className="text-center italic text-gray-500 pt-10 text-2xl"
           >
-            "Designed with culture, worn with pride."
+            Elegance and beauty for a queen!
           </motion.p>
         </div>
       </motion.div>
