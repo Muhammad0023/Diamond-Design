@@ -85,16 +85,18 @@ export default function ProductDetail() {
   }
 
   const productDetail = {
-    ...product,
-    images: [
-      product.image,
-      product.hoverImage || product.image,
-      "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=1200",
-      "https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?w=1200",
-      "https://images.unsplash.com/photo-1618932260643-eee4a2f652a6?w=1200"
-    ],
-    sizes: product.sizes || ['S', 'M', 'L', 'XL', 'XXL']
-  };
+  ...product,
+  images: [
+    // 1. Start with the main image
+    product.image,
+    // 2. Add the hover image ONLY if it exists and is different from the main image
+    ...(product.hoverImage && product.hoverImage !== product.image ? [product.hoverImage] : []),
+    // 3. Add any other images from the array, but filter out the main one so it doesn't repeat
+    ...(product.images || []).filter(img => img !== product.image && img !== product.hoverImage)
+  ].filter(Boolean), // 4. Final safety check: removes any "null" or "undefined" entries
+  
+  sizes: product.sizes || ['S', 'M', 'L', 'XL', 'XXL']
+};
 
   const relatedProducts = getProductsByCategory(product.category)
     .filter(p => p.id !== product.id)

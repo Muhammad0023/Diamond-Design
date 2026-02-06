@@ -149,7 +149,7 @@ export default function Footer() {
                   <IoCallOutline className="w-5 h-5 text-brand group-hover:text-white" />
                 </div>
                 <a href="tel:+251988503333" className="hover:text-brand transition-colors" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
-                  +251 988 503 333
+                  +251 988 503 333 | +447534785665 (UK) 
                 </a>
               </li>
             </ul>
