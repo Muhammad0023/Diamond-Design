@@ -148,9 +148,26 @@ export default function Footer() {
                 <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-brand transition-colors duration-300">
                   <IoCallOutline className="w-5 h-5 text-brand group-hover:text-white" />
                 </div>
-                <a href="tel:+251988503333" className="hover:text-brand transition-colors" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
-                  +251 988 503 333 | +447534785665 (UK) 
-                </a>
+                <div className="flex flex-col space-y-1" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
+                      {/* Ethiopia Number */}
+                      <a 
+                        href="tel:+251988503333" 
+                        className="hover:text-brand transition-colors w-fit"
+                      >
+                        +251 988 503 333
+                      </a>
+                      
+                      {/* UK Number */}
+                      <div className="flex items-center gap-1">
+                        <a 
+                          href="tel:+447534785665" 
+                          className="hover:text-brand transition-colors w-fit"
+                        >
+                          +44 753 478 5665
+                        </a>
+                        <span className="text-gray-400">(UK)</span>
+                      </div>
+                    </div>
               </li>
             </ul>
           </div>
