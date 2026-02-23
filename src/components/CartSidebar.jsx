@@ -20,7 +20,7 @@ export default function CartSidebar() {
       return;
     }
 
-    const phoneNumber = '251911234567'; // UPDATE WITH YOUR NUMBER
+    const phoneNumber = '+251988503333'; 
     
     // Build order message
     let message = 'Hi Diamond Design!\n\nI want to order:\n\n';
