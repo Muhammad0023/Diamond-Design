@@ -1,5 +1,5 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom' // Added useLocation
-import { useEffect } from 'react' // Added useEffect
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
 import { AuthProvider } from './context/AuthContext'
 import { ProductsProvider } from './context/ProductsContext'
 import { CartProvider } from './context/CartContext'
@@ -15,13 +15,14 @@ import CategoryPage from './pages/CategoryPage'
 import LatestDesignsPage from './pages/LatestDesignsPage'
 import AdminLogin from './pages/admin/AdminLogin'
 import AdminDashboard from './pages/admin/AdminDashboard'
-import AddEditProduct from './pages/admin/AddEditProduct';
-import About from './pages/About';
-import Contact from './pages/Contact';
+import AddEditProduct from './pages/admin/AddEditProduct'
+import About from './pages/About'
+import Contact from './pages/Contact'
+import ScrollToTopButton from './components/ScrollToTop' // RENAMED to avoid conflict
 
-// --- SCROLL TO TOP UTILITY ---
+// --- SCROLL TO TOP ON ROUTE CHANGE ---
 // This component listens for route changes and snaps the window to the top
-function ScrollToTop() {
+function ScrollToTopOnNavigate() {
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -38,8 +39,8 @@ function App() {
         <SearchProvider>
           <CartProvider>
             <BrowserRouter>
-              {/* Add ScrollToTop here so it runs on every navigation */}
-              <ScrollToTop />
+              {/* Scroll to top on every navigation */}
+              <ScrollToTopOnNavigate />
               
               <Routes>
                 {/* ADMIN ROUTES - Using /abulhabesh */}
@@ -69,13 +70,14 @@ function App() {
                   } 
                 />
 
-                {/* STORE ROUTES - Untouched logic */}
+                {/* STORE ROUTES */}
                 <Route 
                   path="/*" 
                   element={
                     <div className="min-h-screen flex flex-col">
                       <Header />
                       <CartSidebar />
+                      <ScrollToTopButton />
                       
                       <main className="flex-grow">
                         <Routes>
@@ -89,7 +91,7 @@ function App() {
                           <Route path="/mens" element={<CategoryPage manualCategory="mens" />} />
                           <Route path="/couples" element={<CategoryPage manualCategory="couples" />} />
                           
-                          {/* Support Pages - UPDATED WITH ACTUAL COMPONENTS */}
+                          {/* Support Pages */}
                           <Route path="/about" element={<About />} />
                           <Route path="/contact" element={<Contact />} />
                           

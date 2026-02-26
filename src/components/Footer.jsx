@@ -1,9 +1,8 @@
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FaFacebookF, FaInstagram, FaTiktok, FaPinterestP, FaYoutube } from 'react-icons/fa';
-import { IoLocationOutline, IoCallOutline, IoChevronUpOutline } from "react-icons/io5";
+import { IoLocationOutline, IoCallOutline } from "react-icons/io5";
 import { MdOutlineEmail } from "react-icons/md";
-import { motion } from 'framer-motion';
 
 export default function Footer() {
   const navigate = useNavigate();
@@ -21,27 +20,9 @@ export default function Footer() {
     }
   };
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   return (
-    <footer className="relative bg-gray-900 text-white border-t border-gray-800">
-      
-      {/* --- SMALL & SLEEK TOP ICON --- */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        <motion.button
-          onClick={scrollToTop}
-          whileHover={{ y: -3 }}
-          whileTap={{ scale: 0.9 }}
-          // "w-10 h-10" makes it small and "hover:bg-[#B88A0D]" is the dark yellow
-          className="w-10 h-10 bg-[#D29E0E] text-white rounded-full shadow-xl flex items-center justify-center transition-all duration-300 hover:bg-[#B88A0D] active:scale-90"
-        >
-          <IoChevronUpOutline className="w-5 h-5" />
-        </motion.button>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 pt-12">
+    <footer className="bg-gray-900 text-white border-t border-gray-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           
           {/* Column 1: Brand & Social Media */}
@@ -149,25 +130,25 @@ export default function Footer() {
                   <IoCallOutline className="w-5 h-5 text-brand group-hover:text-white" />
                 </div>
                 <div className="flex flex-col space-y-1" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
-                      {/* Ethiopia Number */}
-                      <a 
-                        href="tel:+251988503333" 
-                        className="hover:text-brand transition-colors w-fit"
-                      >
-                        +251 988 503 333
-                      </a>
-                      
-                      {/* UK Number */}
-                      <div className="flex items-center gap-1">
-                        <a 
-                          href="tel:+447534785665" 
-                          className="hover:text-brand transition-colors w-fit"
-                        >
-                          +44 753 478 5665
-                        </a>
-                        <span className="text-gray-400">(UK)</span>
-                      </div>
-                    </div>
+                  {/* Ethiopia Number */}
+                  <a 
+                    href="tel:+251988503333" 
+                    className="hover:text-brand transition-colors w-fit"
+                  >
+                    +251 988 503 333
+                  </a>
+                  
+                  {/* UK Number */}
+                  <div className="flex items-center gap-1">
+                    <a 
+                      href="tel:+447534785665" 
+                      className="hover:text-brand transition-colors w-fit"
+                    >
+                      +44 753 478 5665
+                    </a>
+                    <span className="text-gray-400">(UK)</span>
+                  </div>
+                </div>
               </li>
             </ul>
           </div>
