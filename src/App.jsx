@@ -19,10 +19,9 @@ import AddEditProduct from './pages/admin/AddEditProduct'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import ScrollToTopButton from './components/ScrollToTop' 
-import { HelmetProvider } from 'react-helmet-async';
+import { HelmetProvider } from 'react-helmet-async'; // Added import
 
 // --- SCROLL TO TOP ON ROUTE CHANGE ---
-// This component listens for route changes and snaps the window to the top
 function ScrollToTopOnNavigate() {
   const { pathname } = useLocation();
 
@@ -32,9 +31,10 @@ function ScrollToTopOnNavigate() {
 
   return null;
 }
-  function App() {
+
+function App() {
   return (
-    <HelmetProvider> 
+    <HelmetProvider> {/* Wrapped everything to fix the White Screen/Undefined error */}
       <AuthProvider>
         <ProductsProvider>
           <SearchProvider>
@@ -111,6 +111,8 @@ function ScrollToTopOnNavigate() {
           </SearchProvider>
         </ProductsProvider>
       </AuthProvider>
-    </HelmetProvider> 
+    </HelmetProvider>
   )
 }
+
+export default App
