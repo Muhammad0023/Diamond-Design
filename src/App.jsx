@@ -18,7 +18,8 @@ import AdminDashboard from './pages/admin/AdminDashboard'
 import AddEditProduct from './pages/admin/AddEditProduct'
 import About from './pages/About'
 import Contact from './pages/Contact'
-import ScrollToTopButton from './components/ScrollToTop' // RENAMED to avoid conflict
+import ScrollToTopButton from './components/ScrollToTop' 
+import { HelmetProvider } from 'react-helmet-async';
 
 // --- SCROLL TO TOP ON ROUTE CHANGE ---
 // This component listens for route changes and snaps the window to the top
@@ -39,7 +40,6 @@ function App() {
         <SearchProvider>
           <CartProvider>
             <BrowserRouter>
-              {/* Scroll to top on every navigation */}
               <ScrollToTopOnNavigate />
               
               <Routes>

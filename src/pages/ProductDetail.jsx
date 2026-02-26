@@ -5,6 +5,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion'; //motion
 import { useCart } from '../context/CartContext';
 import { useProducts } from '../context/ProductsContext';
+import { Helmet } from 'react-helmet-async';
 
 export default function ProductDetail() {
   const { id } = useParams();
