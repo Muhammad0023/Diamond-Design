@@ -32,87 +32,85 @@ function ScrollToTopOnNavigate() {
 
   return null;
 }
-
-function App() {
+  function App() {
   return (
-    <AuthProvider>
-      <ProductsProvider>
-        <SearchProvider>
-          <CartProvider>
-            <BrowserRouter>
-              <ScrollToTopOnNavigate />
-              
-              <Routes>
-                {/* ADMIN ROUTES - Using /abulhabesh */}
-                <Route path="/abulhabesh" element={<AdminLogin />} />
-                <Route 
-                  path="/abulhabesh/dashboard" 
-                  element={
-                    <ProtectedRoute>
-                      <AdminDashboard />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/abulhabesh/add-product" 
-                  element={
-                    <ProtectedRoute>
-                      <AddEditProduct />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/abulhabesh/edit-product/:id" 
-                  element={
-                    <ProtectedRoute>
-                      <AddEditProduct />
-                    </ProtectedRoute>
-                  } 
-                />
+    <HelmetProvider> 
+      <AuthProvider>
+        <ProductsProvider>
+          <SearchProvider>
+            <CartProvider>
+              <BrowserRouter>
+                <ScrollToTopOnNavigate />
+                
+                <Routes>
+                  {/* ADMIN ROUTES - Using /abulhabesh */}
+                  <Route path="/abulhabesh" element={<AdminLogin />} />
+                  <Route 
+                    path="/abulhabesh/dashboard" 
+                    element={
+                      <ProtectedRoute>
+                        <AdminDashboard />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/abulhabesh/add-product" 
+                    element={
+                      <ProtectedRoute>
+                        <AddEditProduct />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/abulhabesh/edit-product/:id" 
+                    element={
+                      <ProtectedRoute>
+                        <AddEditProduct />
+                      </ProtectedRoute>
+                    } 
+                  />
 
-                {/* STORE ROUTES */}
-                <Route 
-                  path="/*" 
-                  element={
-                    <div className="min-h-screen flex flex-col">
-                      <Header />
-                      <CartSidebar />
-                      <ScrollToTopButton />
-                      
-                      <main className="flex-grow">
-                        <Routes>
-                          <Route path="/" element={<HomePage />} />
-                          <Route path="/latest-designs" element={<LatestDesignsPage />} />
-                          <Route path="/product/:id" element={<ProductDetail />} />
-                          <Route path="/search" element={<SearchResults />} />
-                          
-                          {/* Category Routes */}
-                          <Route path="/dresses/:category" element={<CategoryPage />} />
-                          <Route path="/mens" element={<CategoryPage manualCategory="mens" />} />
-                          <Route path="/couples" element={<CategoryPage manualCategory="couples" />} />
-                          
-                          {/* Support Pages */}
-                          <Route path="/about" element={<About />} />
-                          <Route path="/contact" element={<Contact />} />
-                          
-                          {/* Remaining Placeholders */}
-                          <Route path="/faqs" element={<div className="min-h-screen flex items-center justify-center text-2xl text-gray-600">FAQs Page (Coming Soon)</div>} />
-                          <Route path="/size-guide" element={<div className="min-h-screen flex items-center justify-center text-2xl text-gray-600">Size Guide Page (Coming Soon)</div>} />
-                        </Routes>
-                      </main>
-                      
-                      <Footer />
-                    
-                    </div>
-                  }
-                />
-              </Routes>
-            </BrowserRouter>
-          </CartProvider>
-        </SearchProvider>
-      </ProductsProvider>
-    </AuthProvider>
+                  {/* STORE ROUTES */}
+                  <Route 
+                    path="/*" 
+                    element={
+                      <div className="min-h-screen flex flex-col">
+                        <Header />
+                        <CartSidebar />
+                        <ScrollToTopButton />
+                        
+                        <main className="flex-grow">
+                          <Routes>
+                            <Route path="/" element={<HomePage />} />
+                            <Route path="/latest-designs" element={<LatestDesignsPage />} />
+                            <Route path="/product/:id" element={<ProductDetail />} />
+                            <Route path="/search" element={<SearchResults />} />
+                            
+                            {/* Category Routes */}
+                            <Route path="/dresses/:category" element={<CategoryPage />} />
+                            <Route path="/mens" element={<CategoryPage manualCategory="mens" />} />
+                            <Route path="/couples" element={<CategoryPage manualCategory="couples" />} />
+                            
+                            {/* Support Pages */}
+                            <Route path="/about" element={<About />} />
+                            <Route path="/contact" element={<Contact />} />
+                            
+                            {/* Remaining Placeholders */}
+                            <Route path="/faqs" element={<div className="min-h-screen flex items-center justify-center text-2xl text-gray-600">FAQs Page (Coming Soon)</div>} />
+                            <Route path="/size-guide" element={<div className="min-h-screen flex items-center justify-center text-2xl text-gray-600">Size Guide Page (Coming Soon)</div>} />
+                          </Routes>
+                        </main>
+                        
+                        <Footer />
+                      </div>
+                    }
+                  />
+                </Routes>
+              </BrowserRouter>
+            </CartProvider>
+          </SearchProvider>
+        </ProductsProvider>
+      </AuthProvider>
+    </HelmetProvider> 
   )
 }
-
-export default App
