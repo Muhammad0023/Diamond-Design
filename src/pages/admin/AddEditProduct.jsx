@@ -15,6 +15,7 @@ const createSlug = (name) => {
     .replace(/[\s_-]+/g, '-')      // Replace spaces with hyphens
     .replace(/^-+|-+$/g, '');       // Trim hyphens
 };
+
 export default function AddEditProduct() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -138,7 +139,9 @@ export default function AddEditProduct() {
 
       const productData = {
         name: formData.name,
-        // FIX 1: This logic ensures no price is sent if the box is empty
+        // --- ADDED THIS LINE BELOW ---
+        slug: createSlug(formData.name), 
+        // ------------------------------
         price: formData.price && formData.price !== "" ? parseFloat(formData.price) : null,
         category: formData.category,
         description: formData.description,
@@ -236,7 +239,6 @@ export default function AddEditProduct() {
                 style={{ fontFamily: 'Roboto, sans-serif' }}
                 required
               >
-                {/* FIX 2: Added Latest Design Category */}
                 <option value="latest">Latest Design</option>
                 <option value="simple">Simple Dresses</option>
                 <option value="wedding">Wedding Dresses</option>
