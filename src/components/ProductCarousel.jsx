@@ -77,7 +77,8 @@ function ProductCard({ product }) {
       className="flex-none w-[38%] sm:w-[calc(40%-0.5rem)] lg:w-[calc(20%-1.2rem)] snap-start cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={() => navigate(`/product/${product.id}`)}
+      // FIX: Changed from product.id to product.slug
+      onClick={() => navigate(`/product/${product.slug || product.id}`)}
     >
       {/* 1. FIXED HOVER IMAGE SWAP */}
       <div className="bg-white overflow-hidden shadow-sm transition-shadow duration-300 hover:shadow-lg">

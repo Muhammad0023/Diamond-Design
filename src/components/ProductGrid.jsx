@@ -69,7 +69,8 @@ function ProductCardItem({ product, navigate, itemVariants }) {
   return (
     <motion.div
       variants={itemVariants}
-      onClick={() => navigate(`/product/${product.id}`)}
+      // FIX: Changed from product.id to product.slug
+      onClick={() => navigate(`/product/${product.slug || product.id}`)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="cursor-pointer group"
