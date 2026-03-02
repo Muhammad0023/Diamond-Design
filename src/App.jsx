@@ -83,7 +83,8 @@ function App() {
                           <Routes>
                             <Route path="/" element={<HomePage />} />
                             <Route path="/latest-designs" element={<LatestDesignsPage />} />
-                            <Route path="/product/:id" element={<ProductDetail />} />
+                            {/* UPDATED: Changed :id to :slug for SEO URLs */}
+                            <Route path="/product/:slug" element={<ProductDetail />} />
                             <Route path="/search" element={<SearchResults />} />
                             
                             {/* Category Routes */}

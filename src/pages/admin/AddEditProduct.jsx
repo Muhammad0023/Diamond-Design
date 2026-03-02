@@ -6,6 +6,15 @@ import { HiArrowLeft } from 'react-icons/hi';
 import ImageUploader from '../../components/ImageUploader';
 import SuccessNotification from '../../components/SuccessNotification';
 
+// SLUG GENERATOR ---
+const createSlug = (name) => {
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')     // Remove special characters
+    .replace(/[\s_-]+/g, '-')      // Replace spaces with hyphens
+    .replace(/^-+|-+$/g, '');       // Trim hyphens
+};
 export default function AddEditProduct() {
   const { id } = useParams();
   const navigate = useNavigate();

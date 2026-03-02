@@ -8,12 +8,13 @@ import { useProducts } from '../context/ProductsContext';
 import { Helmet } from 'react-helmet-async'; // Added this import
 
 export default function ProductDetail() {
-  const { id } = useParams();
+  const { slug } = useParams(); // Changed id to slug
   const navigate = useNavigate();
   const { addToCart } = useCart();
-  const { getProductById, getProductsByCategory, loading } = useProducts();
+  // We destructure 'products' to find the one that matches our slug
+  const { products, getProductsByCategory, loading } = useProducts();
   
-  const product = getProductById(id);
+  const product = products?.find(p => p.slug === slug);
   
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState('S');
@@ -269,7 +270,8 @@ export default function ProductDetail() {
                     key={relProduct.id} 
                     variants={fadeUp}
                     className="cursor-pointer group" 
-                    onClick={() => { navigate(`/product/${relProduct.id}`); window.scrollTo(0, 0); }}
+                    // Changed to use slug for navigation
+                    onClick={() => { navigate(`/product/${relProduct.slug}`); window.scrollTo(0, 0); }}
                   >
                     <div className="bg-white overflow-hidden shadow-sm mb-4">
                       <img src={relProduct.image} alt={relProduct.name} className="w-full aspect-[3/4] object-cover group-hover:opacity-80 transition-opacity" />
