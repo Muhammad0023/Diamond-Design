@@ -21,6 +21,19 @@ export default function ProductDetail() {
   const [showModal, setShowModal] = useState(false); 
   const [modalZoom, setModalZoom] = useState(1);
 
+  // UPDATE PAGE TITLE FOR SEO
+useEffect(() => {
+  if (product && product.name) {
+    document.title = `${product.name} | Diamond Design`;
+  } else {
+    document.title = 'Product | Diamond Design';
+  }
+  
+  // Cleanup: Reset title when component unmounts
+  return () => {
+    document.title = 'Diamond Design';
+  };
+}, [product]);
   // Animation Variants
   const fadeUp = {
     hidden: { opacity: 0, y: 20 },
