@@ -52,9 +52,9 @@ export default function SearchResults() {
   // Get unique categories from results
   const categories = ['all', ...new Set(results.map(p => p.category))];
 
-  const goToProduct = (id) => {
-    navigate(`/product/${id}`);
-  };
+ const goToProduct = (product) => {
+  navigate(`/product/${product.slug}`);
+};
 
   const searchSuggestion = () => {
     if (suggestion) {
@@ -134,7 +134,7 @@ export default function SearchResults() {
             {filteredResults.map((product) => (
               <div
                 key={product.id}
-                onClick={() => goToProduct(product.id)}
+                onClick={() => goToProduct(product)}
                 className="cursor-pointer group"
               >
                 <div className="bg-white overflow-hidden shadow-sm mb-3 hover:shadow-xl transition-shadow">

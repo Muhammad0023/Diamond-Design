@@ -178,8 +178,8 @@ function ProductCard({ product, navigate }) {
   const [isHovered, setIsHovered] = useState(false);
 
   const handleClick = () => {
-    navigate(`/product/${product.id}`);
-  };
+  navigate(`/product/${product.slug}`);
+};
 
   const mainImage = product.images?.[0] || product.image;
   const hoverImage = product.images?.[1] || product.hoverImage || mainImage;

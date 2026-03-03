@@ -1,4 +1,4 @@
-
+import { generateSlug } from '../../utils/slugUtils';
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { addProduct, updateProduct, getProductById } from '../../firebase/productService';
@@ -151,13 +151,20 @@ export default function AddEditProduct() {
         sizes: ['S', 'M', 'L', 'XL', 'XXL'],
       };
 
-      if (isEditMode) {
-        await updateProduct(id, productData);
-        setSuccessMessage('Product updated successfully!');
-      } else {
-        await addProduct(productData);
-        setSuccessMessage('Product added successfully!');
-      }
+     // AFTER adding the product, get the ID and update with slug
+          if (isEditMode) {
+            await updateProduct(id, productData);
+            // Update slug if name changed
+            const newSlug = generateSlug(formData.name, id);
+            await updateProduct(id, { ...productData, slug: newSlug });
+            setSuccessMessage('Product updated successfully!');
+          } else {
+            const docRef = await addProduct(productData);
+            // Add slug after getting the ID
+            const newSlug = generateSlug(formData.name, docRef.id);
+            await updateProduct(docRef.id, { slug: newSlug });
+            setSuccessMessage('Product added successfully!');
+          }
 
       setShowSuccess(true);
       

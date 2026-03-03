@@ -230,8 +230,7 @@ function ProductGridItem({ product, navigate, variants }) {
 
   return (
     <motion.div
-      variants={variants}
-      onClick={() => navigate(`/product/${product.id}`)}
+      variants={variants}onClick={() => navigate(`/product/${product.slug}`)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="cursor-pointer group"

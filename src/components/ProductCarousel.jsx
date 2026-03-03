@@ -78,7 +78,7 @@ function ProductCard({ product }) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       // FIX: Changed from product.id to product.slug
-      onClick={() => navigate(`/product/${product.slug || product.id}`)}
+        onClick={() => navigate(`/product/${product.slug}`)}
     >
       {/* 1. FIXED HOVER IMAGE SWAP */}
       <div className="bg-white overflow-hidden shadow-sm transition-shadow duration-300 hover:shadow-lg">

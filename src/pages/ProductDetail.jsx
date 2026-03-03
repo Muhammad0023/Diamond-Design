@@ -14,7 +14,13 @@ export default function ProductDetail() {
   // We destructure 'products' to find the one that matches our slug
   const { products, getProductsByCategory, loading } = useProducts();
   
-  const product = products?.find(p => p.slug === slug || p.id === slug);
+const getIdFromSlug = (slug) => {
+  const parts = slug.split('-');
+  return parts[parts.length - 1]; // Last part is the ID
+};
+
+const productId = getIdFromSlug(slug);
+const product = products?.find(p => p.id === productId || p.slug === slug);
   
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState('S');
@@ -284,7 +290,7 @@ useEffect(() => {
                     variants={fadeUp}
                     className="cursor-pointer group" 
                     // Changed to use slug for navigation
-                    onClick={() => { navigate(`/product/${relProduct.slug || relProduct.id}`); window.scrollTo(0, 0); }}
+                   onClick={() => { navigate(`/product/${relProduct.slug}`); window.scrollTo(0, 0); }}
                   >
                     <div className="bg-white overflow-hidden shadow-sm mb-4">
                       <img src={relProduct.image} alt={relProduct.name} className="w-full aspect-[3/4] object-cover group-hover:opacity-80 transition-opacity" />
