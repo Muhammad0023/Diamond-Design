@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { addProduct, updateProduct, getProductById } from '../../firebase/productService';
@@ -139,9 +140,7 @@ export default function AddEditProduct() {
 
       const productData = {
         name: formData.name,
-        // --- ADDED THIS LINE BELOW ---
         slug: createSlug(formData.name), 
-        // ------------------------------
         price: formData.price && formData.price !== "" ? parseFloat(formData.price) : null,
         category: formData.category,
         description: formData.description,
