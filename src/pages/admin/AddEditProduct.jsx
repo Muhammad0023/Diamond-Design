@@ -7,16 +7,6 @@ import { HiArrowLeft } from 'react-icons/hi';
 import ImageUploader from '../../components/ImageUploader';
 import SuccessNotification from '../../components/SuccessNotification';
 
-// SLUG GENERATOR ---
-const createSlug = (name) => {
-  return name
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, '')     // Remove special characters
-    .replace(/[\s_-]+/g, '-')      // Replace spaces with hyphens
-    .replace(/^-+|-+$/g, '');       // Trim hyphens
-};
-
 export default function AddEditProduct() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -138,9 +128,9 @@ export default function AddEditProduct() {
 
       setUploadingImages(false);
 
+      // Base product data (WITHOUT slug yet)
       const productData = {
         name: formData.name,
-        slug: createSlug(formData.name), 
         price: formData.price && formData.price !== "" ? parseFloat(formData.price) : null,
         category: formData.category,
         description: formData.description,
@@ -151,20 +141,22 @@ export default function AddEditProduct() {
         sizes: ['S', 'M', 'L', 'XL', 'XXL'],
       };
 
-     // AFTER adding the product, get the ID and update with slug
-          if (isEditMode) {
-            await updateProduct(id, productData);
-            // Update slug if name changed
-            const newSlug = generateSlug(formData.name, id);
-            await updateProduct(id, { ...productData, slug: newSlug });
-            setSuccessMessage('Product updated successfully!');
-          } else {
-            const docRef = await addProduct(productData);
-            // Add slug after getting the ID
-            const newSlug = generateSlug(formData.name, docRef.id);
-            await updateProduct(docRef.id, { slug: newSlug });
-            setSuccessMessage('Product added successfully!');
-          }
+      if (isEditMode) {
+        // EDITING: We have the ID already
+        const slug = generateSlug(formData.name, id);
+        await updateProduct(id, { ...productData, slug });
+        setSuccessMessage('Product updated successfully!');
+      } else {
+        // ADDING NEW: Save first, then add slug
+        const docRef = await addProduct(productData);
+        
+        // Now we have the ID, create slug
+        const slug = generateSlug(formData.name, docRef.id);
+        
+        // Update product with slug
+        await updateProduct(docRef.id, { slug });
+        setSuccessMessage('Product added successfully!');
+      }
 
       setShowSuccess(true);
       
