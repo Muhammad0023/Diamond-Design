@@ -14,6 +14,7 @@ export default function AddEditProduct() {
 
   const [loading, setLoading] = useState(false);
   const [uploadingImages, setUploadingImages] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   
@@ -97,10 +98,6 @@ export default function AddEditProduct() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log('=== SUBMIT STARTED ===');
-    console.log('Form Data:', formData);
-    console.log('Images:', images);
-
     if (!formData.name || !formData.category) {
       alert('Please fill in all required fields (Name and Category)');
       return;
@@ -116,34 +113,34 @@ export default function AddEditProduct() {
       setUploadingImages(true);
       
       const uploadedUrls = [];
+      const newImages = images.filter(img => !img.isExisting && img.file);
+      const existingImages = images.filter(img => img.isExisting && img.url);
       
-      console.log('=== UPLOADING IMAGES ===');
-      for (let i = 0; i < images.length; i++) {
-        const img = images[i];
-        console.log(`Image ${i}:`, img);
+      // Add existing images first
+      existingImages.forEach(img => uploadedUrls.push(img.url));
+      
+      // Upload new images one by one with progress
+      for (let i = 0; i < newImages.length; i++) {
+        setUploadProgress(`Uploading image ${i + 1} of ${newImages.length}...`);
         
-        if (img.isExisting && img.url) {
-          console.log(`  -> Using existing URL: ${img.url}`);
-          uploadedUrls.push(img.url);
-        } else if (img.file) {
-          console.log(`  -> Uploading new file...`);
-          const url = await uploadImage(img.file, 'products');
-          console.log(`  -> Uploaded to: ${url}`);
+        try {
+          const url = await Promise.race([
+            uploadImage(newImages[i].file, 'products'),
+            new Promise((_, reject) => 
+              setTimeout(() => reject(new Error('Upload timeout after 60 seconds')), 60000)
+            )
+          ]);
           uploadedUrls.push(url);
-        } else if (img.preview && typeof img.preview === 'string' && img.preview.startsWith('http')) {
-          console.log(`  -> Using preview URL: ${img.preview}`);
-          uploadedUrls.push(img.preview);
-        } else {
-          console.warn(`  -> Skipping invalid image:`, img);
+        } catch (uploadError) {
+          console.error(`Failed to upload image ${i + 1}:`, uploadError);
+          throw new Error(`Image upload failed: ${uploadError.message}`);
         }
       }
 
-      console.log('=== UPLOADED URLs ===');
-      console.log(uploadedUrls);
-
       setUploadingImages(false);
+      setUploadProgress('Saving product...');
 
-      // Base product data (WITHOUT slug yet)
+      // Base product data
       const productData = {
         name: formData.name,
         price: formData.price && formData.price !== "" ? parseFloat(formData.price) : null,
@@ -156,38 +153,19 @@ export default function AddEditProduct() {
         sizes: ['S', 'M', 'L', 'XL', 'XXL'],
       };
 
-      console.log('=== PRODUCT DATA (before save) ===');
-      console.log(productData);
-
       if (isEditMode) {
-        console.log('=== EDIT MODE ===');
-        console.log('Generating slug with name:', formData.name, 'and id:', id);
         const slug = generateSlug(formData.name, id);
-        console.log('Generated slug:', slug);
-        
         await updateProduct(id, { ...productData, slug });
         setSuccessMessage('Product updated successfully!');
       } else {
-        console.log('=== ADD MODE ===');
-        console.log('Adding product to Firebase...');
         const docRef = await addProduct(productData);
         
-        console.log('Product added! DocRef:', docRef);
-        console.log('DocRef type:', typeof docRef);
-        console.log('DocRef.id:', docRef?.id);
-        
         if (!docRef || !docRef.id) {
-          throw new Error('Failed to get document reference from addProduct');
+          throw new Error('Failed to create product');
         }
         
-        console.log('Generating slug with name:', formData.name, 'and id:', docRef.id);
         const slug = generateSlug(formData.name, docRef.id);
-        console.log('Generated slug:', slug);
-        
-        console.log('Updating product with slug...');
         await updateProduct(docRef.id, { slug });
-        console.log('Product updated with slug!');
-        
         setSuccessMessage('Product added successfully!');
       }
 
@@ -198,14 +176,12 @@ export default function AddEditProduct() {
       }, 1500);
       
     } catch (error) {
-      console.error('=== ERROR OCCURRED ===');
-      console.error('Error object:', error);
-      console.error('Error message:', error.message);
-      console.error('Error stack:', error.stack);
+      console.error('Error saving product:', error);
       alert('Failed to save product: ' + error.message);
     } finally {
       setLoading(false);
       setUploadingImages(false);
+      setUploadProgress('');
     }
   };
 
@@ -338,7 +314,7 @@ export default function AddEditProduct() {
               {loading ? (
                 <div className="flex items-center justify-center gap-2">
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  {uploadingImages ? 'Uploading images...' : 'Saving...'}
+                  <span className="text-sm">{uploadProgress || (uploadingImages ? 'Uploading images...' : 'Saving...')}</span>
                 </div>
               ) : (
                 isEditMode ? 'Update Product' : 'Add Product'
