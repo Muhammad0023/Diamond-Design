@@ -121,7 +121,8 @@ export default function AddEditProduct() {
         } else if (img.file) {
           const url = await uploadImage(img.file, 'products');
           uploadedUrls.push(url);
-        } else if (img.preview && img.preview.startsWith('http')) {
+        } else if (img.preview && typeof img.preview === 'string' && img.preview.startsWith('http')) {
+          // FIXED: Added type check before calling startsWith
           uploadedUrls.push(img.preview);
         }
       }
