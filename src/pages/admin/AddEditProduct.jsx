@@ -97,6 +97,10 @@ export default function AddEditProduct() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    console.log('=== SUBMIT STARTED ===');
+    console.log('Form Data:', formData);
+    console.log('Images:', images);
+
     if (!formData.name || !formData.category) {
       alert('Please fill in all required fields (Name and Category)');
       return;
@@ -113,19 +117,29 @@ export default function AddEditProduct() {
       
       const uploadedUrls = [];
       
+      console.log('=== UPLOADING IMAGES ===');
       for (let i = 0; i < images.length; i++) {
         const img = images[i];
+        console.log(`Image ${i}:`, img);
         
         if (img.isExisting && img.url) {
+          console.log(`  -> Using existing URL: ${img.url}`);
           uploadedUrls.push(img.url);
         } else if (img.file) {
+          console.log(`  -> Uploading new file...`);
           const url = await uploadImage(img.file, 'products');
+          console.log(`  -> Uploaded to: ${url}`);
           uploadedUrls.push(url);
         } else if (img.preview && typeof img.preview === 'string' && img.preview.startsWith('http')) {
-          // FIXED: Added type check before calling startsWith
+          console.log(`  -> Using preview URL: ${img.preview}`);
           uploadedUrls.push(img.preview);
+        } else {
+          console.warn(`  -> Skipping invalid image:`, img);
         }
       }
+
+      console.log('=== UPLOADED URLs ===');
+      console.log(uploadedUrls);
 
       setUploadingImages(false);
 
@@ -142,20 +156,38 @@ export default function AddEditProduct() {
         sizes: ['S', 'M', 'L', 'XL', 'XXL'],
       };
 
+      console.log('=== PRODUCT DATA (before save) ===');
+      console.log(productData);
+
       if (isEditMode) {
-        // EDITING: We have the ID already
+        console.log('=== EDIT MODE ===');
+        console.log('Generating slug with name:', formData.name, 'and id:', id);
         const slug = generateSlug(formData.name, id);
+        console.log('Generated slug:', slug);
+        
         await updateProduct(id, { ...productData, slug });
         setSuccessMessage('Product updated successfully!');
       } else {
-        // ADDING NEW: Save first, then add slug
+        console.log('=== ADD MODE ===');
+        console.log('Adding product to Firebase...');
         const docRef = await addProduct(productData);
         
-        // Now we have the ID, create slug
-        const slug = generateSlug(formData.name, docRef.id);
+        console.log('Product added! DocRef:', docRef);
+        console.log('DocRef type:', typeof docRef);
+        console.log('DocRef.id:', docRef?.id);
         
-        // Update product with slug
+        if (!docRef || !docRef.id) {
+          throw new Error('Failed to get document reference from addProduct');
+        }
+        
+        console.log('Generating slug with name:', formData.name, 'and id:', docRef.id);
+        const slug = generateSlug(formData.name, docRef.id);
+        console.log('Generated slug:', slug);
+        
+        console.log('Updating product with slug...');
         await updateProduct(docRef.id, { slug });
+        console.log('Product updated with slug!');
+        
         setSuccessMessage('Product added successfully!');
       }
 
@@ -166,7 +198,10 @@ export default function AddEditProduct() {
       }, 1500);
       
     } catch (error) {
-      console.error('Error saving product:', error);
+      console.error('=== ERROR OCCURRED ===');
+      console.error('Error object:', error);
+      console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
       alert('Failed to save product: ' + error.message);
     } finally {
       setLoading(false);
