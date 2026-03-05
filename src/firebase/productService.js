@@ -24,7 +24,7 @@ export const addProduct = async (productData) => {
       createdAt: new Date()
     });
     console.log('Product added with ID:', docRef.id);
-    return docRef.id;
+    return docRef; // FIXED: Return the entire docRef object, not just the id
   } catch (error) {
     console.error('Error adding product:', error);
     throw error;
