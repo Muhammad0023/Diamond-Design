@@ -11,13 +11,7 @@ export default function HomePage() {
 
   return (
     <div className="overflow-hidden bg-white">
-      <Helmet>
-        <title>Diamond Design | Authentic Habesha Kemis</title>
-        <meta name="description" content="Discover premium Ethiopian traditional clothing and modern Habesha designs at Diamond Design." />
-        <meta property="og:title" content="Diamond Design | Authentic Habesha Kemis" />
-        <meta property="og:type" content="website" />
-      </Helmet>
-
+      
       {/* FIX: The Hero is now outside of any "if" statements. 
           The key="constant-hero" tells React: "This is the same component, 
           do not re-animate it when loading finishes."
