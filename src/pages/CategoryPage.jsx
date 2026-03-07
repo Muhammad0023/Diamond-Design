@@ -240,7 +240,7 @@ function ProductGridItem({ product, navigate, variants }) {
           <img
             src={product.image}
             alt={product.name}
-            className={`w-full h-full object-cover transition-opacity duration-100 absolute inset-0 ${
+            className={`w-full h-full object-cover transition-opacity duration-500 absolute inset-0 ${
               isHovered && product.hoverImage ? 'opacity-0' : 'opacity-100'
             }`}
           />
@@ -248,7 +248,7 @@ function ProductGridItem({ product, navigate, variants }) {
             <img
               src={product.hoverImage}
               alt={product.name}
-              className={`w-full h-full object-cover transition-opacity duration-100 ${
+              className={`w-full h-full object-cover transition-opacity duration-500 ${
                 isHovered ? 'opacity-100' : 'opacity-0'
               }`}
             />
