@@ -11,28 +11,28 @@ export default function HomePage() {
 
   return (
     <div className="overflow-hidden bg-white">
-      <Helmet>
+    <Helmet>
   <title>Habesha Kemis – Authentic Habesha Dresses | Diamond Design</title>
   
   <meta name="description" content="Shop Diamond Design's online collection of Habesha Kemis. Elegant Habesha, Ethiopian, and Eritrean dresses designed for weddings, holidays, and special occasions." />
-  <meta name="keywords" content="Habesha Kemis, Habesha Dress, Ethiopian Dress, Eritrean Dress, Ethiopian Wedding Dress, Traditional Habesha Clothing, Diamond Design" />
   
-  <meta property="og:title" content="Habesha Kemis | Authentic Ethiopian & Eritrean Dresses | Diamond Design" />
-  <meta property="og:description" content="Authentic Habesha Kemis and elegant Ethiopian and Eritrean dresses crafted for weddings, holidays, and unforgettable moments. Discover Diamond Design." />
+  {/* Open Graph - For Telegram, Facebook, WhatsApp */}
+  <meta property="og:title" content="Habesha Kemis | Authentic Ethiopian & Eritrean Dresses" />
+  <meta property="og:description" content="Authentic Habesha Kemis and elegant Ethiopian and Eritrean dresses crafted for weddings, holidays, and unforgettable moments." />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://diamond-design.vercel.app/og-image.jpg" />
+  <meta property="og:url" content="https://diamond-design.vercel.app/" />
+  <meta property="og:image" content="https://diamond-design.vercel.app/og-image-improved.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:url" content="https://diamond-design.vercel.app/" />
-  <meta property="og:image:alt" content="Elegant Habesha Kemis dress from Diamond Design collection" />
+  <meta property="og:image:type" content="image/jpeg" />
   
-  {/* Twitter Card */}
+  {/* Twitter Card - Some platforms use this */}
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Habesha Kemis | Authentic Ethiopian & Eritrean Dresses | Diamond Design" />
-  <meta name="twitter:description" content="Authentic Habesha Kemis and elegant Ethiopian and Eritrean dresses crafted for weddings, holidays, and unforgettable moments." />
-  <meta name="twitter:image" content="https://diamond-design.vercel.app/og-image.jpg" />
+  <meta name="twitter:title" content="Habesha Kemis | Diamond Design" />
+  <meta name="twitter:description" content="Authentic Habesha Kemis and Ethiopian dresses." />
+  <meta name="twitter:image" content="https://diamond-design.vercel.app/og-image-improved.jpg" />
   
-  <link rel="canonical" href="https://diamond-design.vercel.app/" />
+  <link rel="canonical" content="https://diamond-design.vercel.app/" />
 </Helmet>
       {/* FIX: The Hero is now outside of any "if" statements. 
           The key="constant-hero" tells React: "This is the same component, 
