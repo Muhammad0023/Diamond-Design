@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { HiHome, HiChevronRight } from 'react-icons/hi';
-import { motion } from 'framer-motion'; // Added Framer Motion
+import { motion } from 'framer-motion';
 import { useProducts } from '../context/ProductsContext';
 
 // Category configurations
@@ -230,17 +230,18 @@ function ProductGridItem({ product, navigate, variants }) {
 
   return (
     <motion.div
-      variants={variants}onClick={() => navigate(`/product/${product.slug}`)}
+      variants={variants}
+      onClick={() => navigate(`/product/${product.slug}`)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="cursor-pointer group"
     >
-      <div className="bg-white overflow-hidden shadow-sm mb-3 group-hover:shadow-xl transition-all duration-500">
+      <div className="bg-white overflow-hidden shadow-sm mb-3 group-hover:shadow-xl transition-all duration-100">
         <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
           <img
             src={product.image}
             alt={product.name}
-            className={`w-full h-full object-cover transition-opacity duration-500 absolute inset-0 ${
+            className={`w-full h-full object-cover transition-opacity duration-100 absolute inset-0 ${
               isHovered && product.hoverImage ? 'opacity-0' : 'opacity-100'
             }`}
           />
@@ -248,7 +249,7 @@ function ProductGridItem({ product, navigate, variants }) {
             <img
               src={product.hoverImage}
               alt={product.name}
-              className={`w-full h-full object-cover transition-opacity duration-500 ${
+              className={`w-full h-full object-cover transition-opacity duration-100 ${
                 isHovered ? 'opacity-100' : 'opacity-0'
               }`}
             />
@@ -260,7 +261,6 @@ function ProductGridItem({ product, navigate, variants }) {
           )}
         </div>
       </div>
-      {/* Space fixed: Removed min-h and mb-1, replaced with leading-tight */}
       <h3 
         className="text-gray-700 text-sm mb-0.5 line-clamp-2 leading-tight" 
         style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}
