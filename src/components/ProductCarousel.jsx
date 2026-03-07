@@ -86,7 +86,7 @@ function ProductCard({ product }) {
           <img
             src={isHovered ? hoverImage : mainImage}
             alt={product.name}
-            className={`w-full h-full object-cover transition-all duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
+            className={`w-full h-full object-cover transition-all duration-200 ${isHovered ? 'scale-110' : 'scale-100'}`}
           />
           {product.isNew && (
             <span className="absolute top-4 left-4 bg-brand text-white text-[10px] font-bold px-3 py-1">

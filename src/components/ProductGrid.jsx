@@ -80,7 +80,7 @@ function ProductCardItem({ product, navigate, itemVariants }) {
           <img
             src={isHovered ? hoverImage : mainImage} // Hover logic restored
             alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
           />
           {product.isNew && (
             <span className="absolute top-4 left-4 bg-brand text-white text-[10px] font-bold px-3 py-1">
