@@ -7,6 +7,10 @@ export default function ProductCarousel({ title, products, viewAllLink = "#" }) 
   const scrollContainerRef = useRef(null);
   const navigate = useNavigate();
 
+  // ✅ LIMIT TO 13 PRODUCTS IN CAROUSEL
+  const displayedProducts = products.slice(0, 13);
+  const hasMoreProducts = products.length > 13;
+
   const scroll = (direction) => {
     const container = scrollContainerRef.current;
     if (container) {
@@ -27,7 +31,7 @@ export default function ProductCarousel({ title, products, viewAllLink = "#" }) 
             className="text-brand font-semibold hover:text-brand-dark transition-colors flex items-center gap-1 cursor-pointer group"
             style={{ fontFamily: 'Roboto, sans-serif' }}
           >
-            View All <span className="transform group-hover:translate-x-1 transition-transform">→</span>
+            View All {hasMoreProducts && `(${products.length})`} <span className="transform group-hover:translate-x-1 transition-transform">→</span>
           </button>
         </div>
 
@@ -44,9 +48,24 @@ export default function ProductCarousel({ title, products, viewAllLink = "#" }) 
             className="flex gap-3 sm:gap-4 lg:gap-6 overflow-x-auto scrollbar-hide scroll-smooth snap-x snap-mandatory pb-4"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            {products.map((product) => (
+            {/* ✅ ONLY SHOW FIRST 13 PRODUCTS */}
+            {displayedProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
+            
+            {/* ✅ OPTIONAL: SHOW "VIEW MORE" CARD AT THE END */}
+            {hasMoreProducts && (
+              <div 
+                className="flex-none w-[38%] sm:w-[calc(40%-0.5rem)] lg:w-[calc(20%-1.2rem)] snap-start cursor-pointer"
+                onClick={() => navigate(viewAllLink)}
+              >
+                <div className="bg-brand h-full flex flex-col items-center justify-center p-8 hover:bg-brand-dark transition-colors">
+                  <span className="text-white text-4xl mb-2">+{products.length - 13}</span>
+                  <p className="text-white font-semibold text-center">More Products</p>
+                  <p className="text-white text-sm mt-2">View All →</p>
+                </div>
+              </div>
+            )}
           </div>
 
           <button
@@ -77,10 +96,8 @@ function ProductCard({ product }) {
       className="flex-none w-[38%] sm:w-[calc(40%-0.5rem)] lg:w-[calc(20%-1.2rem)] snap-start cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      // FIX: Changed from product.id to product.slug
-        onClick={() => navigate(`/product/${product.slug}`)}
+      onClick={() => navigate(`/product/${product.slug}`)}
     >
-      {/* 1. FIXED HOVER IMAGE SWAP */}
       <div className="bg-white overflow-hidden shadow-sm transition-shadow duration-300 hover:shadow-lg">
         <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
           <img
@@ -96,7 +113,6 @@ function ProductCard({ product }) {
         </div>
       </div>
 
-      {/* 2. FIXED SPACING & FONTS */}
       <div className="mt-3">
         <h3 
           className="text-gray-700 text-sm line-clamp-2 leading-tight" 
