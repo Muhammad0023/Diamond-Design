@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { HiHome, HiChevronRight } from 'react-icons/hi';
-import { motion } from 'framer-motion';
+import { motion } from 'framer-motion'; // Added Framer Motion
 import { useProducts } from '../context/ProductsContext';
 
 // Category configurations
@@ -230,13 +230,12 @@ function ProductGridItem({ product, navigate, variants }) {
 
   return (
     <motion.div
-      variants={variants}
-      onClick={() => navigate(`/product/${product.slug}`)}
+      variants={variants}onClick={() => navigate(`/product/${product.slug}`)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="cursor-pointer group"
     >
-      <div className="bg-white overflow-hidden shadow-sm mb-3 group-hover:shadow-xl transition-all duration-100">
+      <div className="bg-white overflow-hidden shadow-sm mb-3 group-hover:shadow-xl transition-all duration-500">
         <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
           <img
             src={product.image}
@@ -261,6 +260,7 @@ function ProductGridItem({ product, navigate, variants }) {
           )}
         </div>
       </div>
+      {/* Space fixed: Removed min-h and mb-1, replaced with leading-tight */}
       <h3 
         className="text-gray-700 text-sm mb-0.5 line-clamp-2 leading-tight" 
         style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}
