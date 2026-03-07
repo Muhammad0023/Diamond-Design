@@ -21,8 +21,16 @@ export default function HomePage() {
   <meta property="og:description" content="Authentic Habesha Kemis and elegant Ethiopian and Eritrean dresses crafted for weddings, holidays, and unforgettable moments. Discover Diamond Design." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://diamond-design.vercel.app/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta property="og:url" content="https://diamond-design.vercel.app/" />
   <meta property="og:image:alt" content="Elegant Habesha Kemis dress from Diamond Design collection" />
+  
+  {/* Twitter Card */}
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Habesha Kemis | Authentic Ethiopian & Eritrean Dresses | Diamond Design" />
+  <meta name="twitter:description" content="Authentic Habesha Kemis and elegant Ethiopian and Eritrean dresses crafted for weddings, holidays, and unforgettable moments." />
+  <meta name="twitter:image" content="https://diamond-design.vercel.app/og-image.jpg" />
   
   <link rel="canonical" href="https://diamond-design.vercel.app/" />
 </Helmet>
