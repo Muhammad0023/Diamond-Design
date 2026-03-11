@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /abulhabesh/
+
+Sitemap: https://diamond-design.vercel.app/sitemap.xml
