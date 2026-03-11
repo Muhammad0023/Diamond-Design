@@ -2,45 +2,30 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { HiZoomIn, HiX, HiPlus, HiMinus } from 'react-icons/hi';
 import { FaWhatsapp } from 'react-icons/fa';
-import { motion, AnimatePresence } from 'framer-motion'; //motion
+import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../context/CartContext';
 import { useProducts } from '../context/ProductsContext';
-import { Helmet } from 'react-helmet-async'; // Added this import
+import { Helmet } from 'react-helmet-async';
 
 export default function ProductDetail() {
-  const { slug } = useParams(); // Changed id to slug
+  const { slug } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
-  // We destructure 'products' to find the one that matches our slug
   const { products, getProductsByCategory, loading } = useProducts();
   
-const getIdFromSlug = (slug) => {
-  const parts = slug.split('-');
-  return parts[parts.length - 1]; // Last part is the ID
-};
+  const getIdFromSlug = (slug) => {
+    const parts = slug.split('-');
+    return parts[parts.length - 1];
+  };
 
-const productId = getIdFromSlug(slug);
-const product = products?.find(p => p.id === productId || p.slug === slug);
+  const productId = getIdFromSlug(slug);
+  const product = products?.find(p => p.id === productId || p.slug === slug);
   
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState('S');
   const [showModal, setShowModal] = useState(false); 
   const [modalZoom, setModalZoom] = useState(1);
 
-  // UPDATE PAGE TITLE FOR SEO
-useEffect(() => {
-  if (product && product.name) {
-    document.title = `${product.name} | Diamond Design`;
-  } else {
-    document.title = 'Product | Diamond Design';
-  }
-  
-  // Cleanup: Reset title when component unmounts
-  return () => {
-    document.title = 'Diamond Design';
-  };
-}, [product]);
-  // Animation Variants
   const fadeUp = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
@@ -62,7 +47,19 @@ useEffect(() => {
     }
   }, [showModal]);
 
-  // Loading State
+  // ✅ FIXED: Move these functions BEFORE the return statement
+  const handleWhatsAppOrder = () => {
+    const phoneNumber = '+251988503333'; 
+    const message = encodeURIComponent(
+      `Hi Diamond Design!\n\nI want to order:\nProduct: ${productDetail.name}\nSize: ${selectedSize}\nPrice: $${productDetail.price}\n\nPlease confirm availability.`
+    );
+    window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+  };
+              
+  const handleAddToCart = () => {
+    addToCart(productDetail, selectedSize);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-white pt-24 pb-16">
@@ -106,34 +103,18 @@ useEffect(() => {
   }
 
   const productDetail = {
-  ...product,
-  images: [
-    // 1. Start with the main image
-    product.image,
-    // 2. Add the hover image ONLY if it exists and is different from the main image
-    ...(product.hoverImage && product.hoverImage !== product.image ? [product.hoverImage] : []),
-    // 3. Add any other images from the array, but filter out the main one so it doesn't repeat
-    ...(product.images || []).filter(img => img !== product.image && img !== product.hoverImage)
-  ].filter(Boolean), // 4. Final safety check: removes any "null" or "undefined" entries
-  
-  sizes: product.sizes || ['S', 'M', 'L', 'XL', 'XXL']
-};
+    ...product,
+    images: [
+      product.image,
+      ...(product.hoverImage && product.hoverImage !== product.image ? [product.hoverImage] : []),
+      ...(product.images || []).filter(img => img !== product.image && img !== product.hoverImage)
+    ].filter(Boolean),
+    sizes: product.sizes || ['S', 'M', 'L', 'XL', 'XXL']
+  };
 
   const relatedProducts = getProductsByCategory(product.category)
     .filter(p => p.id !== product.id)
     .slice(0, 8);
-
-  const handleWhatsAppOrder = () => {
-    const phoneNumber = '+251988503333'; 
-    const message = encodeURIComponent(
-      `Hi Diamond Design!\n\nI want to order:\nProduct: ${productDetail.name}\nSize: ${selectedSize}\nPrice: $${productDetail.price}\n\nPlease confirm availability.`
-    );
-    window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
-  };
-
-  const handleAddToCart = () => {
-    addToCart(productDetail, selectedSize);
-  };
 
   return (
     <>
@@ -254,9 +235,18 @@ useEffect(() => {
 
               {/* PILL BUTTONS */}
               <motion.div variants={fadeUp} className="space-y-4 w-full max-w-2xl">
-                <button onClick={handleAddToCart} className="w-full bg-brand text-white py-5 rounded-full font-bold hover:bg-brand-dark transition-all shadow-xl uppercase tracking-widest active:scale-[0.98]">Add to Cart</button>
-                <button onClick={handleWhatsAppOrder} className="w-full bg-[#25D366] text-white py-5 rounded-full font-bold hover:bg-[#20ba59] transition-all shadow-xl flex items-center justify-center gap-3 uppercase tracking-widest active:scale-[0.98]">
-                  <FaWhatsapp className="w-6 h-6" /> Order via WhatsApp
+                <button 
+                  onClick={handleAddToCart} 
+                  className="w-full bg-brand text-white py-5 rounded-full font-bold hover:bg-brand-dark transition-all shadow-xl uppercase tracking-widest active:scale-[0.98]"
+                >
+                  Add to Cart
+                </button>
+                
+                <button 
+                  onClick={handleWhatsAppOrder} 
+                  className="w-full bg-[#25D366] text-white py-5 rounded-full font-bold hover:bg-[#20ba59] transition-all shadow-xl flex items-center justify-center gap-3 uppercase tracking-widest active:scale-[0.98]"
+                >
+                  <FaWhatsapp className="w-6 h-6" /> Order with WhatsApp
                 </button>
               </motion.div>
             </motion.div>
@@ -289,8 +279,7 @@ useEffect(() => {
                     key={relProduct.id} 
                     variants={fadeUp}
                     className="cursor-pointer group" 
-                    // Changed to use slug for navigation
-                   onClick={() => { navigate(`/product/${relProduct.slug}`); window.scrollTo(0, 0); }}
+                    onClick={() => { navigate(`/product/${relProduct.slug}`); window.scrollTo(0, 0); }}
                   >
                     <div className="bg-white overflow-hidden shadow-sm mb-4">
                       <img src={relProduct.image} alt={relProduct.name} className="w-full aspect-[3/4] object-cover group-hover:opacity-80 transition-opacity" />

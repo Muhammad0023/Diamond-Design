@@ -17,24 +17,18 @@ export default function Header() {
   const { getCartCount, toggleCart } = useCart();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // --- NEW LOGIC FOR HOME CLICK ---
   const handleHomeClick = (e) => {
     e.preventDefault();
     if (location.pathname === '/') {
-      // If already on home, scroll up and reset animation
       window.scrollTo({ top: 0, behavior: 'smooth' });
       sessionStorage.removeItem('heroAnimated');
-      // Small timeout to allow scroll to start before refresh
       setTimeout(() => window.location.reload(), 100); 
     } else {
-      // If on another page, go home
       navigate('/');
     }
     setIsMobileMenuOpen(false);
@@ -42,19 +36,20 @@ export default function Header() {
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
+  // ✅ Updated to /collections/ slugs
   const dressCategories = [
-    { name: 'Simple Dresses', url: '/dresses/simple' },
-    { name: 'Wedding Dresses', url: '/dresses/wedding' },
-    { name: 'Chiffon', url: '/dresses/chiffon' },
-    { name: 'Holidays', url: '/dresses/holiday' },
-    { name: 'Group Outfits', url: '/dresses/group' },
+    { name: 'Simple Dresses',  url: '/collections/simple-dresses' },
+    { name: 'Wedding Dresses', url: '/collections/wedding-dresses' },
+    { name: 'Chiffon',         url: '/collections/chiffon' },
+    { name: 'Holidays',        url: '/collections/holidays' },
+    { name: 'Group Outfits',   url: '/collections/group-outfits' },
   ];
 
   return (
     <>
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled 
-          ? 'bg-white/40 backdrop-blur-sm h-16 shadow-sm  border-white/20' 
+          ? 'bg-white/40 backdrop-blur-sm h-16 shadow-sm border-white/20' 
           : 'bg-transparent h-24'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
@@ -69,14 +64,10 @@ export default function Header() {
                 </div>
               </button>
 
-              {/* Desktop Logo with handleHomeClick */}
               <a href="/" onClick={handleHomeClick} className="hidden md:block">
                 <motion.img 
                   initial={{ scale: 1.5, opacity: 0 }}
-                  animate={{ 
-                    scale: scrolled ? 0.8 : 1, 
-                    opacity: 1 
-                  }}
+                  animate={{ scale: scrolled ? 0.8 : 1, opacity: 1 }}
                   transition={{ duration: 0.8, ease: "easeOut" }}
                   src={logo} 
                   alt="Diamond Design" 
@@ -85,7 +76,6 @@ export default function Header() {
               </a>
 
               <nav className="hidden md:flex items-center space-x-8">
-                {/* Home Nav Link with handleHomeClick */}
                 <a href="/" onClick={handleHomeClick} className="relative group text-sm font-medium text-gray-700 py-2">
                   Home
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-brand scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
@@ -118,18 +108,18 @@ export default function Header() {
                   </AnimatePresence>
                 </div>
 
-                <Link to="/mens" className="relative group text-sm font-medium text-gray-700 py-2">
+                {/* ✅ Updated Men's and Couples to /collections/ slugs */}
+                <Link to="/collections/mens-collection" className="relative group text-sm font-medium text-gray-700 py-2">
                   Men's
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-brand scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
                 </Link>
-                <Link to="/couples" className="relative group text-sm font-medium text-gray-700 py-2">
+                <Link to="/collections/couples-collection" className="relative group text-sm font-medium text-gray-700 py-2">
                   Couples
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-brand scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
                 </Link>
               </nav>
             </div>
 
-            {/* Mobile Logo with handleHomeClick */}
             <div className="md:hidden absolute left-1/2 -translate-x-1/2">
               <a href="/" onClick={handleHomeClick}>
                 <motion.img 
@@ -143,17 +133,9 @@ export default function Header() {
             </div>
 
             <div className="flex items-center gap-2 md:gap-4">
-              <div className="hidden md:block">
-                <SearchBar />
-              </div>
-              <div className="md:hidden">
-                <SearchBar isMobile={true} />
-              </div>
-
-              <button 
-                onClick={toggleCart}
-                className="relative p-2 text-gray-700 hover:text-brand transition-all hover:scale-110"
-              >
+              <div className="hidden md:block"><SearchBar /></div>
+              <div className="md:hidden"><SearchBar isMobile={true} /></div>
+              <button onClick={toggleCart} className="relative p-2 text-gray-700 hover:text-brand transition-all hover:scale-110">
                 <HiOutlineShoppingBag className="w-6 h-6" />
                 {getCartCount() > 0 && (
                   <span className="absolute top-1 right-1 bg-brand text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
@@ -166,6 +148,7 @@ export default function Header() {
         </div>
       </header>
 
+      {/* Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <div className="fixed inset-0 z-[60]">
@@ -199,30 +182,20 @@ export default function Header() {
                     {isDressesOpen && (
                       <ul className="ml-4 mt-4 space-y-4">
                         {dressCategories.map(cat => (
-                          <li key={cat.url}><Link to={cat.url} className="text-gray-500 text-lg block" onClick={toggleMobileMenu}>{cat.name}</Link></li>
+                          <li key={cat.url}>
+                            <Link to={cat.url} className="text-gray-500 text-lg block" onClick={toggleMobileMenu}>{cat.name}</Link>
+                          </li>
                         ))}
                       </ul>
                     )}
                   </li>
-                  <li><Link to="/mens" className="text-xl font-medium text-gray-900 block" onClick={toggleMobileMenu}>Men's</Link></li>
-                  <li><Link to="/couples" className="text-xl font-medium text-gray-900 block" onClick={toggleMobileMenu}>Couples</Link></li>
+                  {/* ✅ Updated mobile menu links */}
+                  <li><Link to="/collections/mens-collection" className="text-xl font-medium text-gray-900 block" onClick={toggleMobileMenu}>Men's</Link></li>
+                  <li><Link to="/collections/couples-collection" className="text-xl font-medium text-gray-900 block" onClick={toggleMobileMenu}>Couples</Link></li>
                   
-                  {/* --- SEPARATOR AND LIGHTER LINKS --- */}
                   <li className="pt-4 border-t border-gray-100 space-y-6">
-                    <Link 
-                      to="/about" 
-                      className="text-lg font-light text-gray-400 block" 
-                      onClick={toggleMobileMenu}
-                    >
-                      About Us
-                    </Link>
-                    <Link 
-                      to="/contact" 
-                      className="text-lg font-light text-gray-400 block" 
-                      onClick={toggleMobileMenu}
-                    >
-                      Contact Us
-                    </Link>
+                    <Link to="/about" className="text-lg font-light text-gray-400 block" onClick={toggleMobileMenu}>About Us</Link>
+                    <Link to="/contact" className="text-lg font-light text-gray-400 block" onClick={toggleMobileMenu}>Contact Us</Link>
                   </li>
                 </ul>
               </nav>

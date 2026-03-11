@@ -1,95 +1,99 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { IoLocationOutline, IoCallOutline, IoTimeOutline } from "react-icons/io5";
-import { MdOutlineEmail } from "react-icons/md";
-import { FaWhatsapp } from "react-icons/fa"; // Added WhatsApp icon for a better look
+import logo from '../assets/logo.png'; 
+import { Helmet } from 'react-helmet-async'; 
 
-export default function Contact() {
-  const contactDetails = [
-    {
-      icon: <IoLocationOutline className="w-6 h-6" />,
-      title: "Our Studio",
-      content: "Haya Hulet, Addis Ababa, Ethiopia",
-      link: "#"
-    },
-    {
-      icon: <IoCallOutline className="w-6 h-6" />,
-      title: "Phone & WhatsApp",
-      content: "+251 988 503 333",
-      link: "tel:+251988503333"
-    },
-    {
-      icon: <MdOutlineEmail className="w-6 h-6" />,
-      title: "Email Us",
-      content: "diamonddesign907@gmail.com",
-      link: "mailto:diamonddesign907@gmail.com"
-    },
-    {
-      icon: <IoTimeOutline className="w-6 h-6" />,
-      title: "Working Hours",
-      content: "Mon - Sat: 8:00 AM - 7:00 PM",
-      link: null
+export default function About() {
+  // Animation variants for the parent container
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.3, // Delay between each element
+        delayChildren: 0.2
+      }
     }
-  ];
+  };
+
+  // Animation variants for individual items
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut" }
+    }
+  };
 
   return (
-    <div className="pt-32 pb-20 bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-16"
-        >
-          <h1 className="text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'Roboto, sans-serif' }}>
-            Get In Touch
+    <div className="pt-32 pb-20 bg-white overflow-hidden">
+      <Helmet>
+        <title>About Us | Diamond Design – Authentic Ethiopian Habesha Dresses</title>
+        <meta name="description" content="Learn the story behind Diamond Design. Born in Addis Ababa, we craft authentic Habesha Kemis using traditional Ethiopian artisanship for women, men, and couples." />
+        <meta property="og:title" content="About Diamond Design | Our Heritage, Your Elegance" />
+        <meta property="og:description" content="Handcrafted Ethiopian Habesha dresses by skilled artisans in Addis Ababa. Discover our story and our mission to bring traditional elegance to the world." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://diamond-design.vercel.app/about" />
+        <link rel="canonical" href="https://diamond-design.vercel.app/about" />
+        <meta property="og:image" content="https://diamond-design.vercel.app/og-about.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />  
+        <meta name="twitter:title" content="About Diamond Design | Our Heritage, Your Elegance" />
+      </Helmet>
+      <motion.div 
+        className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8"
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }} // Only animate once
+      >
+        {/* Header Section */}
+        <motion.div variants={itemVariants} className="text-center mb-16">
+          <motion.img 
+            src={logo} 
+            alt="Diamond Design" 
+            className="h-24 w-auto mx-auto mb-8"
+            whileHover={{ scale: 1.05 }}
+          />
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6" style={{ fontFamily: 'Roboto, sans-serif' }}>
+            Our Heritage, Your Elegance
           </h1>
-          <p className="text-gray-600 max-w-2xl mx-auto" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
-            Have questions about sizing, custom orders, or shipping? Our team is here to help you find your perfect Habesha dress.
-          </p>
+          <motion.div 
+            className="w-24 h-1 bg-brand mx-auto"
+            initial={{ width: 0 }}
+            whileInView={{ width: 96 }}
+            transition={{ duration: 1, delay: 0.5 }}
+          ></motion.div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {contactDetails.map((item, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.1 }}
-              className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow"
-            >
-              <div className="w-12 h-12 bg-brand/10 text-brand rounded-full flex items-center justify-center mx-auto mb-6">
-                {item.icon}
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2" style={{ fontFamily: 'Roboto, sans-serif' }}>
-                {item.title}
-              </h3>
-              {item.link ? (
-                <a href={item.link} className="text-gray-600 hover:text-brand transition-colors" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
-                  {item.content}
-                </a>
-              ) : (
-                <p className="text-gray-600" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
-                  {item.content}
-                </p>
-              )}
+        {/* Content Section */}
+        <div className="prose prose-lg mx-auto text-gray-600 space-y-8" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
+          <motion.p variants={itemVariants} className="text-xl leading-relaxed text-center md:text-left">
+            Welcome to <strong className="text-gray-900 font-bold">Diamond Design</strong>, the premier destination for authentic Habesha Kemis. 
+            Born in the heart of Addis Ababa, our mission is to preserve the rich weaving traditions 
+            of Ethiopia while introducing them to the modern global fashion stage.
+          </motion.p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 py-10">
+            <motion.div variants={itemVariants} className="bg-gray-50 p-8 rounded-2xl border-l-4 border-brand">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">The Craftsmanship</h3>
+              <p>Every dress in our collection is handcrafted by skilled artisans. We use the finest cotton and intricate "Tilf" embroidery to ensure that every Diamond Design piece is a unique work of art.</p>
             </motion.div>
-          ))}
-        </div>
 
-        {/* --- BRANDED WHATSAPP DIRECT BUTTON --- */}
-        <div className="mt-16 text-center">
-          <a 
-            href="https://wa.me/251988503333" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 bg-brand text-white px-8 py-4 rounded-full font-bold hover:bg-brand-dark hover:scale-105 transition-all shadow-lg"
-            style={{ fontFamily: 'Roboto, sans-serif' }}
+            <motion.div variants={itemVariants} className="bg-gray-50 p-8 rounded-2xl border-l-4 border-brand">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Our Vision</h3>
+              <p>We believe that Habesha clothing is more than just a garment—it is a symbol of pride, identity, and celebration. We strive to make these timeless designs accessible to everyone, everywhere.</p>
+            </motion.div>
+          </div>
+
+          <motion.p 
+            variants={itemVariants}
+            className="text-center italic text-gray-500 pt-10 text-2xl"
           >
-            <FaWhatsapp className="w-6 h-6" />
-            Chat with us on WhatsApp
-          </a>
+            Elegance and beauty for a queen!
+          </motion.p>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

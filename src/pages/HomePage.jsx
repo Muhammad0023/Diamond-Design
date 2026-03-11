@@ -32,7 +32,7 @@ export default function HomePage() {
   <meta name="twitter:description" content="Authentic Habesha Kemis and Ethiopian dresses." />
   <meta name="twitter:image" content="https://diamond-design.vercel.app/og-image.jpg" />
   
-  <link rel="canonical" content="https://diamond-design.vercel.app/" />
+  <link rel="canonical" href="https://diamond-design.vercel.app/" />
 </Helmet>
       {/* FIX: The Hero is now outside of any "if" statements. 
           The key="constant-hero" tells React: "This is the same component, 

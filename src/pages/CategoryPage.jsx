@@ -1,41 +1,114 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { HiHome, HiChevronRight } from 'react-icons/hi';
-import { motion } from 'framer-motion'; // Added Framer Motion
+import { motion } from 'framer-motion';
 import { useProducts } from '../context/ProductsContext';
+import { Helmet } from 'react-helmet-async';
 
-// Category configurations
-const categoryConfig = {
-  simple: { title: 'Simple Dresses', description: 'Timeless elegance for everyday wear' },
-  wedding: { title: 'Wedding Dresses', description: 'Exquisite bridal collections for your special day' },
-  chiffon: { title: 'Chiffon', description: 'Light and flowing designs for any occasion' },
-  holiday: { title: 'Holidays', description: 'Festive attire for special celebrations' },
-  group: { title: 'Group Outfits', description: 'Coordinated sets for family and friends' },
-  mens: { title: "Men's Collection", description: 'Traditional Ethiopian menswear with modern style' },
-  couples: { title: 'Couples Collection', description: 'Matching collections for the perfect pair' },
+// ✅ URL slug → category key  (used when route is /collections/:slug)
+const slugToCategory = {
+  'simple-dresses':     'simple',
+  'wedding-dresses':    'wedding',
+  'chiffon':            'chiffon',
+  'holidays':           'holiday',
+  'group-outfits':      'group',
+  'mens-collection':    'mens',
+  'couples-collection': 'couples',
 };
 
-export default function CategoryPage({ manualCategory }) {
-  const { category: urlCategory } = useParams();
+// ✅ Category key → URL slug  (used to build links & canonical URLs)
+const categoryToSlug = {
+  simple:  'simple-dresses',
+  wedding: 'wedding-dresses',
+  chiffon: 'chiffon',
+  holiday: 'holidays',
+  group:   'group-outfits',
+  mens:    'mens-collection',
+  couples: 'couples-collection',
+};
+
+const categoryConfig = {
+  simple: {
+    title: 'Simple Dresses',
+    description: 'Timeless elegance for everyday wear',
+    seoTitle: 'Simple Dresses | Diamond Design – Everyday Ethiopian Elegance',
+    seoDescription: "Shop Diamond Design's simple Habesha dress collection. Timeless Ethiopian styles crafted for everyday wear, made with authentic traditional fabrics.",
+  },
+  wedding: {
+    title: 'Wedding Dresses',
+    description: 'Exquisite bridal collections for your special day',
+    seoTitle: 'Wedding Dresses | Diamond Design – Ethiopian Bridal Collection',
+    seoDescription: 'Find your perfect Habesha wedding dress at Diamond Design. Handcrafted Ethiopian bridal gowns for your unforgettable special day.',
+  },
+  chiffon: {
+    title: 'Chiffon',
+    description: 'Light and flowing designs for any occasion',
+    seoTitle: 'Chiffon | Diamond Design – Light & Flowing Ethiopian Style',
+    seoDescription: "Explore Diamond Design's chiffon Habesha dress collection. Light, elegant, and flowing Ethiopian dresses perfect for any occasion.",
+  },
+  holiday: {
+    title: 'Holidays',
+    description: 'Festive attire for special celebrations',
+    seoTitle: 'Holidays | Diamond Design – Ethiopian Festive Attire',
+    seoDescription: "Celebrate in style with Diamond Design's holiday Habesha collection. Traditional Ethiopian festive dresses for Timkat, Enkutatash, and every celebration.",
+  },
+  group: {
+    title: 'Group Outfits',
+    description: 'Coordinated sets for family and friends',
+    seoTitle: 'Group Outfits | Diamond Design – Matching Ethiopian Family Sets',
+    seoDescription: 'Shop coordinated Habesha group outfits at Diamond Design. Matching Ethiopian traditional dress sets for families, bridal parties, and special events.',
+  },
+  mens: {
+    title: "Men's Collection",
+    description: 'Traditional Ethiopian menswear with modern style',
+    seoTitle: "Men's Collection | Diamond Design – Traditional Ethiopian Menswear",
+    seoDescription: "Shop Diamond Design's men's Habesha collection. Authentic traditional Ethiopian menswear crafted with quality fabrics and modern style.",
+  },
+  couples: {
+    title: 'Couples Collection',
+    description: 'Matching collections for the perfect pair',
+    seoTitle: 'Couples Collection | Diamond Design – Matching Ethiopian Dress Sets',
+    seoDescription: 'Find matching Habesha couples outfits at Diamond Design. Coordinated Ethiopian traditional dress sets for weddings, holidays, and special occasions.',
+  },
+};
+
+const BASE_URL = 'https://diamond-design.vercel.app';
+
+export default function CategoryPage({ manualCategory, legacyMode = false }) {
+  // slug comes from /collections/:slug
+  // urlCategory comes from legacy /dresses/:category
+  const { slug, category: urlCategory } = useParams();
   const navigate = useNavigate();
   const { getProductsByCategory, loading } = useProducts();
-  
-  const category = manualCategory || urlCategory; 
-  
+
+  // ✅ Resolve which category key we're dealing with
+  let category;
+  if (manualCategory) {
+    category = manualCategory;             // prop from /mens or /couples legacy routes
+  } else if (slug) {
+    category = slugToCategory[slug];       // /collections/simple-dresses → 'simple'
+  } else if (urlCategory) {
+    category = urlCategory;               // legacy /dresses/simple → 'simple'
+  }
+
+  // ✅ Auto-redirect legacy URLs to new /collections/ URLs
+  useEffect(() => {
+    if (legacyMode && category && categoryToSlug[category]) {
+      navigate(`/collections/${categoryToSlug[category]}`, { replace: true });
+    }
+  }, [legacyMode, category, navigate]);
+
   const [sortBy, setSortBy] = useState('default');
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 20;
 
   const categoryData = categoryConfig[category];
+  const canonicalUrl = `${BASE_URL}/collections/${categoryToSlug[category] || ''}`;
 
-  // Animation Variants
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.1 }
-    }
+    visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.1 } }
   };
 
   const itemVariants = {
@@ -48,8 +121,7 @@ export default function CategoryPage({ manualCategory }) {
       if (!loading) navigate('/');
       return;
     }
-    const categoryProducts = getProductsByCategory(category);
-    setProducts(categoryProducts);
+    setProducts(getProductsByCategory(category));
     setCurrentPage(1);
     window.scrollTo(0, 0);
   }, [category, categoryData, navigate, getProductsByCategory, loading]);
@@ -79,6 +151,10 @@ export default function CategoryPage({ manualCategory }) {
   if (loading) {
     return (
       <div className="min-h-screen bg-white pt-24 pb-16">
+        <Helmet>
+          <title>{categoryData.seoTitle}</title>
+          <meta name="description" content={categoryData.seoDescription} />
+        </Helmet>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center min-h-[60vh]">
           <div className="text-center">
             <div className="w-16 h-16 border-4 border-brand border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
@@ -91,11 +167,23 @@ export default function CategoryPage({ manualCategory }) {
 
   return (
     <div className="min-h-screen bg-white pt-24 pb-16">
+
+      {/* ✅ Dynamic Helmet — unique title & description per category */}
+      <Helmet>
+        <title>{categoryData.seoTitle}</title>
+        <meta name="description" content={categoryData.seoDescription} />
+        <meta property="og:title" content={categoryData.seoTitle} />
+        <meta property="og:description" content={categoryData.seoDescription} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl} />
+        <link rel="canonical" href={canonicalUrl} />
+      </Helmet>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Breadcrumbs - Simple Fade In */}
-        <motion.nav 
-          initial={{ opacity: 0 }} 
+
+        {/* Breadcrumbs */}
+        <motion.nav
+          initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="flex items-center gap-2 text-sm mb-6"
         >
@@ -105,15 +193,18 @@ export default function CategoryPage({ manualCategory }) {
           <HiChevronRight className="w-4 h-4 text-gray-400" />
           {category !== 'mens' && category !== 'couples' && (
             <>
-              <span className="text-gray-500">Dresses</span>
+              {/* ✅ "Dresses" is now a clickable link */}
+              <a href="/collections/simple-dresses" className="text-gray-500 hover:text-brand transition-colors">
+                Dresses
+              </a>
               <HiChevronRight className="w-4 h-4 text-gray-400" />
             </>
           )}
           <span className="text-gray-900 font-medium">{categoryData.title}</span>
         </motion.nav>
 
-        {/* Page Header - Animated Slide Up */}
-        <motion.div 
+        {/* Page Header */}
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -123,13 +214,13 @@ export default function CategoryPage({ manualCategory }) {
             {categoryData.title}
           </h1>
           <p className="text-lg text-gray-600 max-w-3xl leading-relaxed" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
-            Discover our collection of {categoryData.title.toLowerCase()} featuring authentic Ethiopian craftsmanship. 
+            Discover our collection of {categoryData.title.toLowerCase()} featuring authentic Ethiopian craftsmanship.
             Each piece is carefully selected to bring you the finest quality and traditional designs with a modern touch.
           </p>
         </motion.div>
 
         {/* Filters Bar */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
@@ -138,7 +229,6 @@ export default function CategoryPage({ manualCategory }) {
           <div className="text-gray-600" style={{ fontFamily: 'Roboto, sans-serif' }}>
             Showing <span className="font-semibold text-gray-900">{products.length > 0 ? indexOfFirstProduct + 1 : 0}-{Math.min(indexOfLastProduct, products.length)}</span> of <span className="font-semibold text-gray-900">{products.length}</span> products
           </div>
-
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
@@ -152,63 +242,33 @@ export default function CategoryPage({ manualCategory }) {
           </select>
         </motion.div>
 
-        {/* Staggered Products Grid */}
+        {/* Products Grid */}
         {currentProducts.length > 0 ? (
           <>
-            <motion.div 
+            <motion.div
               variants={containerVariants}
               initial="hidden"
               animate="visible"
               className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
             >
               {currentProducts.map((product) => (
-                <ProductGridItem 
-                  key={product.id} 
-                  product={product} 
-                  navigate={navigate} 
-                  variants={itemVariants} 
-                />
+                <ProductGridItem key={product.id} product={product} navigate={navigate} variants={itemVariants} />
               ))}
             </motion.div>
 
-            {/* Pagination Controls */}
             {totalPages > 1 && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className="mt-12 flex justify-center items-center gap-2"
               >
-                <button
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className="px-4 py-2 border rounded-md disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
-                >
-                  Previous
-                </button>
-                
+                <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1} className="px-4 py-2 border rounded-md disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors">Previous</button>
                 <div className="flex gap-2">
                   {[...Array(totalPages)].map((_, i) => (
-                    <button
-                      key={i + 1}
-                      onClick={() => handlePageChange(i + 1)}
-                      className={`w-10 h-10 rounded-md border transition-colors ${
-                        currentPage === i + 1 
-                          ? 'bg-brand text-white border-brand' 
-                          : 'bg-white text-gray-700 hover:bg-gray-50'
-                      }`}
-                    >
-                      {i + 1}
-                    </button>
+                    <button key={i + 1} onClick={() => handlePageChange(i + 1)} className={`w-10 h-10 rounded-md border transition-colors ${currentPage === i + 1 ? 'bg-brand text-white border-brand' : 'bg-white text-gray-700 hover:bg-gray-50'}`}>{i + 1}</button>
                   ))}
                 </div>
-
-                <button
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  className="px-4 py-2 border rounded-md disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
-                >
-                  Next
-                </button>
+                <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages} className="px-4 py-2 border rounded-md disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors">Next</button>
               </motion.div>
             )}
           </>
@@ -230,7 +290,8 @@ function ProductGridItem({ product, navigate, variants }) {
 
   return (
     <motion.div
-      variants={variants}onClick={() => navigate(`/product/${product.slug}`)}
+      variants={variants}
+      onClick={() => navigate(`/product/${product.slug}`)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="cursor-pointer group"
@@ -239,32 +300,22 @@ function ProductGridItem({ product, navigate, variants }) {
         <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
           <img
             src={product.image}
-            alt={product.name}
-            className={`w-full h-full object-cover transition-opacity duration-500 absolute inset-0 ${
-              isHovered && product.hoverImage ? 'opacity-0' : 'opacity-100'
-            }`}
+            alt={`${product.name} – Ethiopian Habesha Dress`}
+            className={`w-full h-full object-cover transition-opacity duration-500 absolute inset-0 ${isHovered && product.hoverImage ? 'opacity-0' : 'opacity-100'}`}
           />
           {product.hoverImage && (
             <img
               src={product.hoverImage}
-              alt={product.name}
-              className={`w-full h-full object-cover transition-opacity duration-500 ${
-                isHovered ? 'opacity-100' : 'opacity-0'
-              }`}
+              alt={`${product.name} – alternate view`}
+              className={`w-full h-full object-cover transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'}`}
             />
           )}
           {product.isNew && (
-            <span className="absolute top-4 left-4 bg-brand text-white text-xs font-bold px-3 py-1 z-10">
-              NEW
-            </span>
+            <span className="absolute top-4 left-4 bg-brand text-white text-xs font-bold px-3 py-1 z-10">NEW</span>
           )}
         </div>
       </div>
-      {/* Space fixed: Removed min-h and mb-1, replaced with leading-tight */}
-      <h3 
-        className="text-gray-700 text-sm mb-0.5 line-clamp-2 leading-tight" 
-        style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}
-      >
+      <h3 className="text-gray-700 text-sm mb-0.5 line-clamp-2 leading-tight" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
         {product.name}
       </h3>
       <p className="text-gray-900 font-semibold text-base" style={{ fontFamily: 'Roboto, sans-serif' }}>

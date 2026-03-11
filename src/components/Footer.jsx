@@ -61,15 +61,15 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Column 2: Shop */}
+          {/* Column 2: Shop — ✅ Updated to /collections/ slugs */}
           <div>
             <h4 className="font-bold text-lg mb-4" style={{ fontFamily: 'Roboto, sans-serif' }}>SHOP</h4>
             <ul className="space-y-2">
               {[
-                { name: "Wedding Dresses", path: "/dresses/wedding" },
-                { name: "Holidays", path: "/dresses/holiday" },
-                { name: "Simple Dress", path: "/dresses/simple" },
-                { name: "Men's Collection", path: "/mens" }
+                { name: "Wedding Dresses",  path: "/collections/wedding-dresses" },
+                { name: "Holidays",         path: "/collections/holidays" },
+                { name: "Simple Dresses",   path: "/collections/simple-dresses" },
+                { name: "Men's Collection", path: "/collections/mens-collection" },
               ].map((item) => (
                 <li key={item.name}>
                   <Link 
@@ -84,14 +84,14 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 3: Support */}
+          {/* Column 3: Support — unchanged */}
           <div>
             <h4 className="font-bold text-lg mb-4" style={{ fontFamily: 'Roboto, sans-serif' }}>SUPPORT</h4>
             <ul className="space-y-2">
               {[
-                { name: "About Us", path: "/about" },
+                { name: "About Us",   path: "/about" },
                 { name: "Contact Us", path: "/contact" },
-                { name: "FAQs", path: "/faqs" },
+                { name: "FAQs",       path: "/faqs" },
                 { name: "Size Guide", path: "/size-guide" }
               ].map((item) => (
                 <li key={item.name}>
@@ -107,7 +107,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 4: Contact Info */}
+          {/* Column 4: Contact Info — unchanged */}
           <div>
             <h4 className="font-bold text-lg mb-4" style={{ fontFamily: 'Roboto, sans-serif' }}>CONTACT INFO</h4>
             <ul className="space-y-4">
@@ -130,22 +130,9 @@ export default function Footer() {
                   <IoCallOutline className="w-5 h-5 text-brand group-hover:text-white" />
                 </div>
                 <div className="flex flex-col space-y-1" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
-                  {/* Ethiopia Number */}
-                  <a 
-                    href="tel:+251988503333" 
-                    className="hover:text-brand transition-colors w-fit"
-                  >
-                    +251 988 503 333
-                  </a>
-                  
-                  {/* UK Number */}
+                  <a href="tel:+251988503333" className="hover:text-brand transition-colors w-fit">+251 988 503 333</a>
                   <div className="flex items-center gap-1">
-                    <a 
-                      href="tel:+447534785665" 
-                      className="hover:text-brand transition-colors w-fit"
-                    >
-                      +44 753 478 5665
-                    </a>
+                    <a href="tel:+447534785665" className="hover:text-brand transition-colors w-fit">+44 753 478 5665</a>
                     <span className="text-gray-400">(UK)</span>
                   </div>
                 </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import logo from '../assets/logo.png'; 
+import { Helmet } from 'react-helmet-async'; 
 
 export default function About() {
   // Animation variants for the parent container
@@ -27,6 +28,18 @@ export default function About() {
 
   return (
     <div className="pt-32 pb-20 bg-white overflow-hidden">
+      <Helmet>
+        <title>About Us | Diamond Design – Authentic Ethiopian Habesha Dresses</title>
+        <meta name="description" content="Learn the story behind Diamond Design. Born in Addis Ababa, we craft authentic Habesha Kemis using traditional Ethiopian artisanship for women, men, and couples." />
+        <meta property="og:title" content="About Diamond Design | Our Heritage, Your Elegance" />
+        <meta property="og:description" content="Handcrafted Ethiopian Habesha dresses by skilled artisans in Addis Ababa. Discover our story and our mission to bring traditional elegance to the world." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://diamond-design.vercel.app/about" />
+        <link rel="canonical" href="https://diamond-design.vercel.app/about" />
+        <meta property="og:image" content="https://diamond-design.vercel.app/og-about.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />  
+        <meta name="twitter:title" content="About Diamond Design | Our Heritage, Your Elegance" />
+      </Helmet>
       <motion.div 
         className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8"
         variants={containerVariants}
