@@ -24,32 +24,30 @@ const handleWhatsAppCheckout = () => {
   const baseUrl = window.location.origin; // Gets your website domain
   
   // Build order message
-  let message = 'Hi Diamond Design! 👋\n\nI want to order the following items:\n\n';
-  
-  cartItems.forEach((item, index) => {
-    // Construct the specific product link
-    const productLink = `${baseUrl}/product/${item.slug}`;
-    
-    message += `👗 *Item ${index + 1}: ${item.name}*\n`;
-    message += `    Size: ${item.size}\n`;
-    message += `    Qty: ${item.quantity}\n`;
-    message += `    Price: $${item.price * item.quantity}\n`;
-    message += `   🔗 View: ${productLink}\n\n`; // This makes it clickable
-  });
-  
-  message += `*Total Amount: $${getCartTotal()}*\n\n`;
-  message += 'Please confirm availability and delivery details. ✨';
-  
-  const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-  
-  // Open WhatsApp
-  window.open(whatsappURL, '_blank');
-  
-  // Optional: Clear cart after a delay so they don't double order
-  setTimeout(() => { 
-    clearCart(); 
-    toggleCart(); // Close the sidebar
-  }, 1000);
+ let message = 'Hi Diamond Design! 👋\n\nI’d like to order these designs:\n\n';
+
+cartItems.forEach((item, index) => {
+  const productLink = `${baseUrl}/product/${item.slug}`;
+
+  message += `✨ *Item ${index + 1}: ${item.name}*\n`;
+  message += `Size: ${item.size} | Qty: ${item.quantity}\n`;
+  message += `Price: $${item.price * item.quantity}\n`;
+  message += `🔗 ${productLink}\n\n`;
+});
+
+message += `💰 *Total: $${getCartTotal()}*\n\n`;
+message += 'Is this available? 💎';
+
+const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+// Open WhatsApp
+window.open(whatsappURL, '_blank');
+
+// Optional: Clear cart after a delay
+setTimeout(() => { 
+  clearCart(); 
+  toggleCart();
+}, 1000);
 };
 
   return (

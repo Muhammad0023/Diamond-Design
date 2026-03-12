@@ -39,11 +39,14 @@ function App() {
         <link rel="canonical" href="https://diamond-design.vercel.app/" />
       </Helmet>
 
-      <AuthProvider>
-        <ProductsProvider>
-          <SearchProvider>
-            <CartProvider>
-              <BrowserRouter>
+      {/* ✅ FIX: BrowserRouter wraps everything so useLocation works everywhere */}
+      <BrowserRouter>
+        <AuthProvider>
+          <ProductsProvider>
+            {/* ✅ FIX: SearchProvider is inside ProductsProvider AND BrowserRouter
+                so it always has access to latest products AND router context */}
+            <SearchProvider>
+              <CartProvider>
                 <ScrollToTopOnNavigate />
                 <Routes>
 
@@ -68,10 +71,10 @@ function App() {
                             <Route path="/product/:slug" element={<ProductDetail />} />
                             <Route path="/search" element={<SearchResults />} />
 
-                            {/* ✅ NEW: SEO-friendly /collections/:slug routes */}
+                            {/* ✅ SEO-friendly /collections/:slug routes */}
                             <Route path="/collections/:slug" element={<CategoryPage />} />
 
-                            {/* ✅ OLD routes kept — CategoryPage auto-redirects to /collections/ */}
+                            {/* ✅ Legacy routes — auto-redirects to /collections/ */}
                             <Route path="/dresses/:category" element={<CategoryPage legacyMode />} />
                             <Route path="/mens" element={<CategoryPage legacyMode manualCategory="mens" />} />
                             <Route path="/couples" element={<CategoryPage legacyMode manualCategory="couples" />} />
@@ -80,7 +83,7 @@ function App() {
                             <Route path="/about" element={<About />} />
                             <Route path="/contact" element={<Contact />} />
 
-                            {/* Placeholder Pages with Helmet */}
+                            {/* Placeholder Pages */}
                             <Route path="/faqs" element={
                               <>
                                 <Helmet>
@@ -108,11 +111,11 @@ function App() {
                     }
                   />
                 </Routes>
-              </BrowserRouter>
-            </CartProvider>
-          </SearchProvider>
-        </ProductsProvider>
-      </AuthProvider>
+              </CartProvider>
+            </SearchProvider>
+          </ProductsProvider>
+        </AuthProvider>
+      </BrowserRouter>
     </HelmetProvider>
   )
 }

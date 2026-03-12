@@ -51,14 +51,15 @@ export default function ProductDetail() {
   const handleWhatsAppOrder = () => {
     const phoneNumber = '+251988503333';
     const productUrl = window.location.href;
-    const message = encodeURIComponent(
-      `Hi Diamond Design! 👋\n\nI want to order:\n\n` +
-      `👗 Product: ${productDetail.name}\n` +
-      `📏 Size: ${selectedSize}\n` +
-      `💰 Price: $${productDetail.price}\n\n` +
-      `🔗 View Product: ${productUrl}\n\n` +
-      `Please confirm availability.`
-    );
+  const message = encodeURIComponent(
+  `Hi Diamond Design! 👋\n\n` +
+  `I’d like to order this design:\n\n` +
+  `✨ ${productDetail.name}\n` +
+  `Size: ${selectedSize} | Qty: ${quantity}` +
+  `Price: $${productDetail.price}\n\n` +
+  `🔗 ${productUrl}\n\n` +
+  `Is this available? 💎`
+);
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };
               

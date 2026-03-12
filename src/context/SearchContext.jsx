@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useCallback } from 'react';
 import { useProducts } from './ProductsContext';
 
 const SearchContext = createContext();
@@ -12,33 +12,22 @@ export function useSearch() {
 }
 
 export function SearchProvider({ children }) {
+  // ✅ FIX: We read products directly from ProductsContext here
+  // This means performSearch ALWAYS uses the latest products array
+  // even after Firebase finishes loading on page 2, 3, or any route
   const { products } = useProducts();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isSearching, setIsSearching] = useState(false);
 
-  // ✅ FIX: performSearch is now a pure function — NO setState inside
-  // It just filters and returns results. State updates are separate.
+  // Pure search function — no setState, safe to call inside useMemo
+  // Re-created whenever products array updates (Firebase load complete)
   const performSearch = useCallback((query) => {
     if (!query || query.trim() === '') return [];
-
     const searchTerm = query.toLowerCase().trim();
-
     return products.filter(product => {
-      const nameMatch = product.name.toLowerCase().includes(searchTerm);
-      const categoryMatch = product.category.toLowerCase().includes(searchTerm);
+      const nameMatch = product.name?.toLowerCase().includes(searchTerm);
+      const categoryMatch = product.category?.toLowerCase().includes(searchTerm);
       return nameMatch || categoryMatch;
     });
-  }, [products]);
-
-  // Separate function to update query state — only called from event handlers
-  const setQuery = useCallback((query) => {
-    setSearchQuery(query);
-  }, []);
-
-  const clearSearch = useCallback(() => {
-    setSearchQuery('');
-    setIsSearching(false);
-  }, []);
+  }, [products]); // ✅ re-runs when products load from Firebase
 
   const getSuggestion = useCallback((query) => {
     const commonTerms = [
@@ -51,17 +40,10 @@ export function SearchProvider({ children }) {
     ) || null;
   }, []);
 
-  const value = {
-    searchQuery,
-    isSearching,
-    performSearch,
-    setQuery,
-    clearSearch,
-    getSuggestion,
-  };
+  const clearSearch = useCallback(() => {}, []); // kept for backward compat
 
   return (
-    <SearchContext.Provider value={value}>
+    <SearchContext.Provider value={{ performSearch, getSuggestion, clearSearch }}>
       {children}
     </SearchContext.Provider>
   );
