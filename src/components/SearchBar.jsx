@@ -90,7 +90,7 @@ export default function SearchBar({ isMobile = false }) {
 
        {/* Mobile Search Modal */}
 {isOpen && (
-  <div className="fixed inset-0 bg-white z-[70] flex flex-col">
+  <div className="fixed inset-0 bg-transparent z-[70] flex flex-col">
     {/* MATERIAL SEARCH BAR - UPDATED */}
     <div className="flex items-center p-4">
       <div className="flex-1 flex items-center bg-gray-100 rounded-full px-4 py-3 shadow-inner border border-gray-200">
@@ -101,7 +101,7 @@ export default function SearchBar({ isMobile = false }) {
           value={inputValue}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
-          placeholder="Search messages"
+          placeholder="Search..."
           className="flex-1 bg-transparent text-gray-800 outline-none placeholder:text-gray-500"
           style={{ fontFamily: 'Roboto, sans-serif' }}
           autoFocus
@@ -163,12 +163,7 @@ export default function SearchBar({ isMobile = false }) {
                   </p>
                 </div>
               ) : (
-                <div className="text-center py-12">
-                  <HiOutlineSearch className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                  <p className="text-gray-500" style={{ fontFamily: 'Roboto, sans-serif' }}>
-                    Start typing to search...
-                  </p>
-                </div>
+                null
               )}
             </div>
           </div>
