@@ -76,7 +76,7 @@ export default function SearchBar({ isMobile = false }) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Mobile modal version
+ // Mobile modal version
   if (isMobile) {
     return (
       <>
@@ -88,87 +88,74 @@ export default function SearchBar({ isMobile = false }) {
           <HiOutlineSearch className="w-6 h-6" />
         </button>
 
-       {/* Mobile Search Modal */}
-{isOpen && (
-  <div className="fixed inset-0 bg-transparent z-[70] flex flex-col">
-    {/* MATERIAL SEARCH BAR - UPDATED */}
-    <div className="flex items-center p-4">
-      <div className="flex-1 flex items-center bg-gray-100 rounded-full px-4 py-3 shadow-inner border border-gray-200">
-        <HiOutlineSearch className="w-5 h-5 text-gray-500 mr-3" />
-        <input
-          ref={inputRef}
-          type="text"
-          value={inputValue}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          placeholder="Search..."
-          className="flex-1 bg-transparent text-gray-800 outline-none placeholder:text-gray-500"
-          style={{ fontFamily: 'Roboto, sans-serif' }}
-          autoFocus
-        />
-        {inputValue && (
-          <button onClick={handleClear} className="ml-2">
-            <HiX className="w-5 h-5 text-gray-400" />
-          </button>
-        )}
-      </div>
-      <button
-        onClick={() => {
-          setIsOpen(false);
-          handleClear();
-        }}
-        className="ml-4 text-gray-600 font-medium"
-      >
-        Cancel
-      </button>
-    </div>
+        {/* Mobile Search Modal */}
+        {isOpen && (
+          <div className="fixed inset-0 bg-white/90 backdrop-blur-md z-[70] flex flex-col">
+            {/* MATERIAL SEARCH BAR */}
+            <div className="flex items-center p-4">
+              <div className="flex-1 flex items-center bg-gray-100 rounded-full px-4 py-3 shadow-inner border border-gray-200">
+                <HiOutlineSearch className="w-5 h-5 text-gray-500 mr-3" />
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={inputValue}
+                  onChange={handleInputChange}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Search..."
+                  className="flex-1 bg-transparent text-gray-800 outline-none placeholder:text-gray-500"
+                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                  autoFocus
+                />
+                {inputValue && (
+                  <button onClick={handleClear} className="ml-2">
+                    <HiX className="w-5 h-5 text-gray-400" />
+                  </button>
+                )}
+              </div>
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                  handleClear();
+                }}
+                className="ml-4 text-gray-600 font-medium"
+              >
+                Cancel
+              </button>
+            </div>
 
-            {/* Results */}
-            <div className="flex-1 overflow-y-auto p-4">
-              {dropdownResults.length > 0 ? (
-                <div className="space-y-3">
+            {/* RESULTS: Solid background and fixed layout */}
+            <div className="flex-1 overflow-y-auto px-4 bg-white z-[80]">
+              {dropdownResults.length > 0 && (
+                <div className="space-y-3 pt-4">
                   {dropdownResults.map((product) => (
                     <div
                       key={product.id}
                       onClick={() => goToProduct(product.id)}
-                      className="flex gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors"
+                      className="flex gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer bg-white border border-gray-100 shadow-sm"
                     >
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-16 h-16 object-cover rounded"
-                      />
+                      <img src={product.image} className="w-16 h-16 object-cover rounded" />
                       <div className="flex-1">
-                        <h4 className="font-medium text-gray-900 text-sm line-clamp-2" style={{ fontFamily: 'Roboto, sans-serif' }}>
-                          {product.name}
-                        </h4>
-                        <p className="text-brand font-semibold text-sm mt-1" style={{ fontFamily: 'Roboto, sans-serif' }}>
-                          ${product.price}
-                        </p>
+                        <h4 className="font-medium text-gray-900 text-sm">{product.name}</h4>
+                        <p className="text-brand font-semibold text-sm">${product.price}</p>
                       </div>
                     </div>
                   ))}
                   <button
                     onClick={goToSearchResults}
-                    className="w-full py-3 text-brand font-semibold hover:bg-brand/10 rounded-lg transition-colors"
-                    style={{ fontFamily: 'Roboto, sans-serif' }}
+                    className="w-full py-4 text-brand font-semibold bg-brand/5 hover:bg-brand/10 rounded-lg mb-6"
                   >
-                    View all results ({dropdownResults.length}+)
+                    View all results
                   </button>
                 </div>
-              ) : inputValue ? (
-                <div className="text-center py-12">
-                  <p className="text-gray-500" style={{ fontFamily: 'Roboto, sans-serif' }}>
-                    No results found for "{inputValue}"
-                  </p>
-                </div>
-              ) : (
-                null
+              )}
+
+              {inputValue.length > 0 && dropdownResults.length === 0 && (
+                <p className="text-center text-gray-500 mt-10">No products found.</p>
               )}
             </div>
-          </div>
+          </div> // <-- THIS CLOSING DIV WAS MISSING
         )}
-      </>
+      </> // <-- THIS CLOSING FRAGMENT WAS MISSING
     );
   }
 
