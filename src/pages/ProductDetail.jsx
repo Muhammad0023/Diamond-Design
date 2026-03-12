@@ -69,7 +69,7 @@ export default function ProductDetail() {
   const handleShare = async () => {
     const shareData = {
       title: `${productDetail.name} | Diamond Design`,
-      text: `Check out this beautiful Habesha style from Diamond Design! 🇪🇹✨`,
+      text: `Check out this beautiful Habesha style from Diamond Design! 🇪🇹 🇪🇷 ✨`,
       url: window.location.href,
     };
     if (navigator.share) {
@@ -237,7 +237,7 @@ export default function ProductDetail() {
               <motion.div variants={fadeUp} className="mb-10 max-w-2xl">
                 <h3 className="font-bold text-lg mb-2" style={{ fontFamily: 'Roboto, sans-serif' }}>Description</h3>
                 <p className="text-gray-600 leading-relaxed text-lg" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
-                  {productDetail.description || "Beautiful handcrafted Ethiopian traditional dress featuring intricate embroidery and premium fabric."}
+                  {productDetail.description || "Beautiful handcrafted Habes traditional dress featuring intricate embroidery and premium fabric."}
                 </p>
               </motion.div>
 
