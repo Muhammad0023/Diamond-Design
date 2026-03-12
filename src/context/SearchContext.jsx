@@ -12,27 +12,36 @@ export function useSearch() {
 }
 
 export function SearchProvider({ children }) {
-  // ✅ FIX: We read products directly from ProductsContext here
-  // This means performSearch ALWAYS uses the latest products array
-  // even after Firebase finishes loading on page 2, 3, or any route
   const { products } = useProducts();
 
-  // Pure search function — no setState, safe to call inside useMemo
-  // Re-created whenever products array updates (Firebase load complete)
   const performSearch = useCallback((query) => {
     if (!query || query.trim() === '') return [];
+    
     const searchTerm = query.toLowerCase().trim();
+    
+    // ✅ IMPROVED LOGIC: Simple synonym/plural mapping
+    let modifiedSearch = searchTerm;
+    if (searchTerm === 'mice') modifiedSearch = 'mouse';
+    if (searchTerm === 'dresses') modifiedSearch = 'dress';
+
     return products.filter(product => {
-      const nameMatch = product.name?.toLowerCase().includes(searchTerm);
-      const categoryMatch = product.category?.toLowerCase().includes(searchTerm);
-      return nameMatch || categoryMatch;
+      const name = product.name?.toLowerCase() || '';
+      const category = product.category?.toLowerCase() || '';
+      const description = product.description?.toLowerCase() || ''; // Added description check
+
+      // Check if the name includes the term OR the term includes the name
+      const nameMatch = name.includes(modifiedSearch) || modifiedSearch.includes(name);
+      const categoryMatch = category.includes(modifiedSearch);
+      const descriptionMatch = description.includes(modifiedSearch);
+
+      return nameMatch || categoryMatch || descriptionMatch;
     });
-  }, [products]); // ✅ re-runs when products load from Firebase
+  }, [products]);
 
   const getSuggestion = useCallback((query) => {
     const commonTerms = [
       'wedding', 'simple', 'chiffon', 'holiday', 'group', 'mens', 'couples',
-      'dress', 'kemis', 'habesha', 'white', 'golden', 'blue', 'red', 'green'
+      'dress', 'kemis', 'habesha', 'white', 'golden', 'blue', 'red', 'green', 'mouse'
     ];
     const searchTerm = query.toLowerCase().trim();
     return commonTerms.find(term =>
@@ -40,7 +49,7 @@ export function SearchProvider({ children }) {
     ) || null;
   }, []);
 
-  const clearSearch = useCallback(() => {}, []); // kept for backward compat
+  const clearSearch = useCallback(() => {}, []);
 
   return (
     <SearchContext.Provider value={{ performSearch, getSuggestion, clearSearch }}>

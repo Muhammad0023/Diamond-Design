@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { HiOutlineSearch, HiX, HiClock } from 'react-icons/hi';
 import { useSearch } from '../context/SearchContext';
@@ -10,7 +10,6 @@ function getHistory() {
   try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); }
   catch { return []; }
 }
-
 function saveToHistory(product) {
   try {
     const history = getHistory().filter(p => p.id !== product.id);
@@ -19,48 +18,48 @@ function saveToHistory(product) {
   } catch {}
 }
 
-function clearHistory() {
-  localStorage.removeItem(HISTORY_KEY);
-}
-
 export default function SearchBar({ isMobile = false }) {
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [dropdownResults, setDropdownResults] = useState([]);
   const [history, setHistory] = useState([]);
+  const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0 });
+  
   const inputRef = useRef(null);
-  const dropdownRef = useRef(null);
+  const containerRef = useRef(null);
+  
   const navigate = useNavigate();
   const location = useLocation();
   const { performSearch } = useSearch();
 
-  // ✅ FIX: On route change, close modal but KEEP inputValue so history still shows
   useEffect(() => {
     setIsOpen(false);
-    setDropdownResults([]);
-    // NOTE: intentionally NOT clearing inputValue here
-    // so when user comes back, input is empty and history shows
     setInputValue('');
+    setDropdownResults([]);
     document.body.style.overflow = 'unset';
   }, [location.pathname, location.search]);
 
-  // ✅ FIX: Only lock scroll on mobile modal, never on desktop
   useEffect(() => {
     if (isMobile && isOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
     }
-    return () => { document.body.style.overflow = 'unset'; };
   }, [isMobile, isOpen]);
 
-  // Load history when opening
   useEffect(() => {
     if (isOpen) {
       setHistory(getHistory());
-      setTimeout(() => inputRef.current?.focus(), 50);
+      setTimeout(() => inputRef.current?.focus(), 100);
     }
   }, [isOpen]);
+
+  const updateDropdownPos = useCallback(() => {
+    if (inputRef.current) {
+      const rect = inputRef.current.getBoundingClientRect();
+      setDropdownPos({ top: rect.bottom + 8, left: rect.left });
+    }
+  }, []);
 
   const handleInputChange = (e) => {
     const query = e.target.value;
@@ -73,14 +72,16 @@ export default function SearchBar({ isMobile = false }) {
     setDropdownResults(results.slice(0, 5));
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && inputValue.trim() !== '') goToSearchResults();
-    if (e.key === 'Escape') closeAll();
+  const clearHistory = (e) => {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+    localStorage.removeItem(HISTORY_KEY);
+    setHistory([]);
   };
 
-  const goToSearchResults = () => {
+  const goToSearchResults = (e) => {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
     if (inputValue.trim() !== '') {
-      navigate(`/search?q=${encodeURIComponent(inputValue)}`);
+      navigate(`/search?q=${encodeURIComponent(inputValue.trim())}`);
     }
   };
 
@@ -89,26 +90,14 @@ export default function SearchBar({ isMobile = false }) {
     navigate(`/product/${product.slug}`);
   };
 
-  const closeAll = () => {
-    setIsOpen(false);
-    setInputValue('');
-    setDropdownResults([]);
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') goToSearchResults();
+    if (e.key === 'Escape') setIsOpen(false);
   };
 
-  const handleClear = () => {
-    setInputValue('');
-    setDropdownResults([]);
-    inputRef.current?.focus();
-  };
-
-  // Close desktop dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target) &&
-        !inputRef.current?.contains(e.target)
-      ) {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
         setDropdownResults([]);
       }
     };
@@ -120,31 +109,19 @@ export default function SearchBar({ isMobile = false }) {
   const showResults = inputValue !== '' && dropdownResults.length > 0;
   const showNoResults = inputValue !== '' && dropdownResults.length === 0;
 
-  // --- MOBILE VERSION ---
   if (isMobile) {
     return (
-      <>
-        <button
-          onClick={() => setIsOpen(true)}
-          className="p-2 text-gray-700 hover:text-brand transition-transform hover:scale-110"
-        >
+      <div ref={containerRef}>
+        <button onClick={() => setIsOpen(true)} className="p-2 text-gray-700">
           <HiOutlineSearch className="w-6 h-6" />
         </button>
 
-        {/* ✅ FIX: z-[200] — highest z-index, above everything including header (z-50) and mobile menu (z-60) */}
         {isOpen && (
-          <div
-            className="fixed inset-0 z-[200] flex flex-col bg-white"
-            style={{ top: 0, left: 0, right: 0, bottom: 0 }}
-          >
-            {/* Solid white background — nothing can bleed through */}
-            
-
-            {/* STICKY SEARCH HEADER */}
-            <div className="flex-shrink-0 w-full bg-white pb-3 pt-4 border-b border-gray-100 shadow-sm">
+          <div className="fixed inset-0 z-[9999] flex flex-col bg-black/40 backdrop-blur-md">
+            <div className="flex-shrink-0 w-full bg-white pb-3 pt-4 border-b border-gray-100">
               <div className="flex items-center gap-2 px-3">
-                <div className="flex-1 flex items-center bg-gray-100 rounded-full px-4 py-3 border border-gray-200 min-w-0">
-                  <HiOutlineSearch className="w-5 h-5 text-gray-400 mr-2 flex-shrink-0" />
+                <div className="flex-1 flex items-center bg-gray-100 rounded-full px-4 py-3 border border-gray-200">
+                  <HiOutlineSearch className="w-5 h-5 text-gray-400 mr-2" />
                   <input
                     ref={inputRef}
                     type="text"
@@ -152,147 +129,74 @@ export default function SearchBar({ isMobile = false }) {
                     onChange={handleInputChange}
                     onKeyDown={handleKeyDown}
                     placeholder="Search..."
-                    className="flex-1 bg-transparent text-gray-800 outline-none text-base min-w-0"
-                    style={{ fontFamily: 'Roboto, sans-serif' }}
+                    className="flex-1 bg-transparent outline-none text-base text-gray-800"
                     autoFocus
                   />
                   {inputValue && (
-                    <button onClick={handleClear} className="ml-2 flex-shrink-0">
-                      <HiX className="w-4 h-4 text-gray-400" />
-                    </button>
+                    <button onClick={() => setInputValue('')}><HiX className="w-4 h-4 text-gray-400" /></button>
                   )}
                 </div>
-                {/* ✅ FIX: Cancel always fully visible */}
-                <button
-                  onClick={closeAll}
-                  className="flex-shrink-0 text-gray-600 font-medium text-sm px-2 py-1"
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
-                >
-                  Cancel
-                </button>
+                <button onClick={() => setIsOpen(false)} className="text-gray-900 font-bold px-2">Cancel</button>
               </div>
             </div>
 
-            {/* ✅ FIX: Scrollable results — overscroll-contain keeps it free */}
-            <div className="flex-1 overflow-y-auto overscroll-contain">
-              <div className="px-4 pb-20 pt-2">
-
-                {/* Recent History */}
+            <div className="flex-1 overflow-y-auto">
+              <div className="pb-20">
                 {showHistory && (
-                  <div>
-                    <div className="flex items-center justify-between py-3">
-                      <span
-                        className="text-xs font-semibold text-gray-400 uppercase tracking-widest"
-                        style={{ fontFamily: 'Roboto, sans-serif' }}
-                      >
-                        Recent
-                      </span>
-                      <button
-                        onClick={() => { clearHistory(); setHistory([]); }}
-                        className="text-xs text-gray-400 hover:text-brand"
-                        style={{ fontFamily: 'Roboto, sans-serif' }}
-                      >
-                        Clear
+                  <div className="bg-white p-4 shadow-xl rounded-b-2xl">
+                    <div className="flex justify-between items-center mb-2">
+                      <p className="text-xs font-bold text-gray-400 uppercase">Recent</p>
+                      <button onMouseDown={clearHistory} className="text-xs font-bold text-gray-400 hover:text-gray-600">
+                        Clear All
                       </button>
                     </div>
-                    <div className="space-y-1">
-                      {history.map((product) => (
-                        <div
-                          key={product.id}
-                          onClick={() => goToProduct(product)}
-                          className="flex items-center gap-3 px-2 py-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
-                        >
-                          <img
-                            src={product.image}
-                            className="w-11 h-11 object-cover rounded-lg flex-shrink-0"
-                            alt={product.name}
-                          />
-                          <div className="flex-1 min-w-0">
-                            <h4
-                              className="text-sm font-medium text-gray-800 line-clamp-1"
-                              style={{ fontFamily: 'Roboto, sans-serif' }}
-                            >
-                              {product.name}
-                            </h4>
-                            <p
-                              className="text-sm text-brand font-bold"
-                              style={{ fontFamily: 'Roboto, sans-serif' }}
-                            >
-                              ${product.price}
-                            </p>
-                          </div>
-                          <HiClock className="w-4 h-4 text-gray-300 flex-shrink-0" />
+                    {history.map((product) => (
+                      <div key={product.id} onMouseDown={() => goToProduct(product)} className="flex items-center gap-3 py-3 border-b border-gray-50 last:border-0">
+                        <img src={product.image} className="w-12 h-12 object-cover rounded-lg" alt="" />
+                        <div className="flex-1">
+                          <h4 className="text-sm font-medium text-gray-800">{product.name}</h4>
+                          <p className="text-brand font-bold">${product.price}</p>
                         </div>
-                      ))}
-                    </div>
+                      </div>
+                    ))}
                   </div>
                 )}
 
-                {/* ✅ FIX: Search Results — NO border, NO shadow, NO rectangle */}
                 {showResults && (
-                  <div>
-                    <div className="space-y-1 pt-2">
-                      {dropdownResults.map((product) => (
-                        <div
-                          key={product.id}
-                          onClick={() => goToProduct(product)}
-                          className="flex gap-3 px-2 py-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors"
-                        >
-                          <img
-                            src={product.image}
-                            className="w-11 h-11 object-cover rounded-lg flex-shrink-0"
-                            alt={product.name}
-                          />
-                          <div className="flex-1 min-w-0">
-                            <h4
-                              className="text-sm font-medium text-gray-800 line-clamp-2"
-                              style={{ fontFamily: 'Roboto, sans-serif' }}
-                            >
-                              {product.name}
-                            </h4>
-                            <p
-                              className="text-sm text-brand font-bold mt-0.5"
-                              style={{ fontFamily: 'Roboto, sans-serif' }}
-                            >
-                              ${product.price}
-                            </p>
-                          </div>
+                  <div className="bg-white p-4 shadow-xl rounded-b-2xl">
+                    {dropdownResults.map((product) => (
+                      <div key={product.id} onMouseDown={() => goToProduct(product)} className="flex gap-3 p-3 hover:bg-gray-50 rounded-lg">
+                        <img src={product.image} className="w-12 h-12 object-cover rounded-lg" alt="" />
+                        <div className="flex-1">
+                          <h4 className="text-sm font-medium text-gray-800">{product.name}</h4>
+                          <p className="text-brand font-bold">${product.price}</p>
                         </div>
-                      ))}
-                    </div>
-                    <button
-                      onClick={goToSearchResults}
-                      className="w-full py-4 mt-3 text-brand font-semibold bg-brand/5 hover:bg-brand/10 rounded-xl transition-colors border border-brand/10 text-sm"
-                      style={{ fontFamily: 'Roboto, sans-serif' }}
+                      </div>
+                    ))}
+                    <button 
+                      onMouseDown={(e) => goToSearchResults(e)} 
+                      className="w-full py-4 mt-2 text-brand font-bold bg-brand/5 rounded-xl border border-brand/10 active:bg-brand/20"
                     >
                       View all results for "{inputValue}"
                     </button>
                   </div>
                 )}
 
-                {/* No Results */}
                 {showNoResults && (
-                  <div className="text-center py-16">
-                    <p
-                      className="text-gray-400 text-sm"
-                      style={{ fontFamily: 'Roboto, sans-serif' }}
-                    >
-                      No results for "{inputValue}"
-                    </p>
+                  <div className="text-center py-16 bg-white shadow-xl rounded-b-2xl">
+                    <p className="text-gray-400">No results found for "{inputValue}"</p>
                   </div>
                 )}
-
               </div>
             </div>
           </div>
         )}
-      </>
+      </div>
     );
   }
 
-  // --- DESKTOP VERSION ---
   return (
-    <div className="relative">
+    <div className="relative" ref={containerRef}>
       <div className="relative">
         <HiOutlineSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
         <input
@@ -301,116 +205,60 @@ export default function SearchBar({ isMobile = false }) {
           value={inputValue}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
-          onFocus={() => setHistory(getHistory())}
+          onFocus={() => { setHistory(getHistory()); updateDropdownPos(); }}
           placeholder="Search..."
-          className="w-64 pl-10 pr-10 py-2 border border-gray-300 rounded-full text-sm outline-none focus:border-brand transition-colors"
-          style={{ fontFamily: 'Roboto, sans-serif' }}
+          className="w-64 pl-10 pr-10 py-2 border border-gray-300 rounded-full text-sm outline-none focus:border-brand"
         />
-        {inputValue && (
-          <button
-            onClick={handleClear}
-            className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 rounded-full"
-          >
-            <HiX className="w-4 h-4 text-gray-400" />
-          </button>
-        )}
       </div>
 
-      {/* Desktop Dropdown */}
       {(showResults || showHistory) && (
         <div
-          ref={dropdownRef}
-          className="absolute top-full mt-2 w-96 bg-white border border-gray-200 rounded-2xl shadow-2xl max-h-[480px] overflow-y-auto z-[200]"
+          className="fixed w-80 bg-white border border-gray-200 rounded-2xl shadow-2xl z-[9999] overflow-hidden"
+          style={{ top: dropdownPos.top, left: dropdownPos.left }}
         >
-          {/* History */}
           {showHistory && (
             <div className="p-3">
-              <div className="flex items-center justify-between px-2 pb-2">
-                <span
-                  className="text-xs font-semibold text-gray-400 uppercase tracking-widest"
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
+              <div className="flex justify-between items-center px-2 mb-1">
+                <p className="text-[10px] font-bold text-gray-400 uppercase">Recent Searches</p>
+                {/* ✅ Added Clear All button for Desktop */}
+                <button 
+                  onMouseDown={clearHistory} 
+                  className="text-[10px] font-bold text-gray-400 hover:text-brand cursor-pointer uppercase"
                 >
-                  Recent
-                </span>
-                <button
-                  onClick={() => { clearHistory(); setHistory([]); }}
-                  className="text-xs text-gray-400 hover:text-brand"
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
-                >
-                  Clear
+                  Clear All
                 </button>
               </div>
               {history.map((product) => (
-                <div
-                  key={product.id}
-                  onClick={() => goToProduct(product)}
-                  className="flex gap-3 px-2 py-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors"
-                >
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-11 h-11 object-cover rounded-lg flex-shrink-0"
-                  />
+                <div key={product.id} onMouseDown={() => goToProduct(product)} className="flex gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                  <img src={product.image} className="w-10 h-10 object-cover rounded-md" alt="" />
                   <div className="flex-1 min-w-0">
-                    <h4
-                      className="font-medium text-gray-800 text-sm line-clamp-1"
-                      style={{ fontFamily: 'Roboto, sans-serif' }}
-                    >
-                      {product.name}
-                    </h4>
-                    <p
-                      className="text-brand font-bold text-sm"
-                      style={{ fontFamily: 'Roboto, sans-serif' }}
-                    >
-                      ${product.price}
-                    </p>
+                    <h4 className="text-sm font-medium truncate text-gray-800">{product.name}</h4>
+                    <p className="text-brand font-bold text-xs">${product.price}</p>
                   </div>
-                  <HiClock className="w-4 h-4 text-gray-300 self-center flex-shrink-0" />
+                  <HiClock className="w-4 h-4 text-gray-300 self-center" />
                 </div>
               ))}
             </div>
           )}
 
-          {/* ✅ FIX: Results — NO border, NO shadow rectangle */}
           {showResults && (
-            <>
-              <div className="p-2">
-                {dropdownResults.map((product) => (
-                  <div
-                    key={product.id}
-                    onClick={() => goToProduct(product)}
-                    className="flex gap-3 px-2 py-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors"
-                  >
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-11 h-11 object-cover rounded-lg flex-shrink-0"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <h4
-                        className="font-medium text-gray-800 text-sm line-clamp-2"
-                        style={{ fontFamily: 'Roboto, sans-serif' }}
-                      >
-                        {product.name}
-                      </h4>
-                      <p
-                        className="text-brand font-bold text-sm mt-0.5"
-                        style={{ fontFamily: 'Roboto, sans-serif' }}
-                      >
-                        ${product.price}
-                      </p>
-                    </div>
+            <div className="p-2 border-t border-gray-50">
+              {dropdownResults.map((product) => (
+                <div key={product.id} onMouseDown={() => goToProduct(product)} className="flex gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                  <img src={product.image} className="w-10 h-10 object-cover rounded-md" alt="" />
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-sm font-medium truncate text-gray-800">{product.name}</h4>
+                    <p className="text-brand font-bold text-xs">${product.price}</p>
                   </div>
-                ))}
-              </div>
-              <button
-                onClick={goToSearchResults}
-                className="w-full py-3 border-t border-gray-100 text-brand font-semibold hover:bg-brand/5 transition-colors text-sm rounded-b-2xl"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                </div>
+              ))}
+              <button 
+                onMouseDown={(e) => goToSearchResults(e)} 
+                className="w-full py-3 mt-2 text-brand font-bold hover:bg-brand/5 text-sm border-t border-gray-100 rounded-b-xl"
               >
-                View all results for "{inputValue}" →
+                View all results →
               </button>
-            </>
+            </div>
           )}
         </div>
       )}

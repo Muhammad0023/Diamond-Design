@@ -36,7 +36,6 @@ export default function Header() {
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
-  // ✅ Updated to /collections/ slugs
   const dressCategories = [
     { name: 'Simple Dresses',  url: '/collections/simple-dresses' },
     { name: 'Wedding Dresses', url: '/collections/wedding-dresses' },
@@ -47,6 +46,27 @@ export default function Header() {
 
   return (
     <>
+      {/* ✅ FIX: SearchBar lives OUTSIDE <header> so backdrop-blur never traps it */}
+      {/* Desktop SearchBar — positioned absolutely to match header layout */}
+<div className="fixed top-0 left-0 right-0 z-[9999] pointer-events-none">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+    <div className="flex justify-end items-center h-16 md:h-24 transition-all duration-500"
+         style={{ height: scrolled ? '64px' : '96px' }}>
+      
+      {/* Desktop SearchBar */}
+      <div className="hidden md:block pointer-events-auto mr-12">
+        <SearchBar />
+      </div>
+
+      {/* Mobile SearchBar */}
+      <div className="md:hidden pointer-events-auto mr-10">
+        <SearchBar isMobile={true} />
+      </div>
+
+    </div>
+  </div>
+</div>
+
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled 
           ? 'bg-white/40 backdrop-blur-sm h-16 shadow-sm border-white/20' 
@@ -108,7 +128,6 @@ export default function Header() {
                   </AnimatePresence>
                 </div>
 
-                {/* ✅ Updated Men's and Couples to /collections/ slugs */}
                 <Link to="/collections/mens-collection" className="relative group text-sm font-medium text-gray-700 py-2">
                   Men's
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-brand scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
@@ -132,9 +151,11 @@ export default function Header() {
               </a>
             </div>
 
+            {/* ✅ Cart button stays inside header — placeholder div keeps layout balanced */}
             <div className="flex items-center gap-2 md:gap-4">
-              <div className="hidden md:block"><SearchBar /></div>
-              <div className="md:hidden"><SearchBar isMobile={true} /></div>
+              {/* Invisible placeholder to keep cart button position */}
+              <div className="hidden md:block w-64" />
+              <div className="md:hidden w-10" />
               <button onClick={toggleCart} className="relative p-2 text-gray-700 hover:text-brand transition-all hover:scale-110">
                 <HiOutlineShoppingBag className="w-6 h-6" />
                 {getCartCount() > 0 && (
@@ -189,10 +210,8 @@ export default function Header() {
                       </ul>
                     )}
                   </li>
-                  {/* ✅ Updated mobile menu links */}
                   <li><Link to="/collections/mens-collection" className="text-xl font-medium text-gray-900 block" onClick={toggleMobileMenu}>Men's</Link></li>
                   <li><Link to="/collections/couples-collection" className="text-xl font-medium text-gray-900 block" onClick={toggleMobileMenu}>Couples</Link></li>
-                  
                   <li className="pt-4 border-t border-gray-100 space-y-6">
                     <Link to="/about" className="text-lg font-light text-gray-400 block" onClick={toggleMobileMenu}>About Us</Link>
                     <Link to="/contact" className="text-lg font-light text-gray-400 block" onClick={toggleMobileMenu}>Contact Us</Link>
