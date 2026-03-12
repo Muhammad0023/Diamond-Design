@@ -31,13 +31,12 @@ const handleWhatsAppCheckout = () => {
     const productLink = `${baseUrl}/product/${item.slug}`;
     
     message += `👗 *Item ${index + 1}: ${item.name}*\n`;
-    message += `   📏 Size: ${item.size}\n`;
-    message += `   🔢 Qty: ${item.quantity}\n`;
-    message += `   💰 Price: $${item.price * item.quantity}\n`;
+    message += `    Size: ${item.size}\n`;
+    message += `    Qty: ${item.quantity}\n`;
+    message += `    Price: $${item.price * item.quantity}\n`;
     message += `   🔗 View: ${productLink}\n\n`; // This makes it clickable
   });
   
-  message += `━━━━━━━━━━━━━━━\n`;
   message += `*Total Amount: $${getCartTotal()}*\n\n`;
   message += 'Please confirm availability and delivery details. ✨';
   

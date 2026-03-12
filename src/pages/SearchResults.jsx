@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'; // Swapped useEffect for useMemo
+import { useState, useMemo } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useSearch } from '../context/SearchContext';
 import { HiOutlineSearch } from 'react-icons/hi';
@@ -12,14 +12,12 @@ export default function SearchResults() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('relevance');
 
-  // 1. CALCULATE BASE RESULTS (Derived from Query)
-  // Instead of an Effect + State, we calculate this directly when query changes
+  // ✅ FIX: performSearch is now pure (no setState) so useMemo is safe
   const results = useMemo(() => {
     if (!query) return [];
     return performSearch(query);
   }, [query, performSearch]);
 
-  // 2. CALCULATE SUGGESTION
   const suggestion = useMemo(() => {
     if (query && results.length === 0) {
       return getSuggestion(query);
@@ -27,17 +25,11 @@ export default function SearchResults() {
     return null;
   }, [query, results, getSuggestion]);
 
-  // 3. CALCULATE FILTERED & SORTED RESULTS
-  // This replaces your second useEffect and the 'filteredResults' state
   const filteredResults = useMemo(() => {
     let filtered = [...results];
-
-    // Filter by category
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(p => p.category === selectedCategory);
     }
-
-    // Sort results
     if (sortBy === 'price-low') {
       filtered.sort((a, b) => a.price - b.price);
     } else if (sortBy === 'price-high') {
@@ -45,16 +37,14 @@ export default function SearchResults() {
     } else if (sortBy === 'name') {
       filtered.sort((a, b) => a.name.localeCompare(b.name));
     }
-
     return filtered;
   }, [selectedCategory, sortBy, results]);
 
-  // Get unique categories from results
   const categories = ['all', ...new Set(results.map(p => p.category))];
 
- const goToProduct = (product) => {
-  navigate(`/product/${product.slug}`);
-};
+  const goToProduct = (product) => {
+    navigate(`/product/${product.slug}`);
+  };
 
   const searchSuggestion = () => {
     if (suggestion) {
@@ -95,7 +85,6 @@ export default function SearchResults() {
         {/* Filters & Sort */}
         {results.length > 0 && (
           <div className="mb-8 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-            {/* Category Filter */}
             <div className="flex flex-wrap gap-2">
               {categories.map((cat) => (
                 <button
@@ -113,7 +102,6 @@ export default function SearchResults() {
               ))}
             </div>
 
-            {/* Sort */}
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
@@ -140,7 +128,7 @@ export default function SearchResults() {
                 <div className="bg-white overflow-hidden shadow-sm mb-3 hover:shadow-xl transition-shadow">
                   <img
                     src={product.image}
-                    alt={`${product.name} – Ethiopian Habesha Dress | Diamond Design`} 
+                    alt={`${product.name} – Ethiopian Habesha Dress | Diamond Design`}
                     className="w-full aspect-[3/4] object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
@@ -166,7 +154,6 @@ export default function SearchResults() {
             ))}
           </div>
         ) : (
-          // No Results State
           <div className="text-center py-16">
             <HiOutlineSearch className="w-24 h-24 text-gray-300 mx-auto mb-6" />
             <h3 className="text-2xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Roboto, sans-serif' }}>

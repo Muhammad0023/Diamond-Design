@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { HiOutlineSearch, HiX } from 'react-icons/hi';
 import { useSearch } from '../context/SearchContext';
 
@@ -10,49 +10,69 @@ export default function SearchBar({ isMobile = false }) {
   const inputRef = useRef(null);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation(); // ✅ FIX 3 — detect route changes
   const { performSearch, clearSearch } = useSearch();
 
-  // Handle search as user types
+  // ✅ FIX 3 — close modal and reset everything when route changes
+  useEffect(() => {
+    setIsOpen(false);
+    setInputValue('');
+    setDropdownResults([]);
+    document.body.style.overflow = 'unset'; // always restore scroll
+  }, [location.pathname, location.search]);
+
+  // ✅ FIX 3 — restore body scroll when modal closes
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset'; // cleanup on unmount
+    };
+  }, [isOpen]);
+
   const handleInputChange = (e) => {
     const query = e.target.value;
     setInputValue(query);
-
     if (query.trim() === '') {
       setDropdownResults([]);
       return;
     }
-
-    // Perform search
     const results = performSearch(query);
-    setDropdownResults(results.slice(0, 5)); // Show top 5 in dropdown
+    setDropdownResults(results.slice(0, 5));
   };
 
-  // Handle Enter key
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && inputValue.trim() !== '') {
       goToSearchResults();
     }
-  };
-
-  // Go to full search results page
-  const goToSearchResults = () => {
-    if (inputValue.trim() !== '') {
-      navigate(`/search?q=${encodeURIComponent(inputValue)}`);
-      setIsOpen(false);
-      setDropdownResults([]);
+    if (e.key === 'Escape') {
+      closeAll();
     }
   };
 
-  // Go to product detail
-  const goToProduct = (productId) => {
-    navigate(`/product/${productId}`);
+  const goToSearchResults = () => {
+    if (inputValue.trim() !== '') {
+      navigate(`/search?q=${encodeURIComponent(inputValue)}`);
+      // location change useEffect will handle cleanup
+    }
+  };
+
+  // ✅ FIX 1 & 2 — pass full product object, use slug, delay clearSearch
+  const goToProduct = (product) => {
+    navigate(`/product/${product.slug}`);
+    // location change useEffect will handle cleanup automatically
+  };
+
+  const closeAll = () => {
     setIsOpen(false);
     setInputValue('');
     setDropdownResults([]);
     clearSearch();
   };
 
-  // Clear search
   const handleClear = () => {
     setInputValue('');
     setDropdownResults([]);
@@ -71,7 +91,6 @@ export default function SearchBar({ isMobile = false }) {
         setDropdownResults([]);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
@@ -91,15 +110,15 @@ export default function SearchBar({ isMobile = false }) {
         {/* Mobile Search Modal */}
         {isOpen && (
           <div className="fixed inset-0 z-[70] flex flex-col">
-            {/* BACKGROUND MASK: Turns white only when user types */}
+            {/* BACKGROUND MASK */}
             <div 
               className={`absolute inset-0 transition-colors duration-300 ${
                 inputValue ? 'bg-white' : 'bg-white/40 backdrop-blur-sm'
               }`}
-              onClick={() => setIsOpen(false)}
-            ></div>
+              onClick={closeAll}
+            />
             
-            {/* STICKY SEARCH HEADER: This stays at the top while results scroll */}
+            {/* STICKY SEARCH HEADER */}
             <div className="relative z-[80] w-full bg-white/95 backdrop-blur-md pb-4 pt-4 border-b border-gray-100 shadow-sm">
               <div className="flex items-center gap-3 px-4">
                 <div className="flex-1 flex items-center bg-gray-100 rounded-full px-4 py-3 border border-gray-200">
@@ -121,7 +140,7 @@ export default function SearchBar({ isMobile = false }) {
                   )}
                 </div>
                 <button 
-                  onClick={() => { setIsOpen(false); handleClear(); }} 
+                  onClick={closeAll}
                   className="text-gray-600 font-medium whitespace-nowrap"
                 >
                   Cancel
@@ -138,7 +157,7 @@ export default function SearchBar({ isMobile = false }) {
                       {dropdownResults.map((product) => (
                         <div 
                           key={product.id} 
-                          onClick={() => goToProduct(product.id)} 
+                          onClick={() => goToProduct(product)}  // ✅ pass full product
                           className="flex gap-3 p-3 bg-white hover:bg-gray-50 rounded-lg cursor-pointer border border-gray-100 shadow-sm"
                         >
                           <img src={product.image} className="w-16 h-16 object-cover rounded" alt={product.name} />
@@ -149,7 +168,6 @@ export default function SearchBar({ isMobile = false }) {
                         </div>
                       ))}
                       
-                      {/* VIEW ALL RESULTS BUTTON - RESTORED */}
                       <button
                         onClick={goToSearchResults}
                         className="w-full py-4 mt-4 text-brand font-semibold bg-brand/5 hover:bg-brand/10 rounded-xl transition-colors border border-brand/10"
@@ -159,7 +177,7 @@ export default function SearchBar({ isMobile = false }) {
                     </div>
                   ) : (
                     <div className="text-center py-20 bg-white rounded-2xl">
-                       <p className="text-gray-500">No products found for "{inputValue}"</p>
+                      <p className="text-gray-500">No products found for "{inputValue}"</p>
                     </div>
                   )}
                 </div>
@@ -206,7 +224,7 @@ export default function SearchBar({ isMobile = false }) {
             {dropdownResults.map((product) => (
               <div
                 key={product.id}
-                onClick={() => goToProduct(product.id)}
+                onClick={() => goToProduct(product)}  // ✅ pass full product
                 className="flex gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors"
               >
                 <img

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useCallback } from 'react';
 import { useProducts } from './ProductsContext';
 
 const SearchContext = createContext();
@@ -14,63 +14,48 @@ export function useSearch() {
 export function SearchProvider({ children }) {
   const { products } = useProducts();
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
 
-  // Search function
-  const performSearch = (query) => {
-    setSearchQuery(query);
-    setIsSearching(true);
-
-    if (!query || query.trim() === '') {
-      setSearchResults([]);
-      setIsSearching(false);
-      return [];
-    }
+  // ✅ FIX: performSearch is now a pure function — NO setState inside
+  // It just filters and returns results. State updates are separate.
+  const performSearch = useCallback((query) => {
+    if (!query || query.trim() === '') return [];
 
     const searchTerm = query.toLowerCase().trim();
 
-    // Search in product name and category
-    const results = products.filter(product => {
+    return products.filter(product => {
       const nameMatch = product.name.toLowerCase().includes(searchTerm);
       const categoryMatch = product.category.toLowerCase().includes(searchTerm);
       return nameMatch || categoryMatch;
     });
+  }, [products]);
 
-    setSearchResults(results);
-    setIsSearching(false);
-    return results;
-  };
+  // Separate function to update query state — only called from event handlers
+  const setQuery = useCallback((query) => {
+    setSearchQuery(query);
+  }, []);
 
-  // Clear search
-  const clearSearch = () => {
+  const clearSearch = useCallback(() => {
     setSearchQuery('');
-    setSearchResults([]);
     setIsSearching(false);
-  };
+  }, []);
 
-  // Get suggestions for typos (simple implementation)
-  const getSuggestion = (query) => {
+  const getSuggestion = useCallback((query) => {
     const commonTerms = [
       'wedding', 'simple', 'chiffon', 'holiday', 'group', 'mens', 'couples',
       'dress', 'kemis', 'habesha', 'white', 'golden', 'blue', 'red', 'green'
     ];
-
     const searchTerm = query.toLowerCase().trim();
-    
-    // Find closest match
-    const suggestion = commonTerms.find(term => 
+    return commonTerms.find(term =>
       term.includes(searchTerm) || searchTerm.includes(term)
-    );
-
-    return suggestion || null;
-  };
+    ) || null;
+  }, []);
 
   const value = {
     searchQuery,
-    searchResults,
     isSearching,
     performSearch,
+    setQuery,
     clearSearch,
     getSuggestion,
   };
