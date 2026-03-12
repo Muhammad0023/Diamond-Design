@@ -60,7 +60,7 @@ export default function SearchBar({ isMobile = false }) {
     inputRef.current?.focus();
   };
 
-  // Close dropdown when clicking outside
+  // Close dropdown when clicking outside (Desktop)
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -76,11 +76,11 @@ export default function SearchBar({ isMobile = false }) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
- // Mobile modal version
+  // --- MOBILE VERSION ---
   if (isMobile) {
     return (
       <>
-        {/* Mobile Search Icon */}
+        {/* Mobile Search Icon in Header */}
         <button
           onClick={() => setIsOpen(true)}
           className="p-2 text-gray-700 hover:text-brand transition-transform hover:scale-110"
@@ -90,79 +90,90 @@ export default function SearchBar({ isMobile = false }) {
 
         {/* Mobile Search Modal */}
         {isOpen && (
-          <div className="fixed inset-0 bg-white/90 backdrop-blur-md z-[70] flex flex-col">
-            {/* MATERIAL SEARCH BAR */}
-            <div className="flex items-center p-4">
-              <div className="flex-1 flex items-center bg-gray-100 rounded-full px-4 py-3 shadow-inner border border-gray-200">
-                <HiOutlineSearch className="w-5 h-5 text-gray-500 mr-3" />
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={inputValue}
-                  onChange={handleInputChange}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Search..."
-                  className="flex-1 bg-transparent text-gray-800 outline-none placeholder:text-gray-500"
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
-                  autoFocus
-                />
-                {inputValue && (
-                  <button onClick={handleClear} className="ml-2">
-                    <HiX className="w-5 h-5 text-gray-400" />
-                  </button>
-                )}
+          <div className="fixed inset-0 z-[70] flex flex-col">
+            {/* BACKGROUND MASK: Turns white only when user types */}
+            <div 
+              className={`absolute inset-0 transition-colors duration-300 ${
+                inputValue ? 'bg-white' : 'bg-white/40 backdrop-blur-sm'
+              }`}
+              onClick={() => setIsOpen(false)}
+            ></div>
+            
+            {/* STICKY SEARCH HEADER: This stays at the top while results scroll */}
+            <div className="relative z-[80] w-full bg-white/95 backdrop-blur-md pb-4 pt-4 border-b border-gray-100 shadow-sm">
+              <div className="flex items-center gap-3 px-4">
+                <div className="flex-1 flex items-center bg-gray-100 rounded-full px-4 py-3 border border-gray-200">
+                  <HiOutlineSearch className="w-5 h-5 text-gray-400 mr-3" />
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Search..."
+                    className="flex-1 bg-transparent text-gray-800 outline-none"
+                    autoFocus
+                  />
+                  {inputValue && (
+                    <button onClick={handleClear} className="ml-2">
+                      <HiX className="w-5 h-5 text-gray-400" />
+                    </button>
+                  )}
+                </div>
+                <button 
+                  onClick={() => { setIsOpen(false); handleClear(); }} 
+                  className="text-gray-600 font-medium whitespace-nowrap"
+                >
+                  Cancel
+                </button>
               </div>
-              <button
-                onClick={() => {
-                  setIsOpen(false);
-                  handleClear();
-                }}
-                className="ml-4 text-gray-600 font-medium"
-              >
-                Cancel
-              </button>
             </div>
 
-            {/* RESULTS: Solid background and fixed layout */}
-            <div className="flex-1 overflow-y-auto px-4 bg-white z-[80]">
-              {dropdownResults.length > 0 && (
-                <div className="space-y-3 pt-4">
-                  {dropdownResults.map((product) => (
-                    <div
-                      key={product.id}
-                      onClick={() => goToProduct(product.id)}
-                      className="flex gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer bg-white border border-gray-100 shadow-sm"
-                    >
-                      <img src={product.image} className="w-16 h-16 object-cover rounded" />
-                      <div className="flex-1">
-                        <h4 className="font-medium text-gray-900 text-sm">{product.name}</h4>
-                        <p className="text-brand font-semibold text-sm">${product.price}</p>
-                      </div>
+            {/* SCROLLABLE RESULTS AREA */}
+            <div className="relative z-[80] flex-1 overflow-y-auto px-4 mt-2">
+              {inputValue && (
+                <div className="pb-20">
+                  {dropdownResults.length > 0 ? (
+                    <div className="space-y-3 pt-2">
+                      {dropdownResults.map((product) => (
+                        <div 
+                          key={product.id} 
+                          onClick={() => goToProduct(product.id)} 
+                          className="flex gap-3 p-3 bg-white hover:bg-gray-50 rounded-lg cursor-pointer border border-gray-100 shadow-sm"
+                        >
+                          <img src={product.image} className="w-16 h-16 object-cover rounded" alt={product.name} />
+                          <div className="flex-1">
+                            <h4 className="text-sm font-medium line-clamp-2">{product.name}</h4>
+                            <p className="text-sm text-brand font-bold mt-1">${product.price}</p>
+                          </div>
+                        </div>
+                      ))}
+                      
+                      {/* VIEW ALL RESULTS BUTTON - RESTORED */}
+                      <button
+                        onClick={goToSearchResults}
+                        className="w-full py-4 mt-4 text-brand font-semibold bg-brand/5 hover:bg-brand/10 rounded-xl transition-colors border border-brand/10"
+                      >
+                        View all results ({dropdownResults.length}+)
+                      </button>
                     </div>
-                  ))}
-                  <button
-                    onClick={goToSearchResults}
-                    className="w-full py-4 text-brand font-semibold bg-brand/5 hover:bg-brand/10 rounded-lg mb-6"
-                  >
-                    View all results
-                  </button>
+                  ) : (
+                    <div className="text-center py-20 bg-white rounded-2xl">
+                       <p className="text-gray-500">No products found for "{inputValue}"</p>
+                    </div>
+                  )}
                 </div>
               )}
-
-              {inputValue.length > 0 && dropdownResults.length === 0 && (
-                <p className="text-center text-gray-500 mt-10">No products found.</p>
-              )}
             </div>
-          </div> // <-- THIS CLOSING DIV WAS MISSING
+          </div>
         )}
-      </> // <-- THIS CLOSING FRAGMENT WAS MISSING
+      </>
     );
   }
 
-  // Desktop version
+  // --- DESKTOP VERSION ---
   return (
     <div className="relative">
-      {/* Search Input */}
       <div className="relative">
         <HiOutlineSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
         <input
@@ -185,7 +196,7 @@ export default function SearchBar({ isMobile = false }) {
         )}
       </div>
 
-      {/* Dropdown Results */}
+      {/* Dropdown Results (Desktop) */}
       {dropdownResults.length > 0 && (
         <div
           ref={dropdownRef}

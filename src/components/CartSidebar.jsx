@@ -14,31 +14,43 @@ export default function CartSidebar() {
     toggleCart 
   } = useCart();
 
- const handleWhatsAppCheckout = () => {
+const handleWhatsAppCheckout = () => {
   if (cartItems.length === 0) {
     alert('Your cart is empty!');
     return;
   }
 
-  const phoneNumber = '+251988503333'; 
+  const phoneNumber = '+251988503333';
+  const baseUrl = window.location.origin; // Gets your website domain
   
   // Build order message
-  let message = 'Hi Diamond Design! 👋\n\nI want to order:\n\n';
+  let message = 'Hi Diamond Design! 👋\n\nI want to order the following items:\n\n';
   
   cartItems.forEach((item, index) => {
-    message += `👗 ${index + 1}. ${item.name}\n`;
+    // Construct the specific product link
+    const productLink = `${baseUrl}/product/${item.slug}`;
+    
+    message += `👗 *Item ${index + 1}: ${item.name}*\n`;
     message += `   📏 Size: ${item.size}\n`;
     message += `   🔢 Qty: ${item.quantity}\n`;
-    message += `   💰 Price: $${item.price * item.quantity}\n\n`;
+    message += `   💰 Price: $${item.price * item.quantity}\n`;
+    message += `   🔗 View: ${productLink}\n\n`; // This makes it clickable
   });
   
-  message += `Total: $${getCartTotal()}\n\n`;
-  message += 'Please confirm availability and delivery details.';
+  message += `━━━━━━━━━━━━━━━\n`;
+  message += `*Total Amount: $${getCartTotal()}*\n\n`;
+  message += 'Please confirm availability and delivery details. ✨';
   
   const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+  
+  // Open WhatsApp
   window.open(whatsappURL, '_blank');
   
-  setTimeout(() => { clearCart(); }, 1000);
+  // Optional: Clear cart after a delay so they don't double order
+  setTimeout(() => { 
+    clearCart(); 
+    toggleCart(); // Close the sidebar
+  }, 1000);
 };
 
   return (
