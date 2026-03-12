@@ -88,37 +88,40 @@ export default function SearchBar({ isMobile = false }) {
           <HiOutlineSearch className="w-6 h-6" />
         </button>
 
-        {/* Mobile Search Modal */}
-        {isOpen && (
-          <div className="fixed inset-0 bg-white z-[70] flex flex-col">
-            {/* Header */}
-            <div className="flex items-center gap-3 p-4 border-b border-gray-200">
-              <button
-                onClick={() => {
-                  setIsOpen(false);
-                  handleClear();
-                }}
-                className="p-2"
-              >
-                <HiX className="w-6 h-6 text-gray-900" />
-              </button>
-              <input
-                ref={inputRef}
-                type="text"
-                value={inputValue}
-                onChange={handleInputChange}
-                onKeyDown={handleKeyDown}
-                placeholder="Search products..."
-                className="flex-1 text-lg outline-none"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
-                autoFocus
-              />
-              {inputValue && (
-                <button onClick={handleClear} className="p-2">
-                  <HiX className="w-5 h-5 text-gray-400" />
-                </button>
-              )}
-            </div>
+       {/* Mobile Search Modal */}
+{isOpen && (
+  <div className="fixed inset-0 bg-white z-[70] flex flex-col">
+    {/* MATERIAL SEARCH BAR - UPDATED */}
+    <div className="flex items-center p-4">
+      <div className="flex-1 flex items-center bg-gray-100 rounded-full px-4 py-3 shadow-inner border border-gray-200">
+        <HiOutlineSearch className="w-5 h-5 text-gray-500 mr-3" />
+        <input
+          ref={inputRef}
+          type="text"
+          value={inputValue}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+          placeholder="Search messages"
+          className="flex-1 bg-transparent text-gray-800 outline-none placeholder:text-gray-500"
+          style={{ fontFamily: 'Roboto, sans-serif' }}
+          autoFocus
+        />
+        {inputValue && (
+          <button onClick={handleClear} className="ml-2">
+            <HiX className="w-5 h-5 text-gray-400" />
+          </button>
+        )}
+      </div>
+      <button
+        onClick={() => {
+          setIsOpen(false);
+          handleClear();
+        }}
+        className="ml-4 text-gray-600 font-medium"
+      >
+        Cancel
+      </button>
+    </div>
 
             {/* Results */}
             <div className="flex-1 overflow-y-auto p-4">

@@ -14,35 +14,32 @@ export default function CartSidebar() {
     toggleCart 
   } = useCart();
 
-  const handleWhatsAppCheckout = () => {
-    if (cartItems.length === 0) {
-      alert('Your cart is empty!');
-      return;
-    }
+ const handleWhatsAppCheckout = () => {
+  if (cartItems.length === 0) {
+    alert('Your cart is empty!');
+    return;
+  }
 
-    const phoneNumber = '251988503333'; 
-    
-    // Build order message
-    let message = 'Hi Diamond Design!\n\nI want to order:\n\n';
-    
-    cartItems.forEach((item, index) => {
-      message += `${index + 1}. ${item.name}\n`;
-      message += `   Size: ${item.size}\n`;
-      message += `   Qty: ${item.quantity}\n`;
-      message += `   Price: $${item.price * item.quantity}\n\n`;
-    });
-    
-    message += `Total: $${getCartTotal()}\n\n`;
-    message += 'Please confirm availability and delivery details.';
-    
-    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappURL, '_blank');
-    
-    // Clear cart after sending
-    setTimeout(() => {
-      clearCart();
-    }, 1000);
-  };
+  const phoneNumber = '+251988503333'; 
+  
+  // Build order message
+  let message = 'Hi Diamond Design! 👋\n\nI want to order:\n\n';
+  
+  cartItems.forEach((item, index) => {
+    message += `👗 ${index + 1}. ${item.name}\n`;
+    message += `   📏 Size: ${item.size}\n`;
+    message += `   🔢 Qty: ${item.quantity}\n`;
+    message += `   💰 Price: $${item.price * item.quantity}\n\n`;
+  });
+  
+  message += `Total: $${getCartTotal()}\n\n`;
+  message += 'Please confirm availability and delivery details.';
+  
+  const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+  window.open(whatsappURL, '_blank');
+  
+  setTimeout(() => { clearCart(); }, 1000);
+};
 
   return (
     <>
@@ -54,24 +51,21 @@ export default function CartSidebar() {
         onClick={toggleCart}
       ></div>
 
-      {/* Cart Sidebar */}
-      <div
-        className={`fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 flex flex-col ${
-          isCartOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'Roboto, sans-serif' }}>
-            Shopping Cart
-          </h2>
-          <button
-            onClick={toggleCart}
-            className="p-2 rounded-full hover:bg-gray-100 transition-colors"
-          >
-            <IoClose className="w-6 h-6 text-gray-900" />
-          </button>
-        </div>
+            {/* Cart Sidebar Wrapper */}
+        <div
+          className={`fixed top-0 right-0 h-full w-full sm:w-96 bg-white/95 shadow-2xl z-50 transform transition-transform duration-300 flex flex-col overflow-hidden ${
+            isCartOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
+        >
+          {/* Header - Fixed & Blurry */}
+          <div className="flex-none flex items-center justify-between p-6 border-b border-gray-200/50 bg-white/70 backdrop-blur-md sticky top-0 z-50">
+            <h2 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'Roboto, sans-serif' }}>
+              Shopping Cart
+            </h2>
+            <button onClick={toggleCart} className="p-2 rounded-full hover:bg-black/5 transition-colors">
+              <IoClose className="w-6 h-6 text-gray-900" />
+            </button>
+          </div>
 
         {/* Cart Items */}
         <div className="flex-1 overflow-y-auto p-6">
@@ -83,7 +77,7 @@ export default function CartSidebar() {
                 Your cart is empty
               </h3>
               <p className="text-gray-600 mb-6" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
-                Add some beautiful items to get started!
+                Add some beautiful styles to get started!
               </p>
               <button
                 onClick={toggleCart}
@@ -145,7 +139,7 @@ export default function CartSidebar() {
                       {/* Remove Button */}
                       <button
                         onClick={() => removeFromCart(item.cartItemId)}
-                        className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors"
+                        className="p-2 text-gray-400 hover:text-brand hover:bg-brand/10 rounded transition-colors"
                       >
                         <HiTrash className="w-5 h-5" />
                       </button>
@@ -159,7 +153,7 @@ export default function CartSidebar() {
 
         {/* Footer - Only show if cart has items */}
         {cartItems.length > 0 && (
-          <div className="border-t border-gray-200 p-6 bg-white">
+          <div className="flex-none border-t border-white/10 p-6 bg-white/80 backdrop-blur-md sticky bottom-0 z-10">
             {/* Subtotal */}
             <div className="flex items-center justify-between mb-4">
               <span className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'Roboto, sans-serif' }}>
@@ -175,10 +169,10 @@ export default function CartSidebar() {
               <button
                 onClick={handleWhatsAppCheckout}
                 className="w-full bg-[#25D366] text-white py-4 rounded-full font-bold hover:bg-[#20ba59] transition-colors shadow-lg flex items-center justify-center gap-2"
-                style={{ fontFamily: 'Roboto, sans-serif' }}
+                style={{ fontFamily: 'Roboto, sans-serif', letterSpacing: '1px' }}
               >
                 <FaWhatsapp className="w-5 h-5" />
-                Checkout via WhatsApp
+                Order With WhatsApp
               </button>
 
               <button
@@ -195,3 +189,4 @@ export default function CartSidebar() {
     </>
   );
 }
+

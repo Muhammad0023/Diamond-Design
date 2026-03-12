@@ -69,7 +69,7 @@ export default function ProductDetail() {
   const handleShare = async () => {
     const shareData = {
       title: `${productDetail.name} | Diamond Design`,
-      text: `Check out this beautiful Habesha style from Diamond Design! 🇪🇹 🇪🇷 ✨`,
+      text: `Check out this beautiful Habesha style from Diamond Design! \u{1F1EA}\u{1F1F9} \u{1F1F3}\u{1F1F7} ✨`,
       url: window.location.href,
     };
     if (navigator.share) {
