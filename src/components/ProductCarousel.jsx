@@ -7,7 +7,6 @@ export default function ProductCarousel({ title, products, viewAllLink = "#" }) 
   const scrollContainerRef = useRef(null);
   const navigate = useNavigate();
 
-  // ✅ LIMIT TO 13 PRODUCTS IN CAROUSEL
   const displayedProducts = products.slice(0, 13);
   const hasMoreProducts = products.length > 13;
 
@@ -39,6 +38,7 @@ export default function ProductCarousel({ title, products, viewAllLink = "#" }) 
           <button
             onClick={() => scroll('left')}
             className="hidden lg:block absolute left-[-20px] top-1/2 -translate-y-1/2 z-10 bg-white p-3 rounded-full shadow-xl opacity-0 group-hover:opacity-100 transition-all hover:scale-110"
+            aria-label="Scroll left"
           >
             <HiChevronLeft className="w-6 h-6 text-gray-900" />
           </button>
@@ -48,12 +48,10 @@ export default function ProductCarousel({ title, products, viewAllLink = "#" }) 
             className="flex gap-3 sm:gap-4 lg:gap-6 overflow-x-auto scrollbar-hide scroll-smooth snap-x snap-mandatory pb-4"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            {/* ✅ ONLY SHOW FIRST 13 PRODUCTS */}
             {displayedProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
             
-            {/* ✅ OPTIONAL: SHOW "VIEW MORE" CARD AT THE END */}
             {hasMoreProducts && (
               <div 
                 className="flex-none w-[38%] sm:w-[calc(40%-0.5rem)] lg:w-[calc(20%-1.2rem)] snap-start cursor-pointer"
@@ -71,6 +69,7 @@ export default function ProductCarousel({ title, products, viewAllLink = "#" }) 
           <button
             onClick={() => scroll('right')}
             className="hidden lg:block absolute right-[-20px] top-1/2 -translate-y-1/2 z-10 bg-white p-3 rounded-full shadow-xl opacity-0 group-hover:opacity-100 transition-all hover:scale-110"
+            aria-label="Scroll right"
           >
             <HiChevronRight className="w-6 h-6 text-gray-900" />
           </button>
@@ -102,7 +101,8 @@ function ProductCard({ product }) {
         <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
           <img
             src={isHovered ? hoverImage : mainImage}
-            alt={product.name}
+            // ✅ FIXED: Descriptive alt with category context
+            alt={`${product.name} – Ethiopian Habesha Dress`}
             className={`w-full h-full object-cover transition-all duration-200 ${isHovered ? 'scale-110' : 'scale-100'}`}
           />
           {product.isNew && (

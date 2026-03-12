@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react'; // Added useState
+import { useState } from 'react';
 
 export default function ProductGrid({ title, products, viewAllLink }) {
   const navigate = useNavigate();
@@ -9,9 +9,7 @@ export default function ProductGrid({ title, products, viewAllLink }) {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
+      transition: { staggerChildren: 0.1 },
     },
   };
 
@@ -59,7 +57,6 @@ export default function ProductGrid({ title, products, viewAllLink }) {
   );
 }
 
-// Sub-component to handle local hover state for each card
 function ProductCardItem({ product, navigate, itemVariants }) {
   const [isHovered, setIsHovered] = useState(false);
   
@@ -69,8 +66,7 @@ function ProductCardItem({ product, navigate, itemVariants }) {
   return (
     <motion.div
       variants={itemVariants}
-      // FIX: Changed from product.id to product.slug
-          onClick={() => navigate(`/product/${product.slug}`)}
+      onClick={() => navigate(`/product/${product.slug}`)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="cursor-pointer group"
@@ -78,8 +74,9 @@ function ProductCardItem({ product, navigate, itemVariants }) {
       <div className="bg-white overflow-hidden shadow-sm mb-3 group-hover:shadow-xl transition-all duration-300">
         <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
           <img
-            src={isHovered ? hoverImage : mainImage} // Hover logic restored
-            alt={product.name}
+            src={isHovered ? hoverImage : mainImage}
+            // ✅ FIXED: keyword-rich alt text for Google Image Search
+            alt={`${product.name} – Ethiopian Habesha Dress | Diamond Design`}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
           />
           {product.isNew && (
@@ -89,7 +86,6 @@ function ProductCardItem({ product, navigate, itemVariants }) {
           )}
         </div>
       </div>
-      {/* Space fixed by removing min-h and using leading-tight */}
       <h3 className="text-gray-700 text-sm mb-0.5 line-clamp-2 leading-tight" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
         {product.name}
       </h3>

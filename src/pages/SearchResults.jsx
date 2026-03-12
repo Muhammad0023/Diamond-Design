@@ -140,7 +140,7 @@ export default function SearchResults() {
                 <div className="bg-white overflow-hidden shadow-sm mb-3 hover:shadow-xl transition-shadow">
                   <img
                     src={product.image}
-                    alt={product.name}
+                    alt={`${product.name} – Ethiopian Habesha Dress | Diamond Design`} 
                     className="w-full aspect-[3/4] object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>

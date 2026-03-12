@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { HiZoomIn, HiX, HiPlus, HiMinus } from 'react-icons/hi';
+import { HiZoomIn, HiX, HiPlus, HiMinus, HiShare } from 'react-icons/hi';
 import { FaWhatsapp } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../context/CartContext';
@@ -25,6 +25,7 @@ export default function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState('S');
   const [showModal, setShowModal] = useState(false); 
   const [modalZoom, setModalZoom] = useState(1);
+  const [shareCopied, setShareCopied] = useState(false);
 
   const fadeUp = {
     hidden: { opacity: 0, y: 20 },
@@ -47,17 +48,41 @@ export default function ProductDetail() {
     }
   }, [showModal]);
 
-  // ✅ FIXED: Move these functions BEFORE the return statement
   const handleWhatsAppOrder = () => {
-    const phoneNumber = '+251988503333'; 
+    const phoneNumber = '+251988503333';
+    const productUrl = window.location.href;
     const message = encodeURIComponent(
-      `Hi Diamond Design!\n\nI want to order:\nProduct: ${productDetail.name}\nSize: ${selectedSize}\nPrice: $${productDetail.price}\n\nPlease confirm availability.`
+      `Hi Diamond Design! 👋\n\nI want to order:\n\n` +
+      `👗 Product: ${productDetail.name}\n` +
+      `📏 Size: ${selectedSize}\n` +
+      `💰 Price: $${productDetail.price}\n\n` +
+      `🔗 View Product: ${productUrl}\n\n` +
+      `Please confirm availability.`
     );
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };
               
   const handleAddToCart = () => {
     addToCart(productDetail, selectedSize);
+  };
+
+  const handleShare = async () => {
+    const shareData = {
+      title: `${productDetail.name} | Diamond Design`,
+      text: `Check out this beautiful Habesha style from Diamond Design! 🇪🇹✨`,
+      url: window.location.href,
+    };
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {}
+    } else {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        setShareCopied(true);
+        setTimeout(() => setShareCopied(false), 2500);
+      } catch (err) {}
+    }
   };
 
   if (loading) {
@@ -147,7 +172,7 @@ export default function ProductDetail() {
                   initial={{ scale: 0.9 }}
                   animate={{ scale: modalZoom }}
                   src={productDetail.images[selectedImage]}
-                  alt="Zoomed"
+                  alt={`${productDetail.name} - Full Screen View`}
                   className="transition-transform duration-300 ease-out"
                   style={{ 
                     maxHeight: modalZoom > 1 ? 'none' : '90vh',
@@ -179,11 +204,10 @@ export default function ProductDetail() {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3 }}
                     src={productDetail.images[selectedImage]} 
-                    alt={productDetail.name} 
+                    alt={`${productDetail.name} - Featured Image`}
                     className="w-full aspect-[3/4] object-cover" 
                   />
                 </AnimatePresence>
-                
                 <div className="absolute inset-0 flex items-start justify-start p-4">
                   <div className="bg-white/90 p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
                     <HiZoomIn className="w-6 h-6 text-brand" />
@@ -194,7 +218,7 @@ export default function ProductDetail() {
               <div className="grid grid-cols-5 gap-2">
                 {productDetail.images.map((img, index) => (
                   <button key={index} onClick={() => setSelectedImage(index)} className={`aspect-square overflow-hidden border-2 transition-all ${selectedImage === index ? 'border-brand' : 'border-gray-200 hover:border-brand'}`}>
-                    <img src={img} alt="thumb" className="w-full h-full object-cover" />
+                    <img src={img} alt={`${productDetail.name} – view ${index + 1}`} className="w-full h-full object-cover" />
                   </button>
                 ))}
               </div>
@@ -233,21 +257,39 @@ export default function ProductDetail() {
                 </div>
               </motion.div>
 
-              {/* PILL BUTTONS */}
+              {/* ✅ UI — Minimal Luxury */}
               <motion.div variants={fadeUp} className="space-y-4 w-full max-w-2xl">
+
+                {/* ROW 1: Add to Cart — full width solid */}
                 <button 
                   onClick={handleAddToCart} 
                   className="w-full bg-brand text-white py-5 rounded-full font-bold hover:bg-brand-dark transition-all shadow-xl uppercase tracking-widest active:scale-[0.98]"
+                  style={{ fontFamily: 'Roboto, sans-serif' }}
                 >
                   Add to Cart
                 </button>
-                
+
+                {/* ROW 2: Order with WhatsApp — full width outlined green */}
                 <button 
                   onClick={handleWhatsAppOrder} 
-                  className="w-full bg-[#25D366] text-white py-5 rounded-full font-bold hover:bg-[#20ba59] transition-all shadow-xl flex items-center justify-center gap-3 uppercase tracking-widest active:scale-[0.98]"
+                 className="w-full bg-[#25D366] text-white py-5 rounded-full font-bold hover:bg-[#1fc75c] hover:shadow-2xl transition-all flex items-center justify-center gap-3 uppercase tracking-[0.2em] active:scale-[0.96] shadow-lg"
+                  style={{ fontFamily: 'Roboto, sans-serif' }}
                 >
                   <FaWhatsapp className="w-6 h-6" /> Order with WhatsApp
                 </button>
+
+                {/* ROW 3: Share This Style — subtle text link, no heavy button */}
+                <div className="flex justify-center pt-1">
+                  <button
+                    onClick={handleShare}
+                    className="flex items-center gap-2 text-gray-400 hover:text-brand transition-colors text-sm font-bold tracking-widest uppercase group"
+                    style={{ fontFamily: 'Roboto, sans-serif' }}
+                  >
+                    <HiShare className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                    {shareCopied ? 'Link Copied! ✓' : '↗ Share This Style'}
+                  </button>
+                </div>
+
               </motion.div>
             </motion.div>
           </div>
@@ -282,7 +324,11 @@ export default function ProductDetail() {
                     onClick={() => { navigate(`/product/${relProduct.slug}`); window.scrollTo(0, 0); }}
                   >
                     <div className="bg-white overflow-hidden shadow-sm mb-4">
-                      <img src={relProduct.image} alt={relProduct.name} className="w-full aspect-[3/4] object-cover group-hover:opacity-80 transition-opacity" />
+                      <img 
+                        src={relProduct.image} 
+                        alt={`${relProduct.name} - Related Product`} 
+                        className="w-full aspect-[3/4] object-cover group-hover:opacity-80 transition-opacity" 
+                      />
                     </div>
                     <h3 className="text-gray-700 text-sm mb-1 line-clamp-2" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>{relProduct.name}</h3>
                     <p className="text-gray-900 font-semibold" style={{ fontFamily: 'Roboto, sans-serif' }}>${relProduct.price}</p>

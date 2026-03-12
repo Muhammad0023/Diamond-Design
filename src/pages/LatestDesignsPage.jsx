@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HiHome, HiChevronRight, HiChevronLeft } from 'react-icons/hi';
 import { useProducts } from '../context/ProductsContext';
+import { Helmet } from 'react-helmet-async'; {/* ✅ ADDED */}
 
 export default function LatestDesignsPage() {
   const navigate = useNavigate();
@@ -49,6 +50,18 @@ export default function LatestDesignsPage() {
 
   return (
     <div className="min-h-screen bg-white pt-24 pb-16">
+
+      {/* ✅ ADDED: Helmet was completely missing from this page */}
+      <Helmet>
+        <title>Latest Designs | Diamond Design – New Habesha Dress Arrivals</title>
+        <meta name="description" content="Discover Diamond Design's newest Habesha Kemis arrivals. Fresh Ethiopian traditional dress styles for women, men, and couples added regularly." />
+        <meta property="og:title" content="Latest Designs | Diamond Design" />
+        <meta property="og:description" content="Shop the newest Ethiopian Habesha dress arrivals at Diamond Design." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://diamond-design.vercel.app/latest-designs" />
+        <link rel="canonical" href="https://diamond-design.vercel.app/latest-designs" />
+      </Helmet>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Breadcrumbs */}
@@ -196,7 +209,8 @@ function ProductCard({ product, navigate }) {
         <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
           <img
             src={isHovered ? hoverImage : mainImage}
-            alt={product.name}
+            
+            alt={`${product.name} – New Arrival Ethiopian Habesha Dress | Diamond Design`} 
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
           {product.isNew && (
