@@ -2,6 +2,28 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
+function ProductGridSkeleton() {
+  return (
+    <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
+          <div className="h-8 bg-gray-200 animate-pulse rounded-full w-48" />
+          <div className="h-5 bg-gray-200 animate-pulse rounded-full w-16" />
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {[...Array(8)].map((_, i) => (
+            <div key={i}>
+              <div className="aspect-[3/4] bg-gray-200 animate-pulse rounded-sm mb-3" />
+              <div className="h-4 bg-gray-200 animate-pulse rounded-full w-3/4 mb-2" />
+              <div className="h-4 bg-gray-200 animate-pulse rounded-full w-1/3" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function ProductGrid({ title, products, viewAllLink }) {
   const navigate = useNavigate();
 
@@ -23,7 +45,8 @@ export default function ProductGrid({ title, products, viewAllLink }) {
     },
   };
 
-  if (!products || products.length === 0) return null;
+  if (!products) return <ProductGridSkeleton />;
+  if (products.length === 0) return null;
 
   return (
     <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white">

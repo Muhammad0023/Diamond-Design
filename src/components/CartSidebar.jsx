@@ -66,12 +66,12 @@ export default function CartSidebar() {
           isCartOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        {/* Header - Enhanced Glassmorphism */}
-        <div className="flex-none flex items-center justify-between p-6 border-b border-white/60 bg-gradient-to-b from-white/60 to-white/30 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(31,38,135,0.05)] sticky top-0 z-50">
+        {/* Header - Glassmorphism */}
+        <div className="flex-none flex items-center justify-between p-6 border-b border-white/40 bg-white/30 sticky top-0 z-50">
           <h2 className="text-2xl font-bold text-gray-900 drop-shadow-sm" style={{ fontFamily: 'Roboto, sans-serif' }}>
             Shopping Cart
           </h2>
-          <button onClick={toggleCart} className="p-2 rounded-full hover:bg-white/60 bg-white/40 border border-white/60 shadow-sm transition-colors backdrop-blur-md">
+          <button onClick={toggleCart} className="p-2 rounded-full hover:bg-white/50 bg-white/20 border border-white/40 shadow-sm transition-colors">
             <IoClose className="w-6 h-6 text-gray-900" />
           </button>
         </div>
@@ -161,9 +161,9 @@ export default function CartSidebar() {
           )}
         </div>
 
-        {/* Footer - Enhanced Glassmorphism */}
+        {/* Footer - Glassmorphism */}
         {cartItems.length > 0 && (
-          <div className="flex-none border-t border-white/60 p-6 bg-gradient-to-t from-white/60 to-white/30 backdrop-blur-xl shadow-[0_-8px_32px_0_rgba(31,38,135,0.05)] sticky bottom-0 z-10">
+          <div className="flex-none border-t border-white/40 p-6 bg-white/30 backdrop-blur-md sticky bottom-0 z-10">
             {/* Subtotal */}
             <div className="flex items-center justify-between mb-4">
               <span className="text-lg font-semibold text-gray-900 drop-shadow-sm" style={{ fontFamily: 'Roboto, sans-serif' }}>
@@ -178,7 +178,7 @@ export default function CartSidebar() {
             <div className="space-y-3">
               <button
                 onClick={handleWhatsAppCheckout}
-                className="w-full bg-[#25D366] text-white py-4 rounded-full font-bold hover:bg-[#20ba59] transition-colors shadow-[0_4px_14px_0_rgba(37,211,102,0.39)] flex items-center justify-center gap-2"
+className="w-full bg-[#25D366] text-white py-4 rounded-full font-bold border border-white/60 hover:bg-[#20ba59] shadow-[0_4px_14px_0_rgba(37,211,102,0.39)] hover:shadow-[0_6px_20px_0_rgba(37,211,102,0.5)] transition-all flex items-center justify-center gap-2 backdrop-blur-sm drop-shadow-sm active:scale-[0.98]"
                 style={{ fontFamily: 'Roboto, sans-serif', letterSpacing: '1px' }}
               >
                 <FaWhatsapp className="w-5 h-5" />
@@ -187,7 +187,7 @@ export default function CartSidebar() {
 
               <button
                 onClick={clearCart}
-                className="w-full bg-white/50 text-gray-800 py-3 rounded-full font-semibold border border-white/60 hover:bg-white/70 shadow-sm transition-colors drop-shadow-sm backdrop-blur-sm"
+                className="w-full bg-white/50 text-gray-800 py-3 rounded-full font-semibold border border-white/60 hover:bg-white/70 shadow-sm transition-colors drop-shadow-sm"
                 style={{ fontFamily: 'Roboto, sans-serif' }}
               >
                 Clear Cart

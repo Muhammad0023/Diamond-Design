@@ -85,17 +85,52 @@ export default function ProductDetail() {
     }
   };
 
-  if (loading) {
+ if (loading) {
     return (
-      <div className="min-h-screen bg-white pt-24 pb-16">
+      <div className="min-h-screen bg-white mt-20 lg:mt-32 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-center min-h-[60vh]">
-            <div className="text-center">
-              <div className="w-16 h-16 border-4 border-brand border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-gray-600 text-lg" style={{ fontFamily: 'Roboto, sans-serif' }}>
-                Loading product...
-              </p>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+
+            {/* LEFT: Image skeleton */}
+            <div className="lg:col-span-5 w-full">
+              <div className="w-full aspect-[3/4] bg-gray-200 animate-pulse rounded-sm mb-4" />
+              <div className="grid grid-cols-5 gap-2">
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className="aspect-square bg-gray-200 animate-pulse rounded-sm" />
+                ))}
+              </div>
             </div>
+
+            {/* RIGHT: Info skeleton */}
+            <div className="lg:col-span-7 space-y-6">
+              {/* Title */}
+              <div className="h-10 bg-gray-200 animate-pulse rounded-full w-3/4" />
+              {/* Price */}
+              <div className="h-8 bg-gray-200 animate-pulse rounded-full w-1/4" />
+              {/* Description label */}
+              <div className="h-5 bg-gray-200 animate-pulse rounded-full w-1/5" />
+              {/* Description lines */}
+              <div className="space-y-2">
+                <div className="h-4 bg-gray-200 animate-pulse rounded-full w-full" />
+                <div className="h-4 bg-gray-200 animate-pulse rounded-full w-5/6" />
+                <div className="h-4 bg-gray-200 animate-pulse rounded-full w-4/6" />
+              </div>
+              {/* Size label */}
+              <div className="h-5 bg-gray-200 animate-pulse rounded-full w-1/5" />
+              {/* Size circles */}
+              <div className="flex gap-3">
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className="w-11 h-11 bg-gray-200 animate-pulse rounded-full" />
+                ))}
+              </div>
+              {/* Buttons */}
+              <div className="space-y-4 pt-2">
+                <div className="h-16 bg-gray-200 animate-pulse rounded-full w-full" />
+                <div className="h-16 bg-gray-200 animate-pulse rounded-full w-full" />
+                <div className="h-10 bg-gray-200 animate-pulse rounded-full w-1/3 mx-auto" />
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -260,29 +295,28 @@ export default function ProductDetail() {
               {/* ✅ UI — Minimal Luxury */}
               <motion.div variants={fadeUp} className="space-y-4 w-full max-w-2xl">
 
-                {/* ROW 1: Add to Cart — full width solid */}
-                <button 
-                  onClick={handleAddToCart} 
-                  className="w-full bg-brand text-white py-5 rounded-full font-bold hover:bg-brand-dark transition-all shadow-xl uppercase tracking-widest active:scale-[0.98]"
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
-                >
-                  Add to Cart
-                </button>
+                                          {/* ROW 1: Add to Cart — full width solid */}
+                          <button 
+                            onClick={handleAddToCart}
+                            className="w-full bg-brand text-white py-5 rounded-full font-bold border border-white/60 hover:brightness-90 shadow-[0_4px_14px_0_rgba(37,211,102,0.39)] hover:shadow-[0_6px_20px_0_rgba(37,211,102,0.5)] transition-all flex items-center justify-center uppercase tracking-widest active:scale-[0.98] backdrop-blur-sm drop-shadow-sm bg-gradient-to-b from-brand/80 to-brand"
+                          >
+                            Add to Cart
+                          </button>
 
                 {/* ROW 2: Order with WhatsApp — full width outlined green */}
-                <button 
-                  onClick={handleWhatsAppOrder} 
-                 className="w-full bg-[#25D366] text-white py-5 rounded-full font-bold hover:bg-[#1fc75c] hover:shadow-2xl transition-all flex items-center justify-center gap-3 uppercase tracking-[0.2em] active:scale-[0.96] shadow-lg"
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
-                >
-                  <FaWhatsapp className="w-6 h-6" /> Order with WhatsApp
-                </button>
+                                      <button 
+                        onClick={handleWhatsAppOrder} 
+                       className="w-full bg-[#25D366] text-white py-5 rounded-full font-bold border border-white/60 hover:brightness-90 shadow-[0_4px_14px_0_rgba(37,211,102,0.39)] hover:shadow-[0_6px_20px_0_rgba(37,211,102,0.5)] transition-all flex items-center justify-center gap-3 uppercase tracking-[0.2em] active:scale-[0.98] backdrop-blur-sm drop-shadow-sm bg-gradient-to-b from-[#2edf6e] to-[#25D366]"
+                        style={{ fontFamily: 'Roboto, sans-serif' }}
+                      >
+                        <FaWhatsapp className="w-6 h-6" /> Order with WhatsApp
+                      </button>
 
                 {/* ROW 3: Share This Style — subtle text link, no heavy button */}
                 <div className="flex justify-center pt-1">
                   <button
                     onClick={handleShare}
-                    className="flex items-center gap-2 text-gray-400 hover:text-brand transition-colors text-sm font-bold tracking-widest uppercase group"
+                    className="flex items-center gap-2 text-gray-400 hover:text-brand transition-all text-sm font-bold tracking-widest uppercase group px-6 py-3 rounded-full border border-white/60 bg-white/50 hover:bg-white/70 shadow-sm drop-shadow-sm backdrop-blur-sm active:scale-[0.98]"
                     style={{ fontFamily: 'Roboto, sans-serif' }}
                   >
                     <HiShare className="w-4 h-4 group-hover:scale-110 transition-transform" />

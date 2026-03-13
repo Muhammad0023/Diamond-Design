@@ -46,19 +46,24 @@ export default function Header() {
 
   return (
     <>
-      {/* ✅ FIX: SearchBar lives OUTSIDE <header> so backdrop-blur never traps it */}
-      {/* Desktop SearchBar — positioned absolutely to match header layout */}
-      <div className={`hidden md:block fixed top-0 right-0 z-[9999] pr-20 transition-opacity duration-300 ${isCartOpen ? "opacity-0 pointer-events-none" : "opacity-100"}`}
+      {/* Desktop SearchBar — Added pointer-events-none to the wrapper */}
+      <div 
+        className={`hidden md:block fixed top-0 right-0 z-[9999] pr-20 transition-opacity duration-300 pointer-events-none ${isCartOpen ? "opacity-0" : "opacity-100"}`}
         style={{ top: scrolled ? '10px' : '30px', right: '40px', transition: 'top 0.5s' }}
       >
-        <SearchBar />
+        <div className="pointer-events-auto"> {/* Re-enable clicks only for the search input */}
+          <SearchBar />
+        </div>
       </div>
 
-      {/* Mobile SearchBar — positioned absolutely in top-right */}
-      <div className={`md:hidden fixed z-[9999] transition-opacity duration-300 ${isCartOpen || isMobileMenuOpen ? "opacity-0 pointer-events-none" : "opacity-100"}`}
+      {/* Mobile SearchBar — Added pointer-events-none to the wrapper */}
+      <div 
+        className={`md:hidden fixed z-[9999] transition-opacity duration-300 pointer-events-none ${isCartOpen || isMobileMenuOpen ? "opacity-0" : "opacity-100"}`}
         style={{ top: scrolled ? '10px' : '28px', right: '58px', transition: 'top 0.5s' }}
       >
-        <SearchBar isMobile={true} />
+        <div className="pointer-events-auto">
+          <SearchBar isMobile={true} />
+        </div>
       </div>
 
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
@@ -145,15 +150,20 @@ export default function Header() {
               </a>
             </div>
 
-            {/* ✅ Cart button stays inside header — placeholder div keeps layout balanced */}
-            <div className="flex items-center gap-2 md:gap-4">
-              {/* Invisible placeholder to keep cart button position */}
+            {/* ✅ UPDATED CART SECTION: Added relative z-[10000] to ensure it stays on top */}
+            <div className="flex items-center gap-2 md:gap-4 relative z-[10000]">
               <div className="hidden md:block w-64" />
               <div className="md:hidden w-8" />
-              <button onClick={toggleCart} className="relative p-2 text-gray-700 hover:text-brand transition-all hover:scale-110">
+              <button 
+                onClick={(e) => {
+                  e.preventDefault();
+                  toggleCart();
+                }} 
+                className="relative p-2 text-gray-700 hover:text-brand transition-all hover:scale-110 cursor-pointer"
+              >
                 <HiOutlineShoppingBag className="w-6 h-6" />
                 {getCartCount() > 0 && (
-                  <span className="absolute top-1 right-1 bg-brand text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                  <span className="absolute top-1 right-1 bg-brand text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center pointer-events-none">
                     {getCartCount()}
                   </span>
                 )}

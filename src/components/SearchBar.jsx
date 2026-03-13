@@ -33,12 +33,12 @@ export default function SearchBar({ isMobile = false }) {
   const location = useLocation();
   const { performSearch } = useSearch();
 
-  useEffect(() => {
-    setIsOpen(false);
-    setInputValue('');
-    setDropdownResults([]);
-    document.body.style.overflow = 'unset';
-  }, [location.pathname, location.search]);
+ useEffect(() => {
+  setIsOpen(false);
+  setInputValue('');
+  setDropdownResults([]);
+  document.body.style.overflow = 'unset';
+}, [location.pathname]);
 
   useEffect(() => {
     if (isMobile && isOpen) {
@@ -85,11 +85,12 @@ export default function SearchBar({ isMobile = false }) {
       navigate(`/search?q=${encodeURIComponent(inputValue.trim())}`);
     }
   };
-
-  const goToProduct = (product) => {
-    saveToHistory(product);
-    navigate(`/product/${product.slug}`);
-  };
+const goToProduct = (product) => {
+  saveToHistory(product);
+  setDropdownResults([]);
+  setInputValue('');
+  navigate(`/product/${product.slug}`);
+};
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') goToSearchResults();
