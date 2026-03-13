@@ -14,7 +14,7 @@ export default function Header() {
   const [isDressesOpen, setIsDressesOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   
-  const { getCartCount, toggleCart } = useCart();
+  const { getCartCount, toggleCart, isCartOpen } = useCart();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -48,24 +48,18 @@ export default function Header() {
     <>
       {/* ✅ FIX: SearchBar lives OUTSIDE <header> so backdrop-blur never traps it */}
       {/* Desktop SearchBar — positioned absolutely to match header layout */}
-<div className="fixed top-0 left-0 right-0 z-[9999] pointer-events-none">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-    <div className="flex justify-end items-center h-16 md:h-24 transition-all duration-500"
-         style={{ height: scrolled ? '64px' : '96px' }}>
-      
-      {/* Desktop SearchBar */}
-      <div className="hidden md:block pointer-events-auto mr-12">
+      <div className={`hidden md:block fixed top-0 right-0 z-[9999] pr-20 transition-opacity duration-300 ${isCartOpen ? "opacity-0 pointer-events-none" : "opacity-100"}`}
+        style={{ top: scrolled ? '10px' : '30px', right: '40px', transition: 'top 0.5s' }}
+      >
         <SearchBar />
       </div>
 
-      {/* Mobile SearchBar */}
-      <div className="md:hidden pointer-events-auto mr-10">
+      {/* Mobile SearchBar — positioned absolutely in top-right */}
+      <div className={`md:hidden fixed z-[9999] transition-opacity duration-300 ${isCartOpen || isMobileMenuOpen ? "opacity-0 pointer-events-none" : "opacity-100"}`}
+        style={{ top: scrolled ? '10px' : '28px', right: '58px', transition: 'top 0.5s' }}
+      >
         <SearchBar isMobile={true} />
       </div>
-
-    </div>
-  </div>
-</div>
 
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled 
@@ -155,7 +149,7 @@ export default function Header() {
             <div className="flex items-center gap-2 md:gap-4">
               {/* Invisible placeholder to keep cart button position */}
               <div className="hidden md:block w-64" />
-              <div className="md:hidden w-10" />
+              <div className="md:hidden w-8" />
               <button onClick={toggleCart} className="relative p-2 text-gray-700 hover:text-brand transition-all hover:scale-110">
                 <HiOutlineShoppingBag className="w-6 h-6" />
                 {getCartCount() > 0 && (

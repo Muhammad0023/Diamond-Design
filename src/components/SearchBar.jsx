@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { HiOutlineSearch, HiX, HiClock } from 'react-icons/hi';
 import { useSearch } from '../context/SearchContext';
@@ -116,11 +117,20 @@ export default function SearchBar({ isMobile = false }) {
           <HiOutlineSearch className="w-6 h-6" />
         </button>
 
-        {isOpen && (
-          <div className="fixed inset-0 z-[9999] flex flex-col bg-black/40 backdrop-blur-md">
-            <div className="flex-shrink-0 w-full bg-white pb-3 pt-4 border-b border-gray-100">
-              <div className="flex items-center gap-2 px-3">
-                <div className="flex-1 flex items-center bg-gray-100 rounded-full px-4 py-3 border border-gray-200">
+        {isOpen && createPortal(
+          /* ✅ FIX 1: Softer, more attractive background blur (gray-900/20 with blur-lg) */
+          /* ✅ Added onClick to close when clicking the background */
+          <div 
+            className="fixed inset-0 z-[9999] flex flex-col bg-gray-900/20 backdrop-blur-lg"
+            onClick={(e) => e.target === e.currentTarget && setIsOpen(false)}
+          >
+            
+            {/* ✅ FIX 2: Slightly refined header with shadow to separate from the blur */}
+            <div className="flex-shrink-0 w-full bg-white/95 backdrop-blur-md pb-3 pt-4 shadow-sm border-b border-gray-100">
+              <div className="flex items-center gap-3 px-4">
+                
+                {/* Search Input Area */}
+                <div className="flex-1 flex items-center bg-gray-100 rounded-full px-4 py-2.5 border border-transparent focus-within:bg-white focus-within:border-gray-300 transition-all duration-300">
                   <HiOutlineSearch className="w-5 h-5 text-gray-400 mr-2" />
                   <input
                     ref={inputRef}
@@ -129,19 +139,35 @@ export default function SearchBar({ isMobile = false }) {
                     onChange={handleInputChange}
                     onKeyDown={handleKeyDown}
                     placeholder="Search..."
-                    className="flex-1 bg-transparent outline-none text-base text-gray-800"
+                    className="flex-1 bg-transparent outline-none text-base text-gray-800 w-full"
                     autoFocus
                   />
                   {inputValue && (
-                    <button onClick={() => setInputValue('')}><HiX className="w-4 h-4 text-gray-400" /></button>
+                    <button onClick={() => setInputValue('')}>
+                      <HiX className="w-5 h-5 text-gray-400 hover:text-gray-600 transition-colors" />
+                    </button>
                   )}
                 </div>
-                <button onClick={() => setIsOpen(false)} className="text-gray-900 font-bold px-2">Cancel</button>
+        
+                {/* ✅ FIX 3: Responsive perfect cancel button (whitespace-nowrap prevents breaking, active:scale makes it feel tactile) */}
+                <button 
+                  onClick={() => setIsOpen(false)} 
+                  className="text-sm font-semibold text-gray-600 active:text-gray-900 active:scale-95 transition-all whitespace-nowrap px-1 py-2"
+                >
+                  Cancel
+                </button>
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto">
-              <div className="pb-20">
+            {/* ✅ Added onClick to close when clicking the empty scrolling area */}
+            <div 
+              className="flex-1 overflow-y-auto"
+              onClick={(e) => e.target === e.currentTarget && setIsOpen(false)}
+            >
+              <div 
+                className="pb-20"
+                onClick={(e) => e.target === e.currentTarget && setIsOpen(false)}
+              >
                 {showHistory && (
                   <div className="bg-white p-4 shadow-xl rounded-b-2xl">
                     <div className="flex justify-between items-center mb-2">
@@ -189,7 +215,8 @@ export default function SearchBar({ isMobile = false }) {
                 )}
               </div>
             </div>
-          </div>
+          </div>,
+          document.body
         )}
       </div>
     );
@@ -220,7 +247,6 @@ export default function SearchBar({ isMobile = false }) {
             <div className="p-3">
               <div className="flex justify-between items-center px-2 mb-1">
                 <p className="text-[10px] font-bold text-gray-400 uppercase">Recent Searches</p>
-                {/* ✅ Added Clear All button for Desktop */}
                 <button 
                   onMouseDown={clearHistory} 
                   className="text-[10px] font-bold text-gray-400 hover:text-brand cursor-pointer uppercase"
