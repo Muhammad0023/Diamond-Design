@@ -40,15 +40,6 @@ export default function HomePage() {
       */}
       <Hero key="constant-hero" />
       
-      {/* 1. LOADING STATE (Below Hero) */}
-      {loading && (
-        <div className="min-h-[50vh] flex items-center justify-center bg-white">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-brand border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-600 text-lg">Loading products...</p>
-          </div>
-        </div>
-      )}
 
       {/* 2. ERROR STATE (Below Hero) */}
       {error && !loading && (
@@ -68,7 +59,7 @@ export default function HomePage() {
       )}
 
       {/* 3. MAIN CONTENT (Only shows when loading is done) */}
-      {!loading && !error && (
+      {!error && (
         <>
           <motion.div 
             id="shop-now"
@@ -77,41 +68,38 @@ export default function HomePage() {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            {productGroups.latest.length > 0 && (
-              <ProductCarousel 
-                title="Latest Designs" 
-                products={productGroups.latest} 
-                viewAllLink="/latest-designs"
-              />
-            )}
+                          <ProductCarousel 
+                  title="Latest Designs" 
+                  products={loading ? null : productGroups.latest} 
+                  viewAllLink="/latest-designs"
+                />
           </motion.div>
           
           <div className="space-y-4">
-            {[
-              { title: "Simple Dresses", products: productGroups.simple, link: "/dresses/simple" },
-              { title: "Wedding Dresses", products: productGroups.wedding, link: "/dresses/wedding" },
-              { title: "Chiffon", products: productGroups.chiffon, link: "/dresses/chiffon" },
-              { title: "Holidays", products: productGroups.holiday, link: "/dresses/holiday" },
-              { title: "Group Outfits", products: productGroups.group, link: "/dresses/group" },
-              { title: "Men's", products: productGroups.mens, link: "/mens" },
-              { title: "Couples", products: productGroups.couples, link: "/couples" },
-            ].map((group) => (
-              group.products.length > 0 && (
-                <motion.div
-                  key={group.title}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
-                >
-                  <ProductGrid 
-                    title={group.title} 
-                    products={group.products} 
-                    viewAllLink={group.link} 
-                  />
-                </motion.div>
-              )
-            ))}
+                      {[
+            { title: "Simple Dresses", products: productGroups.simple, link: "/collections/simple-dresses" },
+            { title: "Wedding Dresses", products: productGroups.wedding, link: "/collections/wedding-dresses" },
+            { title: "Chiffon", products: productGroups.chiffon, link: "/collections/chiffon" },
+            { title: "Holidays", products: productGroups.holiday, link: "/collections/holidays" },
+            { title: "Group Outfits", products: productGroups.group, link: "/collections/group-outfits" },
+            { title: "Men's", products: productGroups.mens, link: "/collections/mens-collection" },
+            { title: "Couples", products: productGroups.couples, link: "/collections/couples-collection" },
+          ].map((group) => (
+            <motion.div
+              key={group.title}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
+            >
+              <ProductGrid 
+                title={group.title} 
+                products={loading ? null : group.products} 
+                viewAllLink={group.link} 
+              />
+            </motion.div>
+          ))}
+          
           </div>
         </>
       )}

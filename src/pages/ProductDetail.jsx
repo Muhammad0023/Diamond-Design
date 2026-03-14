@@ -48,16 +48,15 @@ export default function ProductDetail() {
     }
   }, [showModal]);
 
-  const handleWhatsAppOrder = () => {
+ const handleWhatsAppOrder = () => {
     const phoneNumber = '+251988503333';
     const productUrl = window.location.href;
     const message = encodeURIComponent(
-      `Hi Diamond Design! 👋\n\nI want to order:\n\n` +
-      `👗 Product: ${productDetail.name}\n` +
-      `📏 Size: ${selectedSize}\n` +
-      `💰 Price: $${productDetail.price}\n\n` +
-      `🔗 View Product: ${productUrl}\n\n` +
-      `Please confirm availability.`
+      `Hi Diamond Design! 👋\n` +
+      `I'd like to order this design:\n\n` +
+      `💎 ${productDetail.name} | Size: ${selectedSize} | Price: $${productDetail.price}\n\n` +
+      `🔗 ${productUrl}\n\n` +
+      `Is this available?`
     );
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };
@@ -69,7 +68,7 @@ export default function ProductDetail() {
   const handleShare = async () => {
     const shareData = {
       title: `${productDetail.name} | Diamond Design`,
-      text: `Check out this beautiful Habesha style from Diamond Design! \u{1F1EA}\u{1F1F9} \u{1F1F3}\u{1F1F7} ✨`,
+      text: `Check out this beautiful Habesha style from Diamond Design! \u{1F1EA}\u{1F1F9}\u{200B} \u{1F1EA}\u{1F1F7}\u{200B} ✨`,
       url: window.location.href,
     };
     if (navigator.share) {

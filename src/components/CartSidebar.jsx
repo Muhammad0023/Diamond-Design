@@ -24,19 +24,16 @@ export default function CartSidebar() {
     const baseUrl = window.location.origin; // Gets your website domain
     
     // Build order message
-    let message = 'Hi Diamond Design! 👋\n\nI’d like to order these designs:\n\n';
+    let message = 'Hi Diamond Design! 👋\n' +
+      'I\'d like to order these designs:\n\n';
 
     cartItems.forEach((item, index) => {
       const productLink = `${baseUrl}/product/${item.slug}`;
-
-      message += `✨ *Item ${index + 1}: ${item.name}*\n`;
-      message += `Size: ${item.size} | Qty: ${item.quantity}\n`;
-      message += `Price: $${item.price * item.quantity}\n`;
-      message += `🔗 ${productLink}\n\n`;
+      message += `💎 Item ${index + 1}: ${item.name} | Size: ${item.size} | Qty: ${item.quantity} | Price: $${item.price * item.quantity} 🔗 ${productLink}\n`;
     });
 
-    message += `💰 *Total: $${getCartTotal()}*\n\n`;
-    message += 'Is this available? 💎';
+    message += `\n— Total: $${getCartTotal()} —\n\n`;
+    message += 'Is this available?';
 
     const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 

@@ -3,9 +3,35 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 
+function ProductCarouselSkeleton() {
+  return (
+    <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 overflow-hidden">
+      <div className="max-w-7xl mx-auto">
+        {/* Title & View All skeleton */}
+        <div className="flex items-center justify-between mb-8">
+          <div className="h-9 bg-gray-200 animate-pulse rounded-full w-56" />
+          <div className="h-5 bg-gray-200 animate-pulse rounded-full w-20" />
+        </div>
+        {/* Cards skeleton */}
+        <div className="flex gap-3 sm:gap-4 lg:gap-6 overflow-hidden pb-4">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="flex-none w-[38%] sm:w-[calc(40%-0.5rem)] lg:w-[calc(20%-1.2rem)]">
+              <div className="aspect-[3/4] bg-gray-200 animate-pulse rounded-sm mb-3" />
+              <div className="h-4 bg-gray-200 animate-pulse rounded-full w-3/4 mb-2" />
+              <div className="h-4 bg-gray-200 animate-pulse rounded-full w-1/3" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function ProductCarousel({ title, products, viewAllLink = "#" }) {
   const scrollContainerRef = useRef(null);
   const navigate = useNavigate();
+
+  if (!products) return <ProductCarouselSkeleton />;
 
   const displayedProducts = products.slice(0, 13);
   const hasMoreProducts = products.length > 13;

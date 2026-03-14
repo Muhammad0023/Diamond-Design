@@ -148,18 +148,46 @@ export default function CategoryPage({ manualCategory, legacyMode = false }) {
 
   if (!categoryData) return null;
 
-  if (loading) {
+ if (loading) {
     return (
       <div className="min-h-screen bg-white pt-24 pb-16">
         <Helmet>
           <title>{categoryData.seoTitle}</title>
           <meta name="description" content={categoryData.seoDescription} />
         </Helmet>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center min-h-[60vh]">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-brand border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-600 text-lg" style={{ fontFamily: 'Roboto, sans-serif' }}>Loading products...</p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          {/* Breadcrumb skeleton */}
+          <div className="flex items-center gap-2 mb-6">
+            <div className="h-4 bg-gray-200 animate-pulse rounded-full w-16" />
+            <div className="h-4 bg-gray-200 animate-pulse rounded-full w-4" />
+            <div className="h-4 bg-gray-200 animate-pulse rounded-full w-28" />
           </div>
+
+          {/* Header skeleton */}
+          <div className="mb-8">
+            <div className="h-12 bg-gray-200 animate-pulse rounded-full w-64 mb-4" />
+            <div className="h-4 bg-gray-200 animate-pulse rounded-full w-full max-w-xl mb-2" />
+            <div className="h-4 bg-gray-200 animate-pulse rounded-full w-4/5 max-w-lg" />
+          </div>
+
+          {/* Filters bar skeleton */}
+          <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-200">
+            <div className="h-4 bg-gray-200 animate-pulse rounded-full w-48" />
+            <div className="h-9 bg-gray-200 animate-pulse rounded-lg w-44" />
+          </div>
+
+          {/* Products grid skeleton */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {[...Array(20)].map((_, i) => (
+              <div key={i}>
+                <div className="aspect-[3/4] bg-gray-200 animate-pulse rounded-sm mb-3" />
+                <div className="h-4 bg-gray-200 animate-pulse rounded-full w-3/4 mb-2" />
+                <div className="h-4 bg-gray-200 animate-pulse rounded-full w-1/3" />
+              </div>
+            ))}
+          </div>
+
         </div>
       </div>
     );
