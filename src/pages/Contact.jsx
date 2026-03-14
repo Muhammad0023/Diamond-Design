@@ -41,8 +41,8 @@ export default function Contact() {
         <meta property="og:title" content="Contact Diamond Design | Get In Touch" />
         <meta property="og:description" content="Questions about your Habesha dress order? Contact our Addis Ababa studio via WhatsApp at +251 988 503 333 or email diamonddesign907@gmail.com." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://diamond-design.vercel.app/contact" />
-        <link rel="canonical" href="https://diamond-design.vercel.app/contact" />
+        <meta property="og:url" content="https://www.diamonddesignstore.com/contact" />
+        <link rel="canonical" href="https://www.diamonddesignstore.com/contact" />
       </Helmet>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 

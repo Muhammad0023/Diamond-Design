@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /abulhabesh/
 
-Sitemap: https://diamond-design.vercel.app/sitemap.xml
+Sitemap: https://www.diamonddesignstore.com/sitemap.xml

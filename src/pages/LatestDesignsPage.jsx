@@ -58,8 +58,8 @@ export default function LatestDesignsPage() {
         <meta property="og:title" content="Latest Designs | Diamond Design" />
         <meta property="og:description" content="Shop the newest Ethiopian Habesha dress arrivals at Diamond Design." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://diamond-design.vercel.app/latest-designs" />
-        <link rel="canonical" href="https://diamond-design.vercel.app/latest-designs" />
+        <meta property="og:url" content="https://www.diamonddesignstore.com/latest-designs" />
+        <link rel="canonical" href="https://www.diamonddesignstore.com/latest-designs" />
       </Helmet>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -3,71 +3,71 @@
 
   <!-- Main Pages -->
   <url>
-    <loc>https://diamond-design.vercel.app/</loc>
+    <loc>https://www.diamonddesignstore.com/</loc>
     <priority>1.0</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>https://diamond-design.vercel.app/latest-designs</loc>
+    <loc>https://www.diamonddesignstore.com/latest-designs</loc>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
 
   <!-- Collections -->
   <url>
-    <loc>https://diamond-design.vercel.app/collections/simple-dresses</loc>
+    <loc>https://www.diamonddesignstore.com/collections/simple-dresses</loc>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>https://diamond-design.vercel.app/collections/wedding-dresses</loc>
+    <loc>https://www.diamonddesignstore.com/collections/wedding-dresses</loc>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>https://diamond-design.vercel.app/collections/chiffon</loc>
+    <loc>https://www.diamonddesignstore.com/collections/chiffon</loc>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>https://diamond-design.vercel.app/collections/holidays</loc>
+    <loc>https://www.diamonddesignstore.com/collections/holidays</loc>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>https://diamond-design.vercel.app/collections/group-outfits</loc>
+    <loc>https://www.diamonddesignstore.com/collections/group-outfits</loc>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>https://diamond-design.vercel.app/collections/mens-collection</loc>
+    <loc>https://www.diamonddesignstore.com/collections/mens-collection</loc>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>https://diamond-design.vercel.app/collections/couples-collection</loc>
+    <loc>https://www.diamonddesignstore.com/collections/couples-collection</loc>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
 
   <!-- Support Pages -->
   <url>
-    <loc>https://diamond-design.vercel.app/about</loc>
+    <loc>https://www.diamonddesignstore.com/about</loc>
     <priority>0.5</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://diamond-design.vercel.app/contact</loc>
+    <loc>https://www.diamonddesignstore.com/contact</loc>
     <priority>0.5</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://diamond-design.vercel.app/faqs</loc>
+    <loc>https://www.diamonddesignstore.com/faqs</loc>
     <priority>0.4</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://diamond-design.vercel.app/size-guide</loc>
+    <loc>https://www.diamonddesignstore.com/size-guide</loc>
     <priority>0.4</priority>
     <changefreq>monthly</changefreq>
   </url>

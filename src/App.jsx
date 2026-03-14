@@ -36,7 +36,7 @@ function App() {
         <meta name="keywords" content="Habesha dress, Ethiopian traditional dress, Diamond Design" />
         <meta property="og:site_name" content="Diamond Design" />
         <meta property="og:type" content="website" />
-        <link rel="canonical" href="https://diamond-design.vercel.app/" />
+        <link rel="canonical" href="https://www.diamonddesignstore.com/" />
       </Helmet>
 
       {/* ✅ FIX: BrowserRouter wraps everything so useLocation works everywhere */}
@@ -89,7 +89,7 @@ function App() {
                                 <Helmet>
                                   <title>FAQs | Diamond Design – Habesha Dress Questions Answered</title>
                                   <meta name="description" content="Find answers to common questions about Diamond Design's Habesha dresses — sizing, shipping, custom orders, and more." />
-                                  <link rel="canonical" href="https://diamond-design.vercel.app/faqs" />
+                                  <link rel="canonical" href="https://www.diamonddesignstore.com/faqs" />
                                 </Helmet>
                                 <div className="min-h-screen flex items-center justify-center text-2xl text-gray-600">FAQs Page (Coming Soon)</div>
                               </>
@@ -99,7 +99,7 @@ function App() {
                                 <Helmet>
                                   <title>Size Guide | Diamond Design – Find Your Perfect Habesha Dress Fit</title>
                                   <meta name="description" content="Use Diamond Design's size guide to find your perfect Habesha Kemis fit. Measurements for women's, men's, and couples collections." />
-                                  <link rel="canonical" href="https://diamond-design.vercel.app/size-guide" />
+                                  <link rel="canonical" href="https://www.diamonddesignstore.com/size-guide" />
                                 </Helmet>
                                 <div className="min-h-screen flex items-center justify-center text-2xl text-gray-600">Size Guide Page (Coming Soon)</div>
                               </>

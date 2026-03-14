@@ -72,7 +72,7 @@ const categoryConfig = {
   },
 };
 
-const BASE_URL = 'https://diamond-design.vercel.app';
+const BASE_URL = 'https://www.diamonddesignstore.com';
 
 export default function CategoryPage({ manualCategory, legacyMode = false }) {
   // slug comes from /collections/:slug

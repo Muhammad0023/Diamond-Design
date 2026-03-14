@@ -34,9 +34,9 @@ export default function About() {
         <meta property="og:title" content="About Diamond Design | Our Heritage, Your Elegance" />
         <meta property="og:description" content="Handcrafted Ethiopian Habesha dresses by skilled artisans in Addis Ababa. Discover our story and our mission to bring traditional elegance to the world." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://diamond-design.vercel.app/about" />
-        <link rel="canonical" href="https://diamond-design.vercel.app/about" />
-        <meta property="og:image" content="https://diamond-design.vercel.app/og-about.jpg" />
+        <meta property="og:url" content="https://www.diamonddesignstore.com/about" />
+        <link rel="canonical" href="https://www.diamonddesignstore.com/about" />
+        <meta property="og:image" content="https://www.diamonddesignstore.com/og-about.jpg" />
         <meta name="twitter:card" content="summary_large_image" />  
         <meta name="twitter:title" content="About Diamond Design | Our Heritage, Your Elegance" />
       </Helmet>
