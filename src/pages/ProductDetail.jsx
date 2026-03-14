@@ -54,9 +54,9 @@ export default function ProductDetail() {
     const message = encodeURIComponent(
       `Hi Diamond Design! 👋\n` +
       `I'd like to order this design:\n\n` +
-      `💎 ${productDetail.name} | Size: ${selectedSize} | Price: $${productDetail.price}\n\n` +
+      `${productDetail.name} | Size: ${selectedSize} | Price: $${productDetail.price}\n\n` +
       `🔗 ${productUrl}\n\n` +
-      `Is this available?`
+      `Is this available? 💎`
     );
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };
@@ -356,12 +356,22 @@ export default function ProductDetail() {
                     className="cursor-pointer group" 
                     onClick={() => { navigate(`/product/${relProduct.slug}`); window.scrollTo(0, 0); }}
                   >
-                    <div className="bg-white overflow-hidden shadow-sm mb-4">
-                      <img 
-                        src={relProduct.image} 
-                        alt={`${relProduct.name} - Related Product`} 
-                        className="w-full aspect-[3/4] object-cover group-hover:opacity-80 transition-opacity" 
-                      />
+                    <div className="bg-white overflow-hidden shadow-sm mb-4 relative">
+
+                                {relProduct.hoverImage && relProduct.hoverImage !== relProduct.image ? (
+  <>
+    <img src={relProduct.image} alt={`${relProduct.name} - Related Product`}
+      className="w-full aspect-[3/4] object-cover transition-all duration-500 absolute inset-0 group-hover:opacity-0 group-hover:scale-105"
+    />
+    <img src={relProduct.hoverImage} alt={`${relProduct.name} – hover`}
+      className="w-full aspect-[3/4] object-cover transition-all duration-500 opacity-0 scale-105 group-hover:opacity-100 group-hover:scale-100"
+    />
+  </>
+) : (
+  <img src={relProduct.image} alt={`${relProduct.name} - Related Product`}
+    className="w-full aspect-[3/4] object-cover transition-all duration-500 group-hover:scale-110"
+  />
+)}
                     </div>
                     <h3 className="text-gray-700 text-sm mb-1 line-clamp-2" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>{relProduct.name}</h3>
                     <p className="text-gray-900 font-semibold" style={{ fontFamily: 'Roboto, sans-serif' }}>${relProduct.price}</p>

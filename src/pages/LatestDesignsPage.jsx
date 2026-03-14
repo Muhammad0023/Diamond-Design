@@ -207,12 +207,21 @@ function ProductCard({ product, navigate }) {
       {/* Product Card */}
       <div className="bg-white overflow-hidden shadow-sm mb-3 hover:shadow-xl transition-shadow duration-300">
         <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
-          <img
-            src={isHovered ? hoverImage : mainImage}
-            
-            alt={`${product.name} – New Arrival Ethiopian Habesha Dress | Diamond Design`} 
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          />
+
+                  {hoverImage !== mainImage ? (
+  <>
+    <img src={mainImage} alt={`${product.name} – New Arrival Ethiopian Habesha Dress | Diamond Design`}
+      className={`w-full h-full object-cover transition-all duration-500 absolute inset-0 ${isHovered ? 'opacity-0 scale-105' : 'opacity-100 scale-100'}`}
+    />
+    <img src={hoverImage} alt={`${product.name} – hover`}
+      className={`w-full h-full object-cover transition-all duration-500 ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
+    />
+  </>
+) : (
+  <img src={mainImage} alt={`${product.name} – New Arrival Ethiopian Habesha Dress | Diamond Design`}
+    className={`w-full h-full object-cover transition-all duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
+  />
+)}
           {product.isNew && (
             <span className="absolute top-4 left-4 bg-brand text-white text-xs font-bold px-3 py-1">
               NEW

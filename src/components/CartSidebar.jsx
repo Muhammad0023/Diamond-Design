@@ -29,11 +29,11 @@ export default function CartSidebar() {
 
     cartItems.forEach((item, index) => {
       const productLink = `${baseUrl}/product/${item.slug}`;
-      message += `💎 Item ${index + 1}: ${item.name} | Size: ${item.size} | Qty: ${item.quantity} | Price: $${item.price * item.quantity} 🔗 ${productLink}\n`;
+      message += `Item ${index + 1}: ${item.name} | Size: ${item.size} | Qty: ${item.quantity} | Price: $${item.price * item.quantity} 🔗 ${productLink}\n`;
     });
 
     message += `\n— Total: $${getCartTotal()} —\n\n`;
-    message += 'Is this available?';
+    message += 'Is this available? 💎';
 
     const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 

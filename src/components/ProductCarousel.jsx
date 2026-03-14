@@ -125,12 +125,21 @@ function ProductCard({ product }) {
     >
       <div className="bg-white overflow-hidden shadow-sm transition-shadow duration-300 hover:shadow-lg">
         <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
-          <img
-            src={isHovered ? hoverImage : mainImage}
-            // ✅ FIXED: Descriptive alt with category context
-            alt={`${product.name} – Ethiopian Habesha Dress`}
-            className={`w-full h-full object-cover transition-all duration-200 ${isHovered ? 'scale-110' : 'scale-100'}`}
-          />
+
+          {hoverImage !== mainImage ? (
+  <>
+    <img src={mainImage} alt={`${product.name} – Ethiopian Habesha Dress`}
+      className={`w-full h-full object-cover transition-all duration-500 absolute inset-0 ${isHovered ? 'opacity-0 scale-105' : 'opacity-100 scale-100'}`}
+    />
+    <img src={hoverImage} alt={`${product.name} – hover`}
+      className={`w-full h-full object-cover transition-all duration-500 ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
+    />
+  </>
+) : (
+  <img src={mainImage} alt={`${product.name} – Ethiopian Habesha Dress`}
+    className={`w-full h-full object-cover transition-all duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
+  />
+)}
           {product.isNew && (
             <span className="absolute top-4 left-4 bg-brand text-white text-[10px] font-bold px-3 py-1">
               NEW

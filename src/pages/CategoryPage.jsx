@@ -326,18 +326,20 @@ function ProductGridItem({ product, navigate, variants }) {
     >
       <div className="bg-white overflow-hidden shadow-sm mb-3 group-hover:shadow-xl transition-all duration-500">
         <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
-          <img
-            src={product.image}
-            alt={`${product.name} – Ethiopian Habesha Dress`}
-            className={`w-full h-full object-cover transition-opacity duration-500 absolute inset-0 ${isHovered && product.hoverImage ? 'opacity-0' : 'opacity-100'}`}
-          />
-          {product.hoverImage && (
-            <img
-              src={product.hoverImage}
-              alt={`${product.name} – alternate view`}
-              className={`w-full h-full object-cover transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'}`}
-            />
-          )}
+          {product.hoverImage && product.hoverImage !== product.image ? (
+  <>
+    <img src={product.image} alt={`${product.name} – Ethiopian Habesha Dress`}
+      className={`w-full h-full object-cover transition-all duration-500 absolute inset-0 ${isHovered ? 'opacity-0 scale-105' : 'opacity-100 scale-100'}`}
+    />
+    <img src={product.hoverImage} alt={`${product.name} – alternate view`}
+      className={`w-full h-full object-cover transition-all duration-500 ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
+    />
+  </>
+) : (
+  <img src={product.image} alt={`${product.name} – Ethiopian Habesha Dress`}
+    className={`w-full h-full object-cover transition-all duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
+  />
+)}
           {product.isNew && (
             <span className="absolute top-4 left-4 bg-brand text-white text-xs font-bold px-3 py-1 z-10">NEW</span>
           )}

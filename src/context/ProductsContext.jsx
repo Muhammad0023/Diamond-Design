@@ -49,11 +49,11 @@ export function ProductsProvider({ children }) {
     return products.filter(p => p.category === category);
   };
 
-  // Get latest products (first 12)
+  // Get latest products of unlimited on the latest page
   const getLatestProducts = () => {
     return products
-      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-      .slice(0, 12);
+      .filter(p => p.isNew === true || p.category === 'latest')
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   };
 
   // Get single product by ID
