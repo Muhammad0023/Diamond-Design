@@ -126,12 +126,23 @@ export default function SearchResults() {
                 className="cursor-pointer group"
               >
                 <div className="bg-white overflow-hidden shadow-sm mb-3 hover:shadow-xl transition-shadow">
-                  <img
-                    src={product.image}
-                    alt={`${product.name} – Ethiopian Habesha Dress | Diamond Design`}
-                    className="w-full aspect-[3/4] object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
+  <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
+    {(product.hoverImage && product.hoverImage !== product.image) ? (
+      <>
+        <img src={product.image} alt={`${product.name} – Ethiopian Habesha Dress | Diamond Design`}
+          className="w-full h-full object-cover transition-all duration-500 absolute inset-0 group-hover:opacity-0 group-hover:scale-105"
+        />
+        <img src={product.hoverImage} alt={`${product.name} – hover`}
+          className="w-full h-full object-cover transition-all duration-500 opacity-0 scale-105 group-hover:opacity-100 group-hover:scale-100"
+        />
+      </>
+    ) : (
+      <img src={product.image} alt={`${product.name} – Ethiopian Habesha Dress | Diamond Design`}
+        className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+      />
+    )}
+  </div>
+</div>
                 <h3
                   className="text-gray-700 text-sm mb-1 line-clamp-2"
                   style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}
