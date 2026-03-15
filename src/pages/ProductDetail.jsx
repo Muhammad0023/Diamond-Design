@@ -253,29 +253,31 @@ export default function ProductDetail() {
               className="lg:col-span-5 w-full"
             >
               {/* Main image */}
-              <div
-                className="relative bg-gray-100 overflow-hidden mb-4 cursor-pointer group"
-                onClick={() => setShowModal(true)}
-                onTouchStart={handleTouchStart}
-                onTouchEnd={(e) => handleTouchEnd(e, productDetail.images.length)}
-              >
-                <AnimatePresence mode="wait">
-                  <motion.img 
-                    key={selectedImage}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    src={productDetail.images[selectedImage]} 
-                    alt={`${productDetail.name} - Featured Image`}
-                    className="w-full aspect-[3/4] object-cover" 
-                  />
-                </AnimatePresence>
-                {/* FIX 2: Zoom icon — bare icon, no circle background */}
-                <div className="absolute inset-0 flex items-start justify-start p-4 pointer-events-none">
-                  <HiZoomIn className="w-7 h-7 text-brand opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-md" />
-                </div>
-              </div>
+             <div
+  className="relative bg-gray-100 overflow-hidden mb-4 cursor-pointer group aspect-[3/4]"
+  onClick={() => setShowModal(true)}
+  onTouchStart={handleTouchStart}
+  onTouchEnd={(e) => handleTouchEnd(e, productDetail.images.length)}
+>
+  <AnimatePresence initial={false}>
+    <motion.img 
+      key={selectedImage}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4, ease: "easeInOut" }}
+      src={productDetail.images[selectedImage]} 
+      alt={`${productDetail.name} - Featured`}
+      className="absolute inset-0 w-full h-full object-cover" 
+    />
+  </AnimatePresence>
+
+  {/* Zoom icon */}
+  <div className="absolute inset-0 flex items-start justify-start p-4 pointer-events-none z-10">
+    <HiZoomIn className="w-5 h-5 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+  </div>
+</div>
+              
 
               {/* Thumbnail strip — scrollable, no arrows */}
               <div
@@ -308,11 +310,13 @@ export default function ProductDetail() {
               animate="visible"
               className="lg:col-span-7"
             >
-              <motion.h1 variants={fadeUp} className="text-3xl md:text-5xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'Roboto, sans-serif' }}>{productDetail.name}</motion.h1>
-              <motion.p variants={fadeUp} className="text-4xl font-bold text-brand mb-8" style={{ fontFamily: 'Roboto, sans-serif' }}>${productDetail.price}</motion.p>
+              <motion.h1 variants={fadeUp} className="text-3xl md:text-3xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'Roboto, sans-serif' }}>{productDetail.name}</motion.h1>
+              <motion.p variants={fadeUp} className="text-2xl font-bold text-brand mb-8" style={{ fontFamily: 'Roboto, sans-serif' }}>${productDetail.price}</motion.p>
               
               <motion.div variants={fadeUp} className="mb-10 max-w-2xl">
-                <h3 className="font-bold text-lg mb-2" style={{ fontFamily: 'Roboto, sans-serif' }}>Description</h3>
+                              <h3 className="font-bold text-sm mb-2 text-gray-500 tracking-wider" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                ABOUT THIS STYLE
+              </h3>
                 <p className="text-gray-600 leading-relaxed text-lg" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
                   {productDetail.description || "Beautiful handcrafted Habes traditional dress featuring intricate embroidery and premium fabric."}
                 </p>
@@ -320,7 +324,10 @@ export default function ProductDetail() {
 
               {/* SIZE CIRCLES */}
               <motion.div variants={fadeUp} className="mb-12">
-                <h3 className="font-bold text-lg mb-4" style={{ fontFamily: 'Roboto, sans-serif' }}>Select Size</h3>
+                                      <h3 
+                        className="font-bold text-sm mb-4 text-gray-500 uppercase tracking-wider" 
+                        style={{ fontFamily: 'Roboto, sans-serif' }} >  Select Size  </h3>
+                       
                 <div className="flex flex-wrap gap-3">
                   {productDetail.sizes.map((size) => (
                     <button 
@@ -375,15 +382,15 @@ export default function ProductDetail() {
         {relatedProducts.length > 0 && (
           <div className="bg-gray-50 py-20 mt-10">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <motion.h2 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="text-3xl font-bold text-gray-900 mb-10" 
-                style={{ fontFamily: 'Roboto, sans-serif' }}
-              >
-                You May Also Like
-              </motion.h2>
+                                <motion.h2 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="text-2xl md:text-3xl font-medium text-gray-900 mb-10" 
+                    style={{ fontFamily: 'Roboto, sans-serif' }}
+                  >
+                    You May Also Like
+                  </motion.h2>
               
               <motion.div 
                 variants={staggerContainer}
