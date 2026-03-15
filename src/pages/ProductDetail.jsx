@@ -76,11 +76,15 @@ export default function ProductDetail() {
 
   const handleWhatsAppOrder = () => {
     const phoneNumber = '+251988503333';
-    // FIX 4: Removed product URL from the message for simplicity
+    // Break the URL with a zero-width space so WhatsApp won't generate an OG preview card
+    // but the link is still visible and copyable in the message
+    const rawUrl = window.location.href;
+    const brokenUrl = rawUrl.replace('https://', 'https://\u200B');
     const message = encodeURIComponent(
       `Hi Diamond Design! 👋\n` +
       `I'd like to order this design:\n\n` +
       `${productDetail.name} | Size: ${selectedSize} | Price: $${productDetail.price}\n\n` +
+      `🔗 ${brokenUrl}\n\n` +
       `Is this available? 💎`
     );
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
