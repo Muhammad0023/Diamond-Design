@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { HiZoomIn, HiX, HiPlus, HiMinus, HiShare } from 'react-icons/hi';
 import { FaWhatsapp } from 'react-icons/fa';
@@ -27,6 +27,9 @@ export default function ProductDetail() {
   const [modalZoom, setModalZoom] = useState(1);
   const [shareCopied, setShareCopied] = useState(false);
 
+  // FIX 1: Thumbnail carousel scroll ref
+  const thumbsRef = useRef(null);
+
   const fadeUp = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
@@ -46,16 +49,38 @@ export default function ProductDetail() {
     } else {
       document.body.style.overflow = 'unset';
     }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
   }, [showModal]);
 
- const handleWhatsAppOrder = () => {
+  // Touch swipe handlers for main image (mobile only)
+  const touchStartX = useRef(null);
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e, totalImages) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) {
+        setSelectedImage(prev => (prev + 1) % totalImages);
+      } else {
+        setSelectedImage(prev => (prev - 1 + totalImages) % totalImages);
+      }
+    }
+    touchStartX.current = null;
+  };
+
+  const handleWhatsAppOrder = () => {
     const phoneNumber = '+251988503333';
-    const productUrl = window.location.href;
+    // FIX 4: Removed product URL from the message for simplicity
     const message = encodeURIComponent(
       `Hi Diamond Design! 👋\n` +
       `I'd like to order this design:\n\n` +
       `${productDetail.name} | Size: ${selectedSize} | Price: $${productDetail.price}\n\n` +
-      `🔗 ${productUrl}\n\n` +
       `Is this available? 💎`
     );
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
@@ -84,7 +109,7 @@ export default function ProductDetail() {
     }
   };
 
- if (loading) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-white mt-20 lg:mt-32 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -102,27 +127,20 @@ export default function ProductDetail() {
 
             {/* RIGHT: Info skeleton */}
             <div className="lg:col-span-7 space-y-6">
-              {/* Title */}
               <div className="h-10 bg-gray-200 animate-pulse rounded-full w-3/4" />
-              {/* Price */}
               <div className="h-8 bg-gray-200 animate-pulse rounded-full w-1/4" />
-              {/* Description label */}
               <div className="h-5 bg-gray-200 animate-pulse rounded-full w-1/5" />
-              {/* Description lines */}
               <div className="space-y-2">
                 <div className="h-4 bg-gray-200 animate-pulse rounded-full w-full" />
                 <div className="h-4 bg-gray-200 animate-pulse rounded-full w-5/6" />
                 <div className="h-4 bg-gray-200 animate-pulse rounded-full w-4/6" />
               </div>
-              {/* Size label */}
               <div className="h-5 bg-gray-200 animate-pulse rounded-full w-1/5" />
-              {/* Size circles */}
               <div className="flex gap-3">
                 {[...Array(5)].map((_, i) => (
                   <div key={i} className="w-11 h-11 bg-gray-200 animate-pulse rounded-full" />
                 ))}
               </div>
-              {/* Buttons */}
               <div className="space-y-4 pt-2">
                 <div className="h-16 bg-gray-200 animate-pulse rounded-full w-full" />
                 <div className="h-16 bg-gray-200 animate-pulse rounded-full w-full" />
@@ -187,16 +205,17 @@ export default function ProductDetail() {
 
       <div className="min-h-screen bg-white">
         
-        {/* FULL SCREEN MODAL SECTION */}
+        {/* FIX 3: FULL SCREEN MODAL — z-index raised above header, pointer-events locked */}
         <AnimatePresence>
           {showModal && (
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[100] bg-black/95 flex flex-col items-center justify-center p-4"
+              className="fixed inset-0 bg-black/95 flex flex-col items-center justify-center p-4"
+              style={{ zIndex: 99999 }}
             >
-              <div className="absolute top-6 right-6 flex gap-4 z-[110]">
+              <div className="absolute top-6 right-6 flex gap-4" style={{ zIndex: 100000 }}>
                 <button onClick={() => setModalZoom(prev => Math.min(prev + 0.5, 3))} className="p-3 bg-white/10 hover:bg-white/20 rounded-full text-white"><HiPlus className="w-6 h-6" /></button>
                 <button onClick={() => setModalZoom(prev => Math.max(prev - 0.5, 1))} className="p-3 bg-white/10 hover:bg-white/20 rounded-full text-white"><HiMinus className="w-6 h-6" /></button>
                 <button onClick={() => { setShowModal(false); setModalZoom(1); }} className="p-3 bg-white/10 hover:bg-white/20 rounded-full text-white"><HiX className="w-6 h-6" /></button>
@@ -229,7 +248,13 @@ export default function ProductDetail() {
               transition={{ duration: 0.6 }}
               className="lg:col-span-5 w-full"
             >
-              <div className="relative bg-gray-100 overflow-hidden mb-4 cursor-pointer group" onClick={() => setShowModal(true)}>
+              {/* Main image */}
+              <div
+                className="relative bg-gray-100 overflow-hidden mb-4 cursor-pointer group"
+                onClick={() => setShowModal(true)}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={(e) => handleTouchEnd(e, productDetail.images.length)}
+              >
                 <AnimatePresence mode="wait">
                   <motion.img 
                     key={selectedImage}
@@ -242,17 +267,31 @@ export default function ProductDetail() {
                     className="w-full aspect-[3/4] object-cover" 
                   />
                 </AnimatePresence>
-                <div className="absolute inset-0 flex items-start justify-start p-4">
-                  <div className="bg-white/90 p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
-                    <HiZoomIn className="w-6 h-6 text-brand" />
-                  </div>
+                {/* FIX 2: Zoom icon — bare icon, no circle background */}
+                <div className="absolute inset-0 flex items-start justify-start p-4 pointer-events-none">
+                  <HiZoomIn className="w-7 h-7 text-brand opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-md" />
                 </div>
               </div>
 
-              <div className="grid grid-cols-5 gap-2">
+              {/* Thumbnail strip — scrollable, no arrows */}
+              <div
+                ref={thumbsRef}
+                className="flex gap-2 overflow-x-auto scroll-smooth"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              >
                 {productDetail.images.map((img, index) => (
-                  <button key={index} onClick={() => setSelectedImage(index)} className={`aspect-square overflow-hidden border-2 transition-all ${selectedImage === index ? 'border-brand' : 'border-gray-200 hover:border-brand'}`}>
-                    <img src={img} alt={`${productDetail.name} – view ${index + 1}`} className="w-full h-full object-cover" />
+                  <button
+                    key={index}
+                    onClick={() => setSelectedImage(index)}
+                    className={`flex-shrink-0 w-16 h-16 overflow-hidden border-2 transition-all rounded-sm ${
+                      selectedImage === index ? 'border-brand' : 'border-gray-200 hover:border-brand'
+                    }`}
+                  >
+                    <img
+                      src={img}
+                      alt={`${productDetail.name} – view ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
                   </button>
                 ))}
               </div>
@@ -291,27 +330,27 @@ export default function ProductDetail() {
                 </div>
               </motion.div>
 
-              {/* ✅ UI — Minimal Luxury */}
+              {/* BUTTONS */}
               <motion.div variants={fadeUp} className="space-y-4 w-full max-w-2xl">
 
-                                          {/* ROW 1: Add to Cart — full width solid */}
-                          <button 
-                            onClick={handleAddToCart}
-                            className="w-full bg-brand text-white py-5 rounded-full font-bold border border-white/60 hover:brightness-90 shadow-[0_4px_14px_0_rgba(37,211,102,0.39)] hover:shadow-[0_6px_20px_0_rgba(37,211,102,0.5)] transition-all flex items-center justify-center uppercase tracking-widest active:scale-[0.98] backdrop-blur-sm drop-shadow-sm bg-gradient-to-b from-brand/80 to-brand"
-                          >
-                            Add to Cart
-                          </button>
+                {/* ROW 1: Add to Cart */}
+                <button 
+                  onClick={handleAddToCart}
+                  className="w-full bg-brand text-white py-5 rounded-full font-bold border border-white/60 hover:brightness-90 shadow-[0_4px_14px_0_rgba(37,211,102,0.39)] hover:shadow-[0_6px_20px_0_rgba(37,211,102,0.5)] transition-all flex items-center justify-center uppercase tracking-widest active:scale-[0.98] backdrop-blur-sm drop-shadow-sm bg-gradient-to-b from-brand/80 to-brand"
+                >
+                  Add to Cart
+                </button>
 
-                {/* ROW 2: Order with WhatsApp — full width outlined green */}
-                                      <button 
-                        onClick={handleWhatsAppOrder} 
-                       className="w-full bg-[#25D366] text-white py-5 rounded-full font-bold border border-white/60 hover:brightness-90 shadow-[0_4px_14px_0_rgba(37,211,102,0.39)] hover:shadow-[0_6px_20px_0_rgba(37,211,102,0.5)] transition-all flex items-center justify-center gap-3 uppercase tracking-[0.2em] active:scale-[0.98] backdrop-blur-sm drop-shadow-sm bg-gradient-to-b from-[#2edf6e] to-[#25D366]"
-                        style={{ fontFamily: 'Roboto, sans-serif' }}
-                      >
-                        <FaWhatsapp className="w-6 h-6" /> Order with WhatsApp
-                      </button>
+                {/* ROW 2: Order with WhatsApp */}
+                <button 
+                  onClick={handleWhatsAppOrder} 
+                  className="w-full bg-[#25D366] text-white py-5 rounded-full font-bold border border-white/60 hover:brightness-90 shadow-[0_4px_14px_0_rgba(37,211,102,0.39)] hover:shadow-[0_6px_20px_0_rgba(37,211,102,0.5)] transition-all flex items-center justify-center gap-3 uppercase tracking-[0.2em] active:scale-[0.98] backdrop-blur-sm drop-shadow-sm bg-gradient-to-b from-[#2edf6e] to-[#25D366]"
+                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                >
+                  <FaWhatsapp className="w-6 h-6" /> Order with WhatsApp
+                </button>
 
-                {/* ROW 3: Share This Style — subtle text link, no heavy button */}
+                {/* ROW 3: Share This Style */}
                 <div className="flex justify-center pt-1">
                   <button
                     onClick={handleShare}
@@ -357,21 +396,20 @@ export default function ProductDetail() {
                     onClick={() => { navigate(`/product/${relProduct.slug}`); window.scrollTo(0, 0); }}
                   >
                     <div className="bg-white overflow-hidden shadow-sm mb-4 relative">
-
-                                {relProduct.hoverImage && relProduct.hoverImage !== relProduct.image ? (
-  <>
-    <img src={relProduct.image} alt={`${relProduct.name} - Related Product`}
-      className="w-full aspect-[3/4] object-cover transition-all duration-500 absolute inset-0 group-hover:opacity-0 group-hover:scale-105"
-    />
-    <img src={relProduct.hoverImage} alt={`${relProduct.name} – hover`}
-      className="w-full aspect-[3/4] object-cover transition-all duration-500 opacity-0 scale-105 group-hover:opacity-100 group-hover:scale-100"
-    />
-  </>
-) : (
-  <img src={relProduct.image} alt={`${relProduct.name} - Related Product`}
-    className="w-full aspect-[3/4] object-cover transition-all duration-500 group-hover:scale-110"
-  />
-)}
+                      {relProduct.hoverImage && relProduct.hoverImage !== relProduct.image ? (
+                        <>
+                          <img src={relProduct.image} alt={`${relProduct.name} - Related Product`}
+                            className="w-full aspect-[3/4] object-cover transition-all duration-500 absolute inset-0 group-hover:opacity-0 group-hover:scale-105"
+                          />
+                          <img src={relProduct.hoverImage} alt={`${relProduct.name} – hover`}
+                            className="w-full aspect-[3/4] object-cover transition-all duration-500 opacity-0 scale-105 group-hover:opacity-100 group-hover:scale-100"
+                          />
+                        </>
+                      ) : (
+                        <img src={relProduct.image} alt={`${relProduct.name} - Related Product`}
+                          className="w-full aspect-[3/4] object-cover transition-all duration-500 group-hover:scale-110"
+                        />
+                      )}
                     </div>
                     <h3 className="text-gray-700 text-sm mb-1 line-clamp-2" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>{relProduct.name}</h3>
                     <p className="text-gray-900 font-semibold" style={{ fontFamily: 'Roboto, sans-serif' }}>${relProduct.price}</p>
