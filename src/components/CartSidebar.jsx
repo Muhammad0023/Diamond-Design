@@ -65,7 +65,7 @@ export default function CartSidebar() {
       >
         {/* Header - Glassmorphism */}
         <div className="flex-none flex items-center justify-between p-6 border-b border-white/40 bg-white/30 sticky top-0 z-50">
-          <h2 className="text-2xl font-bold text-gray-900 drop-shadow-sm" style={{ fontFamily: 'Roboto, sans-serif' }}>
+          <h2 className="text-xl font-bold text-gray-800 drop-shadow-sm" style={{ fontFamily: 'Roboto, sans-serif' }}>
             Shopping Cart
           </h2>
           <button onClick={toggleCart} className="p-2 rounded-full hover:bg-white/50 bg-white/20 border border-white/40 shadow-sm transition-colors">

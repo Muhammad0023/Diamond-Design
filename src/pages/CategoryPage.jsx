@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { HiHome, HiChevronRight } from 'react-icons/hi';
+import { HiHome, HiChevronRight, HiChevronLeft } from 'react-icons/hi';
 import { motion } from 'framer-motion';
 import { useProducts } from '../context/ProductsContext';
 import { Helmet } from 'react-helmet-async';
@@ -284,21 +284,67 @@ export default function CategoryPage({ manualCategory, legacyMode = false }) {
               ))}
             </motion.div>
 
-            {totalPages > 1 && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="mt-12 flex justify-center items-center gap-2"
-              >
-                <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1} className="px-4 py-2 border rounded-md disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors">Previous</button>
-                <div className="flex gap-2">
-                  {[...Array(totalPages)].map((_, i) => (
-                    <button key={i + 1} onClick={() => handlePageChange(i + 1)} className={`w-10 h-10 rounded-md border transition-colors ${currentPage === i + 1 ? 'bg-brand text-white border-brand' : 'bg-white text-gray-700 hover:bg-gray-50'}`}>{i + 1}</button>
-                  ))}
-                </div>
-                <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages} className="px-4 py-2 border rounded-md disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors">Next</button>
-              </motion.div>
-            )}
+{/* Reference-based Numbered Pagination */}
+{totalPages > 1 && (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    className="mt-16 flex justify-center items-center gap-1 sm:gap-2"
+  >
+    {/* Previous Arrow */}
+    <button 
+      onClick={() => handlePageChange(currentPage - 1)} 
+      disabled={currentPage === 1} 
+      className="w-10 h-10 flex items-center justify-center text-gray-900 hover:text-brand disabled:opacity-20 transition-colors"
+    >
+      <HiChevronLeft className="w-5 h-5" />
+    </button>
+
+    {/* Page Numbers */}
+    <div className="flex items-center gap-1">
+      {[...Array(totalPages)].map((_, i) => {
+        const pageNum = i + 1;
+        
+        // This logic shows: First Page, Last Page, and pages around the Current Page
+        if (
+          pageNum === 1 || 
+          pageNum === totalPages || 
+          (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+        ) {
+          return (
+            <button
+              key={pageNum}
+              onClick={() => handlePageChange(pageNum)}
+              className={`w-10 h-10 rounded-full flex items-center justify-center text-sm transition-all duration-300 ${
+                currentPage === pageNum 
+                ? 'bg-brand/20 text-brand font-bold border border-brand/30' // The circle from your image
+                : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              {pageNum}
+            </button>
+          );
+        }
+
+        // Show dots if there is a gap
+        if (pageNum === currentPage - 2 || pageNum === currentPage + 2) {
+          return <span key={pageNum} className="text-gray-400">...</span>;
+        }
+
+        return null;
+      })}
+    </div>
+
+    {/* Next Arrow */}
+    <button 
+      onClick={() => handlePageChange(currentPage + 1)} 
+      disabled={currentPage === totalPages} 
+      className="w-10 h-10 flex items-center justify-center text-gray-900 hover:text-brand disabled:opacity-20 transition-colors"
+    >
+      <HiChevronRight className="w-5 h-5" />
+    </button>
+  </motion.div>
+)}
           </>
         ) : (
           <div className="text-center py-16">
