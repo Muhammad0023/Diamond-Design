@@ -60,7 +60,7 @@ export default function ProductGrid({ title, products, viewAllLink }) {
             className="group flex items-center gap-1 text-brand font-semibold hover:text-brand-dark transition-colors"
           >
             View All 
-            <span className="transform group-hover:translate-x-1 transition-transform">→</span>
+            <span className="transform group-hover:translate-x-1 transition-transform"></span>
           </Link>
         </div>
 

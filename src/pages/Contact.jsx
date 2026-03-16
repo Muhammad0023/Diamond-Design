@@ -7,12 +7,13 @@ import { Helmet } from 'react-helmet-async';
 
 export default function Contact() {
   const contactDetails = [
-    {
-      icon: <IoLocationOutline className="w-6 h-6" />,
-      title: "Our Studio",
-      content: "Haya Hulet, Addis Ababa, Ethiopia",
-      link: "#"
-    },
+   {
+  icon: <IoLocationOutline className="w-6 h-6" />,
+  title: "Our Studio",
+  content: "Haya Hulet, Addis Ababa, Ethiopia",
+  link: "https://maps.google.com/?cid=16109510172413868820&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ",
+  isExternal: true // Add this flag to tell the code to open a new tab
+},
     {
       icon: <IoCallOutline className="w-6 h-6" />,
       title: "Phone & WhatsApp",
@@ -73,15 +74,21 @@ export default function Contact() {
               <h3 className="text-lg font-bold text-gray-900 mb-2" style={{ fontFamily: 'Roboto, sans-serif' }}>
                 {item.title}
               </h3>
-              {item.link ? (
-                <a href={item.link} className="text-gray-600 hover:text-brand transition-colors" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
-                  {item.content}
-                </a>
-              ) : (
-                <p className="text-gray-600" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
-                  {item.content}
-                </p>
-              )}
+            {item.link ? (
+  <a 
+    href={item.link} 
+    target={item.isExternal ? "_blank" : "_self"} 
+    rel={item.isExternal ? "noopener noreferrer" : ""}
+    className="text-gray-600 hover:text-brand transition-colors" 
+    style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}
+  >
+    {item.content}
+  </a>
+) : (
+  <p className="text-gray-600" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
+    {item.content}
+  </p>
+)}
             </motion.div>
           ))}
         </div>

@@ -111,12 +111,21 @@ export default function Footer() {
           <div>
             <h4 className="font-bold text-lg mb-4" style={{ fontFamily: 'Roboto, sans-serif' }}>CONTACT INFO</h4>
             <ul className="space-y-4">
-              <li className="flex items-center gap-3 text-gray-400 group cursor-default">
-                <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-brand transition-colors duration-300">
-                  <IoLocationOutline className="w-5 h-5 text-brand group-hover:text-white" />
-                </div>
-                <span style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>HayaHulet, Addis Ababa, Ethiopia</span>
-              </li>
+    
+            <li className="flex items-center gap-3 text-gray-400 group">
+              <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-brand transition-colors duration-300">
+                <IoLocationOutline className="w-5 h-5 text-brand group-hover:text-white" />
+              </div>
+              <a 
+                href="https://maps.google.com/?cid=16109510172413868820&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQ"
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="hover:text-brand transition-colors"
+                style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}
+              >
+                HayaHulet, Addis Ababa, Ethiopia
+              </a>
+            </li>
               <li className="flex items-center gap-3 text-gray-400 group">
                 <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-brand transition-colors duration-300">
                   <MdOutlineEmail className="w-5 h-5 text-brand group-hover:text-white" />

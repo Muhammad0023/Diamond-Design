@@ -221,7 +221,7 @@ export default function CategoryPage({ manualCategory, legacyMode = false }) {
           <HiChevronRight className="w-4 h-4 text-gray-400" />
           {category !== 'mens' && category !== 'couples' && (
             <>
-              {/* ✅ "Dresses" is now a clickable link */}
+              {/* ✅ "Dresses" is a clickable link */}
               <a href="/collections/simple-dresses" className="text-gray-500 hover:text-brand transition-colors">
                 Dresses
               </a>

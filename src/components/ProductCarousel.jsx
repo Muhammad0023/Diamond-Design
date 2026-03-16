@@ -48,7 +48,7 @@ export default function ProductCarousel({ title, products, viewAllLink = "#" }) 
     <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900" style={{ fontFamily: 'Roboto, sans-serif' }}>
+          <h2 className="text-3xl md:text-2xl font-bold text-gray-900" style={{ fontFamily: 'Roboto, sans-serif' }}>
             {title}
           </h2>
           <button
@@ -56,7 +56,7 @@ export default function ProductCarousel({ title, products, viewAllLink = "#" }) 
             className="text-brand font-semibold hover:text-brand-dark transition-colors flex items-center gap-1 cursor-pointer group"
             style={{ fontFamily: 'Roboto, sans-serif' }}
           >
-            View All {hasMoreProducts && `(${products.length})`} <span className="transform group-hover:translate-x-1 transition-transform">→</span>
+            View All {hasMoreProducts && `(${products.length})`} <span className="transform group-hover:translate-x-1 transition-transform"></span>
           </button>
         </div>
 
