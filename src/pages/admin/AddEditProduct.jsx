@@ -158,7 +158,7 @@ export default function AddEditProduct() {
         await updateProduct(id, { ...productData, slug });
         setSuccessMessage('Product updated successfully!');
       } else {
-        const docRef = await addProduct(productData);
+        const docRef = await addProduct({ ...productData, updatedAt: new Date() });
         
         if (!docRef || !docRef.id) {
           throw new Error('Failed to create product');

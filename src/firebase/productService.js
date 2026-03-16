@@ -35,7 +35,11 @@ export const addProduct = async (productData) => {
 // Get ALL products
 export const getAllProducts = async () => {
   try {
-    const snapshot = await getDocs(collection(db, PRODUCTS_COLLECTION));
+    const q = query(
+      collection(db, PRODUCTS_COLLECTION),
+      orderBy('updatedAt', 'desc')
+    );
+    const snapshot = await getDocs(q);
     const products = snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
