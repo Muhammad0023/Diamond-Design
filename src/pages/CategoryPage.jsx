@@ -238,7 +238,7 @@ export default function CategoryPage({ manualCategory, legacyMode = false }) {
           transition={{ duration: 0.6 }}
           className="mb-8"
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'Roboto, sans-serif' }}>
+          <h1 className="text-2xl md:text-3npm runxl font-bold text-gray-900 mb-4" style={{ fontFamily: 'Roboto, sans-serif' }}>
             {categoryData.title}
           </h1>
           <p className="text-lg text-gray-600 max-w-3xl leading-relaxed" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
