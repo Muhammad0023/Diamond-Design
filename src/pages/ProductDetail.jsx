@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { HiZoomIn, HiX, HiPlus, HiMinus, HiShare } from 'react-icons/hi';
+import { HiOutlineMagnifyingGlassPlus } from 'react-icons/hi2';
+import { HiZoomIn, HiX, HiShare } from 'react-icons/hi';
 import { FaWhatsapp } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../context/CartContext';
@@ -27,8 +28,17 @@ export default function ProductDetail() {
   const [modalZoom, setModalZoom] = useState(1);
   const [shareCopied, setShareCopied] = useState(false);
 
-  // FIX 1: Thumbnail carousel scroll ref
+  // Thumbnail carousel scroll ref
   const thumbsRef = useRef(null);
+
+  // Ref for main image div — needed for non-passive wheel listener
+  const mainImageRef = useRef(null);
+
+  // Ref for modal scroll container — needed for non-passive wheel listener
+  const modalScrollRef = useRef(null);
+
+  // Keep a ref to total images count so the wheel handler can always read the latest value
+  const totalImagesRef = useRef(1);
 
   const fadeUp = {
     hidden: { opacity: 0, y: 20 },
@@ -54,6 +64,53 @@ export default function ProductDetail() {
     };
   }, [showModal]);
 
+  // Non-passive wheel listener on main image
+  // Scroll down = next image, scroll up = prev image
+  useEffect(() => {
+    const el = mainImageRef.current;
+    if (!el) return;
+    const onWheel = (e) => {
+      e.preventDefault();
+      const total = totalImagesRef.current;
+      if (e.deltaY > 0) {
+        setSelectedImage(prev => (prev + 1) % total);
+      } else {
+        setSelectedImage(prev => (prev - 1 + total) % total);
+      }
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, []);
+
+  // Desktop mouse wheel zoom inside modal — non-passive to prevent page scroll
+  useEffect(() => {
+    if (!showModal) return;
+    const timer = setTimeout(() => {
+      const el = modalScrollRef.current;
+      if (!el) return;
+      
+      const onWheel = (e) => {
+        if (e.ctrlKey) {
+          e.preventDefault();
+          const zoomDelta = e.deltaY * -0.01; 
+          setModalZoom(prev => Math.min(Math.max(prev + zoomDelta, 1), 4));
+        }
+      };
+      
+      el.addEventListener('wheel', onWheel, { passive: false });
+      el._onWheel = onWheel;
+    }, 50);
+    
+    return () => {
+      clearTimeout(timer);
+      const el = modalScrollRef.current;
+      if (el && el._onWheel) {
+        el.removeEventListener('wheel', el._onWheel);
+        el._onWheel = null;
+      }
+    };
+  }, [showModal]);
+
   // Touch swipe handlers for main image (mobile only)
   const touchStartX = useRef(null);
 
@@ -76,8 +133,6 @@ export default function ProductDetail() {
 
   const handleWhatsAppOrder = () => {
     const phoneNumber = '+251988503333';
-    // Break the URL with a zero-width space so WhatsApp won't generate an OG preview card
-    // but the link is still visible and copyable in the message
     const rawUrl = window.location.href;
     const brokenUrl = rawUrl.replace('https://', 'https://\u200B');
     const message = encodeURIComponent(
@@ -118,8 +173,6 @@ export default function ProductDetail() {
       <div className="min-h-screen bg-white mt-20 lg:mt-32 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-
-            {/* LEFT: Image skeleton */}
             <div className="lg:col-span-5 w-full">
               <div className="w-full aspect-[3/4] bg-gray-200 animate-pulse rounded-sm mb-4" />
               <div className="grid grid-cols-5 gap-2">
@@ -128,8 +181,6 @@ export default function ProductDetail() {
                 ))}
               </div>
             </div>
-
-            {/* RIGHT: Info skeleton */}
             <div className="lg:col-span-7 space-y-6">
               <div className="h-10 bg-gray-200 animate-pulse rounded-full w-3/4" />
               <div className="h-8 bg-gray-200 animate-pulse rounded-full w-1/4" />
@@ -151,7 +202,6 @@ export default function ProductDetail() {
                 <div className="h-10 bg-gray-200 animate-pulse rounded-full w-1/3 mx-auto" />
               </div>
             </div>
-
           </div>
         </div>
       </div>
@@ -193,6 +243,9 @@ export default function ProductDetail() {
     sizes: product.sizes || ['S', 'M', 'L', 'XL', 'XXL']
   };
 
+  // Keep totalImagesRef in sync so the wheel handler always has the latest count
+  totalImagesRef.current = productDetail.images.length;
+
   const relatedProducts = getProductsByCategory(product.category)
     .filter(p => p.id !== product.id)
     .slice(0, 8);
@@ -208,33 +261,67 @@ export default function ProductDetail() {
       </Helmet>
 
       <div className="min-h-screen bg-white">
-        
-        {/* FIX 3: FULL SCREEN MODAL — z-index raised above header, pointer-events locked */}
+        {/* FULL SCREEN MODAL */}
         <AnimatePresence>
           {showModal && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/95 flex flex-col items-center justify-center p-4"
-              style={{ zIndex: 99999 }}
+              style={{ zIndex: 99999, position: 'fixed', inset: 0, background: 'black' }}
             >
-              <div className="absolute top-6 right-6 flex gap-4" style={{ zIndex: 100000 }}>
-                <button onClick={() => setModalZoom(prev => Math.min(prev + 0.5, 3))} className="p-3 bg-white/10 hover:bg-white/20 rounded-full text-white"><HiPlus className="w-6 h-6" /></button>
-                <button onClick={() => setModalZoom(prev => Math.max(prev - 0.5, 1))} className="p-3 bg-white/10 hover:bg-white/20 rounded-full text-white"><HiMinus className="w-6 h-6" /></button>
-                <button onClick={() => { setShowModal(false); setModalZoom(1); }} className="p-3 bg-white/10 hover:bg-white/20 rounded-full text-white"><HiX className="w-6 h-6" /></button>
-              </div>
-              <div className="w-full h-full overflow-auto flex items-center justify-center cursor-grab active:cursor-grabbing">
-                <motion.img
-                  initial={{ scale: 0.9 }}
-                  animate={{ scale: modalZoom }}
+              {/* Close button */}
+              <button
+                onClick={() => { setShowModal(false); setModalZoom(1); }}
+                className="absolute top-5 right-5 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md"
+                style={{ zIndex: 100000 }}
+              >
+                <HiX className="w-6 h-6" />
+              </button>
+
+              {/* FIX 2: Previous Button */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedImage(prev => (prev - 1 + productDetail.images.length) % productDetail.images.length);
+                  setModalZoom(1); 
+                }}
+                className="absolute left-5 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md"
+                style={{ zIndex: 100000 }}
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
+              </button>
+
+              {/* FIX 2: Next Button */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedImage(prev => (prev + 1) % productDetail.images.length);
+                  setModalZoom(1);
+                }}
+                className="absolute right-5 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md"
+                style={{ zIndex: 100000 }}
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
+              </button>
+
+              {/* FIX 1: Native zoom container - Adjusting flex layout conditionally so panning works! */}
+              <div
+                ref={modalScrollRef}
+                className={`w-full h-full overflow-auto flex ${modalZoom > 1 ? 'items-start justify-start' : 'items-center justify-center'}`}
+                style={{ touchAction: 'pinch-zoom' }}
+              >
+                <img
                   src={productDetail.images[selectedImage]}
-                  alt={`${productDetail.name} - Full Screen View`}
-                  className="transition-transform duration-300 ease-out"
-                  style={{ 
-                    maxHeight: modalZoom > 1 ? 'none' : '90vh',
-                    maxWidth: modalZoom > 1 ? 'none' : '90vw'
+                  alt="Zoomed View"
+                  style={{
+                    width: `${modalZoom * 100}%`,
+                    maxWidth: 'none',
+                    height: 'auto',
+                    display: 'block',
+                    cursor: modalZoom > 1 ? 'grab' : 'zoom-in',
                   }}
+                  onClick={() => setModalZoom(prev => prev >= 3 ? 1 : prev + 1)}
                 />
               </div>
             </motion.div>
@@ -253,43 +340,50 @@ export default function ProductDetail() {
               className="lg:col-span-5 w-full"
             >
               {/* Main image */}
-             <div
-  className="relative bg-gray-100 overflow-hidden mb-4 cursor-pointer group aspect-[3/4]"
-  onClick={() => setShowModal(true)}
-  onTouchStart={handleTouchStart}
-  onTouchEnd={(e) => handleTouchEnd(e, productDetail.images.length)}
->
-  <AnimatePresence initial={false}>
-    <motion.img 
-      key={selectedImage}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.4, ease: "easeInOut" }}
-      src={productDetail.images[selectedImage]} 
-      alt={`${productDetail.name} - Featured`}
-      className="absolute inset-0 w-full h-full object-cover" 
-    />
-  </AnimatePresence>
+              <div
+                ref={mainImageRef}
+                className="relative bg-gray-100 overflow-hidden mb-4 cursor-pointer group aspect-[3/4]"
+                onClick={() => {
+                  setModalZoom(2);
+                  setShowModal(true);
+                }}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={(e) => handleTouchEnd(e, productDetail.images.length)}
+              >
+                <AnimatePresence initial={false}>
+                  <motion.img 
+                    key={selectedImage}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.4, ease: "easeInOut" }}
+                    src={productDetail.images[selectedImage]} 
+                    alt={`${productDetail.name} - Featured`}
+                    className="absolute inset-0 w-full h-full object-cover" 
+                  />
+                </AnimatePresence>
+                <div className="absolute top-4 left-4 pointer-events-none z-10">
+                  <div className="bg-white/20 backdrop-blur-md border border-white/30 p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-90 group-hover:scale-100 shadow-sm">
+                    <HiOutlineMagnifyingGlassPlus className="w-5 h-5 text-white" />
+                  </div>
+                </div>
+              </div> 
 
-  {/* Zoom icon */}
-  <div className="absolute inset-0 flex items-start justify-start p-4 pointer-events-none z-10">
-    <HiZoomIn className="w-5 h-5 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
-  </div>
-</div>
-              
-
-              {/* Thumbnail strip — scrollable, no arrows */}
+              {/* FIX 3: Added 'snap-x snap-mandatory' to parent and 'snap-start' to items for flawless mobile snapping */}
               <div
                 ref={thumbsRef}
-                className="flex gap-2 overflow-x-auto scroll-smooth"
-                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                className="flex gap-2 overflow-x-auto scroll-smooth snap-x snap-mandatory"
+                style={{
+                  scrollbarWidth: 'none',
+                  msOverflowStyle: 'none',
+                  WebkitOverflowScrolling: 'touch',
+                }}
               >
                 {productDetail.images.map((img, index) => (
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
-                    className={`flex-shrink-0 w-16 h-16 overflow-hidden border-2 transition-all rounded-sm ${
+                    className={`snap-start flex-shrink-0 w-16 h-16 overflow-hidden border-2 transition-all rounded-sm ${
                       selectedImage === index ? 'border-brand' : 'border-gray-200 hover:border-brand'
                     }`}
                   >
@@ -310,13 +404,13 @@ export default function ProductDetail() {
               animate="visible"
               className="lg:col-span-7"
             >
-              <motion.h1 variants={fadeUp} className="text-3xl md:text-3xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'Roboto, sans-serif' }}>{productDetail.name}</motion.h1>
+              <motion.h1 variants={fadeUp} className="text-3xl md:text-3xl font-medium text-gray-900 mb-4" style={{ fontFamily: 'Roboto, sans-serif' }}>{productDetail.name}</motion.h1>
               <motion.p variants={fadeUp} className="text-2xl font-bold text-brand mb-8" style={{ fontFamily: 'Roboto, sans-serif' }}>${productDetail.price}</motion.p>
               
               <motion.div variants={fadeUp} className="mb-10 max-w-2xl">
-                              <h3 className="font-bold text-sm mb-2 text-gray-500 tracking-wider" style={{ fontFamily: 'Roboto, sans-serif' }}>
-                ABOUT THIS STYLE
-              </h3>
+                <h3 className="font-bold text-sm mb-2 text-gray-500 tracking-wider" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                  ABOUT THIS STYLE
+                </h3>
                 <p className="text-gray-600 leading-relaxed text-lg" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
                   {productDetail.description || "Beautiful handcrafted Habes traditional dress featuring intricate embroidery and premium fabric."}
                 </p>
@@ -324,10 +418,10 @@ export default function ProductDetail() {
 
               {/* SIZE CIRCLES */}
               <motion.div variants={fadeUp} className="mb-12">
-                                      <h3 
-                        className="font-bold text-sm mb-4 text-gray-500 uppercase tracking-wider" 
-                        style={{ fontFamily: 'Roboto, sans-serif' }} >  Select Size  </h3>
-                       
+                <h3 
+                  className="font-bold text-sm mb-4 text-gray-500 uppercase tracking-wider" 
+                  style={{ fontFamily: 'Roboto, sans-serif' }} >  Select Size  </h3>
+                        
                 <div className="flex flex-wrap gap-3">
                   {productDetail.sizes.map((size) => (
                     <button 
@@ -343,8 +437,6 @@ export default function ProductDetail() {
 
               {/* BUTTONS */}
               <motion.div variants={fadeUp} className="space-y-4 w-full max-w-2xl">
-
-                {/* ROW 1: Add to Cart */}
                 <button 
                   onClick={handleAddToCart}
                   className="w-full bg-brand text-white py-5 rounded-full font-bold border border-white/60 hover:brightness-90 shadow-[0_4px_14px_0_rgba(37,211,102,0.39)] hover:shadow-[0_6px_20px_0_rgba(37,211,102,0.5)] transition-all flex items-center justify-center uppercase tracking-widest active:scale-[0.98] backdrop-blur-sm drop-shadow-sm bg-gradient-to-b from-brand/80 to-brand"
@@ -352,7 +444,6 @@ export default function ProductDetail() {
                   Add to Cart
                 </button>
 
-                {/* ROW 2: Order with WhatsApp */}
                 <button 
                   onClick={handleWhatsAppOrder} 
                   className="w-full bg-[#25D366] text-white py-5 rounded-full font-bold border border-white/60 hover:brightness-90 shadow-[0_4px_14px_0_rgba(37,211,102,0.39)] hover:shadow-[0_6px_20px_0_rgba(37,211,102,0.5)] transition-all flex items-center justify-center gap-3 uppercase tracking-[0.2em] active:scale-[0.98] backdrop-blur-sm drop-shadow-sm bg-gradient-to-b from-[#2edf6e] to-[#25D366]"
@@ -361,7 +452,6 @@ export default function ProductDetail() {
                   <FaWhatsapp className="w-6 h-6" /> Order with WhatsApp
                 </button>
 
-                {/* ROW 3: Share This Style */}
                 <div className="flex justify-center pt-1">
                   <button
                     onClick={handleShare}
@@ -372,7 +462,6 @@ export default function ProductDetail() {
                     {shareCopied ? 'Link Copied! ✓' : '↗ Share This Style'}
                   </button>
                 </div>
-
               </motion.div>
             </motion.div>
           </div>
@@ -382,15 +471,15 @@ export default function ProductDetail() {
         {relatedProducts.length > 0 && (
           <div className="bg-gray-50 py-20 mt-10">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                                <motion.h2 
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="text-2xl md:text-3xl font-medium text-gray-900 mb-10" 
-                    style={{ fontFamily: 'Roboto, sans-serif' }}
-                  >
-                    You May Also Like
-                  </motion.h2>
+              <motion.h2 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-2xl md:text-3xl font-medium text-gray-900 mb-10" 
+                style={{ fontFamily: 'Roboto, sans-serif' }}
+              >
+                You May Also Like
+              </motion.h2>
               
               <motion.div 
                 variants={staggerContainer}
