@@ -53,11 +53,14 @@ export default function ProductDetail() {
     }
   };
 
-  useEffect(() => {
+ useEffect(() => {
     if (showModal) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
+      setModalZoom(1);
+      setPanPos({ x: 0, y: 0 });
+      panOffset.current = { x: 0, y: 0 };
     }
     return () => {
       document.body.style.overflow = 'unset';
@@ -113,6 +116,13 @@ export default function ProductDetail() {
 
   // Touch swipe handlers for main image (mobile only)
   const touchStartX = useRef(null);
+    // Mobile pinch-zoom refs
+  const pinchStartDist = useRef(null);
+  const pinchStartZoom = useRef(1);
+  const panOffset = useRef({ x: 0, y: 0 });
+  const panStart = useRef({ x: 0, y: 0 });
+  const modalTouchStartX = useRef(null);
+  const [panPos, setPanPos] = useState({ x: 0, y: 0 });
 
   const handleTouchStart = (e) => {
     touchStartX.current = e.touches[0].clientX;
@@ -283,8 +293,10 @@ export default function ProductDetail() {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  setSelectedImage(prev => (prev - 1 + productDetail.images.length) % productDetail.images.length);
-                  setModalZoom(1); 
+                 setSelectedImage(prev => (prev - 1 + productDetail.images.length) % productDetail.images.length);
+                  setModalZoom(1);
+                  setPanPos({ x: 0, y: 0 });
+                  panOffset.current = { x: 0, y: 0 };
                 }}
                 className="absolute left-5 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md"
                 style={{ zIndex: 100000 }}
@@ -298,6 +310,8 @@ export default function ProductDetail() {
                   e.stopPropagation();
                   setSelectedImage(prev => (prev + 1) % productDetail.images.length);
                   setModalZoom(1);
+                  setPanPos({ x: 0, y: 0 });
+                  panOffset.current = { x: 0, y: 0 };
                 }}
                 className="absolute right-5 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md"
                 style={{ zIndex: 100000 }}
@@ -305,25 +319,78 @@ export default function ProductDetail() {
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
               </button>
 
-              {/* FIX 1: Native zoom container - Adjusting flex layout conditionally so panning works! */}
-              <div
-                ref={modalScrollRef}
-                className={`w-full h-full overflow-auto flex ${modalZoom > 1 ? 'items-start justify-start' : 'items-center justify-center'}`}
-                style={{ touchAction: 'pinch-zoom' }}
-              >
-                <img
-                  src={productDetail.images[selectedImage]}
-                  alt="Zoomed View"
-                  style={{
-                    width: `${modalZoom * 100}%`,
-                    maxWidth: 'none',
-                    height: 'auto',
-                    display: 'block',
-                    cursor: modalZoom > 1 ? 'grab' : 'zoom-in',
-                  }}
-                  onClick={() => setModalZoom(prev => prev >= 3 ? 1 : prev + 1)}
-                />
-              </div>
+       {/* MOBILE: pinch-zoom + pan + swipe nav */}
+<div
+  ref={modalScrollRef}
+  className={`w-full h-full overflow-auto flex ${modalZoom > 1 ? 'items-start justify-start' : 'items-center justify-center'}`}
+  style={{ touchAction: 'none' }}
+  onTouchStart={(e) => {
+    if (e.touches.length === 2) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      pinchStartDist.current = Math.sqrt(dx * dx + dy * dy);
+      pinchStartZoom.current = modalZoom;
+    } else if (e.touches.length === 1) {
+      if (modalZoom > 1) {
+        panStart.current = {
+          x: e.touches[0].clientX - panOffset.current.x,
+          y: e.touches[0].clientY - panOffset.current.y,
+        };
+      } else {
+        modalTouchStartX.current = e.touches[0].clientX;
+      }
+    }
+  }}
+  onTouchMove={(e) => {
+    e.preventDefault();
+    if (e.touches.length === 2 && pinchStartDist.current) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const newZoom = Math.min(Math.max((dist / pinchStartDist.current) * pinchStartZoom.current, 1), 4);
+      setModalZoom(newZoom);
+      if (newZoom <= 1) {
+        panOffset.current = { x: 0, y: 0 };
+        setPanPos({ x: 0, y: 0 });
+      }
+    } else if (e.touches.length === 1 && modalZoom > 1) {
+      const newX = e.touches[0].clientX - panStart.current.x;
+      const newY = e.touches[0].clientY - panStart.current.y;
+      panOffset.current = { x: newX, y: newY };
+      setPanPos({ x: newX, y: newY });
+    }
+  }}
+  onTouchEnd={(e) => {
+    if (e.changedTouches.length === 1 && modalZoom <= 1 && modalTouchStartX.current !== null) {
+      const diff = modalTouchStartX.current - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) {
+          setSelectedImage(prev => (prev + 1) % productDetail.images.length);
+        } else {
+          setSelectedImage(prev => (prev - 1 + productDetail.images.length) % productDetail.images.length);
+        }
+        setPanPos({ x: 0, y: 0 });
+        panOffset.current = { x: 0, y: 0 };
+      }
+    }
+    pinchStartDist.current = null;
+    modalTouchStartX.current = null;
+  }}
+>
+  {/* ✅ ORIGINAL DESKTOP IMG — UNCHANGED */}
+  <img
+    src={productDetail.images[selectedImage]}
+    alt="Zoomed View"
+    style={{
+      width: `${modalZoom * 100}%`,
+      maxWidth: 'none',
+      height: 'auto',
+      display: 'block',
+      cursor: modalZoom > 1 ? 'grab' : 'zoom-in',
+    }}
+    onClick={() => setModalZoom(prev => prev >= 3 ? 1 : prev + 1)}
+  />
+</div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -344,7 +411,7 @@ export default function ProductDetail() {
                 ref={mainImageRef}
                 className="relative bg-gray-100 overflow-hidden mb-4 cursor-pointer group aspect-[3/4]"
                 onClick={() => {
-                  setModalZoom(2);
+                  setModalZoom(1);
                   setShowModal(true);
                 }}
                 onTouchStart={handleTouchStart}

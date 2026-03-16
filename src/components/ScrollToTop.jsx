@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { IoChevronUpOutline } from "react-icons/io5"; // Consistency with footer icon
+import { IoChevronUpOutline } from "react-icons/io5";
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ScrollToTop() {
@@ -7,12 +7,7 @@ export default function ScrollToTop() {
 
   useEffect(() => {
     const toggleVisibility = () => {
-      // Show when user scrolls down 400px
-      if (window.scrollY > 400) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
+      setIsVisible(window.scrollY > 400);
     };
 
     window.addEventListener('scroll', toggleVisibility);
@@ -30,23 +25,38 @@ export default function ScrollToTop() {
     <AnimatePresence>
       {isVisible && (
         <motion.button
-          initial={{ opacity: 0, scale: 0.5, x: 20 }} // Pops out from the right
-          animate={{ opacity: 1, scale: 1, x: 0 }}
-          exit={{ opacity: 0, scale: 0.5, x: 20 }}
+          initial={{ opacity: 0, scale: 0.8, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.8, y: 10 }}
           onClick={scrollToTop}
-          whileHover={{ y: -5 }} // Subtle "lift" on hover
-          whileTap={{ scale: 0.9 }}
-          // Matches your footer gold: #D29E0E
-          className="fixed bottom-8 right-8 z-50 w-12 h-12 bg-[#D29E0E] text-white rounded-full shadow-[0_10px_25px_rgba(210,158,14,0.3)] flex items-center justify-center transition-colors duration-300 hover:bg-[#B88A0D]"
+          
+          // HOVER: Tint the glass with your brand gold (20% opacity)
+          whileHover={{ 
+            y: -5, 
+            backgroundColor: "rgba(210, 158, 14, 0.2)",
+            borderColor: "rgba(210, 158, 14, 0.4)"
+          }} 
+          
+          // CLICK: Deepen the gold (60% opacity) and shrink slightly
+          whileTap={{ 
+            scale: 0.9, 
+            backgroundColor: "rgba(210, 158, 14, 0.6)" 
+          }}
+
+          className="fixed bottom-6 right-6 z-50 
+                     w-10 h-10 
+                     flex items-center justify-center 
+                     rounded-full border border-white/20
+                     bg-white/10 backdrop-blur-md 
+                     text-[#D29E0E] 
+                     shadow-[0_8px_32px_0_rgba(0,0,0,0.15)]
+                     transition-colors duration-300"
           aria-label="Scroll to top"
         >
-          {/* Using IoChevronUpOutline to match the top of your footer */}
-          <IoChevronUpOutline className="w-6 h-6 stroke-2" />
+          <IoChevronUpOutline className="w-5 h-5 stroke-[3px]" />
           
-          {/* Subtle Label - optional, but looks premium */}
-          <span className="absolute -top-8 text-[10px] font-bold text-[#D29E0E] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
-            Top
-          </span>
+          {/* Internal reflection - gives it that "glass" depth */}
+          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-white/10 to-transparent pointer-events-none" />
         </motion.button>
       )}
     </AnimatePresence>

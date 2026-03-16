@@ -32,9 +32,9 @@ export default function Footer() {
               className="font-roboto text-2xl font-bold mb-4 cursor-pointer group transition-all duration-300"
             >
               Diamond
-              <span className="text-white group-hover:text-brand transition-colors duration-300 ml-1">
-                Design
-              </span>
+              <span className="text-brand transition-colors duration-300 ml-1">
+                      Design
+                    </span>
             </h3>
             <p className="text-gray-400 leading-relaxed mb-6" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
               Habesha Kemis designs inspired by Habesha culture, elegance, and timeless beauty.

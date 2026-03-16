@@ -19,6 +19,7 @@ import AdminDashboard from './pages/admin/AdminDashboard'
 import AddEditProduct from './pages/admin/AddEditProduct'
 import About from './pages/About'
 import Contact from './pages/Contact'
+import Faqs from './pages/Faqs' // ✅ We imported your new FAQs page here!
 import ScrollToTopButton from './components/ScrollToTop'
 
 function ScrollToTopOnNavigate() {
@@ -83,17 +84,10 @@ function App() {
                             <Route path="/about" element={<About />} />
                             <Route path="/contact" element={<Contact />} />
 
-                            {/* Placeholder Pages */}
-                            <Route path="/faqs" element={
-                              <>
-                                <Helmet>
-                                  <title>FAQs | Diamond Design – Habesha Dress Questions Answered</title>
-                                  <meta name="description" content="Find answers to common questions about Diamond Design's Habesha dresses — sizing, shipping, custom orders, and more." />
-                                  <link rel="canonical" href="https://www.diamonddesignstore.com/faqs" />
-                                </Helmet>
-                                <div className="min-h-screen flex items-center justify-center text-2xl text-gray-600">FAQs Page (Coming Soon)</div>
-                              </>
-                            } />
+                            {/* ✅ Cleaned up FAQs Route */}
+                            <Route path="/faqs" element={<Faqs />} />
+                            
+                            {/* Size Guide Placeholder */}
                             <Route path="/size-guide" element={
                               <>
                                 <Helmet>

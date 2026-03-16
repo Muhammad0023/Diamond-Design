@@ -141,10 +141,13 @@ export default function CategoryPage({ manualCategory, legacyMode = false }) {
   const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
   const totalPages = Math.ceil(products.length / productsPerPage);
 
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
+const handlePageChange = (pageNumber) => {
+  setCurrentPage(pageNumber);
+  // Use setTimeout to ensure scroll happens after state update
+  setTimeout(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, 100);
+};
 
   if (!categoryData) return null;
 
