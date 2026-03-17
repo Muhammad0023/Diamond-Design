@@ -400,6 +400,9 @@ function ProductGridItem({ product, navigate, variants }) {
       <p className="text-gray-900 font-semibold text-base" style={{ fontFamily: 'Roboto, sans-serif' }}>
         ${product.price}
       </p>
+      <span className="inline-block mt-1 px-2 py-0.5 rounded-full text-white text-[10px] font-semibold" style={{ backgroundColor: '#D4AF37' }}>
+         Free Shipping
+      </span>
     </motion.div>
   );
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { HiOutlineMagnifyingGlassPlus } from 'react-icons/hi2';
 import { HiZoomIn, HiX, HiShare } from 'react-icons/hi';
 import { FaWhatsapp } from 'react-icons/fa';
@@ -472,7 +472,12 @@ export default function ProductDetail() {
               className="lg:col-span-7"
             >
               <motion.h1 variants={fadeUp} className="text-3xl md:text-3xl font-medium text-gray-900 mb-4" style={{ fontFamily: 'Roboto, sans-serif' }}>{productDetail.name}</motion.h1>
-              <motion.p variants={fadeUp} className="text-2xl font-bold text-brand mb-8" style={{ fontFamily: 'Roboto, sans-serif' }}>${productDetail.price}</motion.p>
+             <motion.p variants={fadeUp} className="text-2xl font-bold text-brand mb-2" style={{ fontFamily: 'Roboto, sans-serif' }}>${productDetail.price}</motion.p>
+              <motion.div variants={fadeUp} className="mb-8">
+                <span className="inline-block px-3 py-1 rounded-full text-white text-xs font-semibold" style={{ backgroundColor: '#D4AF37' }}>
+                  Free Shipping
+                </span>
+              </motion.div>
               
               <motion.div variants={fadeUp} className="mb-10 max-w-2xl">
                 <h3 className="font-bold text-sm mb-2 text-gray-500 tracking-wider" style={{ fontFamily: 'Roboto, sans-serif' }}>
@@ -484,12 +489,14 @@ export default function ProductDetail() {
               </motion.div>
 
               {/* SIZE CIRCLES */}
-              <motion.div variants={fadeUp} className="mb-12">
+             <motion.div variants={fadeUp} className="mb-12">
                 <h3 
                   className="font-bold text-sm mb-4 text-gray-500 uppercase tracking-wider" 
-                  style={{ fontFamily: 'Roboto, sans-serif' }} >  Select Size  </h3>
+                  style={{ fontFamily: 'Roboto, sans-serif' }}>
+                  Select Size
+                </h3>
                         
-                <div className="flex flex-wrap gap-3">
+               <div className="flex flex-wrap gap-3">
                   {productDetail.sizes.map((size) => (
                     <button 
                       key={size} 
@@ -500,6 +507,28 @@ export default function ProductDetail() {
                     </button>
                   ))}
                 </div>
+
+                <Link
+                  to="/size-guide"
+                  className="inline-flex items-center gap-2 mt-4 px-4 py-2 text-xs font-bold uppercase tracking-widest transition-all duration-200 rounded-sm hover:opacity-80"
+                  style={{
+                    color: '#b4b4b4',
+                    backgroundColor: 'transparent',
+                    fontFamily: 'Roboto, sans-serif',
+                    letterSpacing: '0.1em',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.backgroundColor = '#D4AF3715'}
+                  onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="8" width="20" height="8" rx="1" />
+                    <line x1="6" y1="8" x2="6" y2="12" />
+                    <line x1="10" y1="8" x2="10" y2="11" />
+                    <line x1="14" y1="8" x2="14" y2="11" />
+                    <line x1="18" y1="8" x2="18" y2="12" />
+                  </svg>
+                  Size Chart
+                </Link>
               </motion.div>
 
               {/* BUTTONS */}
@@ -580,6 +609,9 @@ export default function ProductDetail() {
                     </div>
                     <h3 className="text-gray-700 text-sm mb-1 line-clamp-2" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>{relProduct.name}</h3>
                     <p className="text-gray-900 font-semibold" style={{ fontFamily: 'Roboto, sans-serif' }}>${relProduct.price}</p>
+                    <span className="inline-block mt-1 px-2 py-0.5 rounded-full text-white text-[10px] font-semibold" style={{ backgroundColor: '#D4AF37' }}>
+                      Free Shipping
+                    </span>
                   </motion.div>
                 ))}
               </motion.div>

@@ -155,12 +155,15 @@ function ProductCard({ product }) {
         >
           {product.name}
         </h3>
-        <p 
+       <p 
           className="text-gray-900 text-base mt-1" 
           style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '400' }}
         >
           ${product.price}
         </p>
+        <span className="inline-block mt-1 px-2 py-0.5 rounded-full text-white text-[10px] font-semibold" style={{ backgroundColor: '#D4AF37' }}>
+           Free Shipping
+        </span>
       </div>
     </motion.div>
   );

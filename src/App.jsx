@@ -19,7 +19,8 @@ import AdminDashboard from './pages/admin/AdminDashboard'
 import AddEditProduct from './pages/admin/AddEditProduct'
 import About from './pages/About'
 import Contact from './pages/Contact'
-import Faqs from './pages/Faqs' // ✅ We imported your new FAQs page here!
+import Faqs from './pages/Faqs' 
+import SizeGuide from './pages/SizeGuide'
 import ScrollToTopButton from './components/ScrollToTop'
 
 function ScrollToTopOnNavigate() {
@@ -88,16 +89,7 @@ function App() {
                             <Route path="/faqs" element={<Faqs />} />
                             
                             {/* Size Guide Placeholder */}
-                            <Route path="/size-guide" element={
-                              <>
-                                <Helmet>
-                                  <title>Size Guide | Diamond Design – Find Your Perfect Habesha Dress Fit</title>
-                                  <meta name="description" content="Use Diamond Design's size guide to find your perfect Habesha Kemis fit. Measurements for women's, men's, and couples collections." />
-                                  <link rel="canonical" href="https://www.diamonddesignstore.com/size-guide" />
-                                </Helmet>
-                                <div className="min-h-screen flex items-center justify-center text-2xl text-gray-600">Size Guide Page (Coming Soon)</div>
-                              </>
-                            } />
+                            <Route path="/size-guide" element={<SizeGuide />} />
                           </Routes>
                         </main>
                         <Footer />

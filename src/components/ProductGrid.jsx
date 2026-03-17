@@ -121,9 +121,12 @@ function ProductCardItem({ product, navigate, itemVariants }) {
       <h3 className="text-gray-700 text-sm mb-0.5 line-clamp-2 leading-tight" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
         {product.name}
       </h3>
-      <p className="text-gray-900 font-semibold text-base" style={{ fontFamily: 'Roboto, sans-serif' }}>
+     <p className="text-gray-900 font-semibold text-base" style={{ fontFamily: 'Roboto, sans-serif' }}>
         ${product.price}
       </p>
+      <span className="inline-block mt-1 px-2 py-0.5 rounded-full text-white text-[10px] font-semibold" style={{ backgroundColor: '#D4AF37' }}>
+         Free Shipping
+      </span>
     </motion.div>
   );
 }
