@@ -86,12 +86,15 @@ function ProductCardItem({ product, navigate, itemVariants }) {
   const mainImage = product.images?.[0] || product.image;
   const hoverImage = product.images?.[1] || product.hoverImage || mainImage;
 
+  // Detect touch devices (mobile) — they don't support real hover
+  const isTouchDevice = () => window.matchMedia("(hover: none)").matches;
+
   return (
     <motion.div
       variants={itemVariants}
       onClick={() => navigate(`/product/${product.slug}`)}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={() => { if (!isTouchDevice()) setIsHovered(true); }}
+      onMouseLeave={() => { if (!isTouchDevice()) setIsHovered(false); }}
       className="cursor-pointer group"
     >
       <div className="bg-white overflow-hidden shadow-sm mb-3 group-hover:shadow-xl transition-all duration-300">
