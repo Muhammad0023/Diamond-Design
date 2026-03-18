@@ -69,21 +69,21 @@ export default function HomePage() {
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
                           <ProductCarousel 
-                  title="Latest Designs" 
+                  title="Latest Styles" 
                   products={loading ? null : productGroups.latest} 
-                  viewAllLink="/latest-designs"
+                  viewAllLink="/latest-habesha-styles"
                 />
           </motion.div>
           
           <div className="space-y-4">
                       {[
-            { title: "Simple Dresses", products: productGroups.simple, link: "/collections/simple-dresses" },
-            { title: "Wedding Dresses", products: productGroups.wedding, link: "/collections/wedding-dresses" },
-            { title: "Chiffon", products: productGroups.chiffon, link: "/collections/chiffon" },
-            { title: "Holidays", products: productGroups.holiday, link: "/collections/holidays" },
-            { title: "Group Outfits", products: productGroups.group, link: "/collections/group-outfits" },
-            { title: "Men's", products: productGroups.mens, link: "/collections/mens-collection" },
-            { title: "Couples", products: productGroups.couples, link: "/collections/couples-collection" },
+            { title: "Simple Dresses", products: productGroups.simple, link: "/collections/habesha-kemis-simple" },
+            { title: "Wedding Dresses", products: productGroups.wedding, link: "/collections/habesha-wedding-dresses" },
+            { title: "Chiffon", products: productGroups.chiffon, link: "/collections/habesha-chiffon-dresses" },
+            { title: "Holidays", products: productGroups.holiday, link: "/collections/event-holiday-habesha-dresses" },
+            { title: "Group Outfits", products: productGroups.group, link: "/collections/habesha-family-group-outfits" },
+            { title: "Men's", products: productGroups.mens, link: "/collections/habesha-mens-traditional-clothing" },
+            { title: "Couples", products: productGroups.couples, link: "/collections/matching-habesha-couples" },
           ].map((group) => (
             <motion.div
               key={group.title}

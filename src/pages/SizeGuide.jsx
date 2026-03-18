@@ -140,7 +140,7 @@ export default function SizeGuide() {
 
         {/* Page title */}
         <div className="border-b border-gray-100 pt-38 pb-7 text-center">
-          <h1 className="text-2xl font-bold tracking-tight" style={{ fontFamily: 'Roboto, sans-serif' }}>
+          <h1 className="text-2xl font-semibold tracking-wide" style={{ fontFamily: 'Roboto, sans-serif' }}>
             Size Chart &amp; Measurement Guide
           </h1>
           <p className="mt-2 text-gray-500 text-sm max-w-md mx-auto" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: 300 }}>
@@ -152,7 +152,7 @@ export default function SizeGuide() {
 
           {/* ── WOMEN'S ── */}
           <section>
-            <h2 className="text-lg font-semibold mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>
+            <h2 className="text-lg font-medium mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>
               Women's Size Guide
             </h2>
             <p className="text-gray-400 text-sm mb-6" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: 300 }}>
@@ -184,7 +184,7 @@ export default function SizeGuide() {
 
           {/* ── MEN'S ── */}
           <section>
-            <h2 className="text-lg font-semibold mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>
+            <h2 className="text-lg font-medium mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>
               Men's Size Guide
             </h2>
             <p className="text-gray-400 text-sm mb-6" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: 300 }}>

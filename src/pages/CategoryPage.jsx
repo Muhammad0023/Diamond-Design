@@ -7,68 +7,82 @@ import { Helmet } from 'react-helmet-async';
 
 // ✅ URL slug → category key  (used when route is /collections/:slug)
 const slugToCategory = {
-  'simple-dresses':     'simple',
-  'wedding-dresses':    'wedding',
-  'chiffon':            'chiffon',
-  'holidays':           'holiday',
-  'group-outfits':      'group',
-  'mens-collection':    'mens',
-  'couples-collection': 'couples',
+  'habesha-kemis-simple':              'simple',
+  'habesha-wedding-dresses':           'wedding',
+  'habesha-chiffon-dresses':           'chiffon',
+  'event-holiday-habesha-dresses':     'holiday',
+  'habesha-family-group-outfits':      'group',
+  'habesha-mens-traditional-clothing': 'mens',
+  'matching-habesha-couples':          'couples',
 };
 
 // ✅ Category key → URL slug  (used to build links & canonical URLs)
 const categoryToSlug = {
-  simple:  'simple-dresses',
-  wedding: 'wedding-dresses',
-  chiffon: 'chiffon',
-  holiday: 'holidays',
-  group:   'group-outfits',
-  mens:    'mens-collection',
-  couples: 'couples-collection',
+  simple:  'habesha-kemis-simple',
+  wedding: 'habesha-wedding-dresses',
+  chiffon: 'habesha-chiffon-dresses',
+  holiday: 'event-holiday-habesha-dresses',
+  group:   'habesha-family-group-outfits',
+  mens:    'habesha-mens-traditional-clothing',
+  couples: 'matching-habesha-couples',
 };
 
 const categoryConfig = {
   simple: {
-    title: 'Simple Dresses',
-    description: 'Timeless elegance for everyday wear',
-    seoTitle: 'Simple Dresses | Diamond Design – Everyday Ethiopian Elegance',
-    seoDescription: "Shop Diamond Design's simple Habesha dress collection. Timeless Ethiopian styles crafted for everyday wear, made with authentic traditional fabrics.",
+    title: 'Simple Habesha Kemis',
+    description: 'Simple Habesha Kemis designed for weddings, holidays, shimglina, graduation and special occasions, blending elegant Ethiopian and Eritrean tradition with modern style.',
+    seoTitle: 'Habesha Kemis for Weddings, Special Occasions | Diamond Design',
+    seoDescription: 'Discover simple Habesha Kemis designed for weddings, holidays, shimglina, graduation and special Events. Elegant Ethiopian and Eritrean styles with a modern touch. Shop Diamond Design.',
+    h1: 'Simple Habesha Kemis',
+    body: 'Discover simple Habesha Kemis designed for weddings, holidays, shimglina, graduation and special events. These elegant Ethiopian and Eritrean dresses blend traditional craftsmanship with modern style, perfect for those who appreciate timeless beauty with a refined touch.',
   },
   wedding: {
-    title: 'Wedding Dresses',
-    description: 'Exquisite bridal collections for your special day',
-    seoTitle: 'Wedding Dresses | Diamond Design – Ethiopian Bridal Collection',
-    seoDescription: 'Find your perfect Habesha wedding dress at Diamond Design. Handcrafted Ethiopian bridal gowns for your unforgettable special day.',
+    title: 'Habesha Wedding Dresses',
+    description: 'Habesha wedding dresses designed for Ethiopian and Eritrean brides, combining traditional elegance with modern bridal style.',
+    seoTitle: 'Habesha Wedding Dresses – Ethiopian & Eritrean Bridal Styles | Diamond Design',
+    seoDescription: 'Discover elegant Habesha wedding dresses crafted for Ethiopian and Eritrean brides. Perfect for weddings, engagements, shimglina and cultural celebrations. Shop your dream bridal look at Diamond Design.',
+    h1: 'Habesha Wedding Dresses',
+    body: 'Explore our collection of Habesha wedding dresses crafted for Ethiopian and Eritrean brides. Perfect for weddings, engagements, and cultural events, each design combines traditional elegance with modern sophistication to make your special day unforgettable.',
   },
   chiffon: {
-    title: 'Chiffon',
-    description: 'Light and flowing designs for any occasion',
-    seoTitle: 'Chiffon | Diamond Design – Light & Flowing Ethiopian Style',
-    seoDescription: "Explore Diamond Design's chiffon Habesha dress collection. Light, elegant, and flowing Ethiopian dresses perfect for any occasion.",
+    title: 'Chiffon Habesha Dresses',
+    description: 'Chiffon Habesha dresses with light, flowing Ethiopian and Eritrean designs, perfect for elegant and comfortable wear.',
+    seoTitle: 'Chiffon Habesha Dresses – Elegant Ethiopian & Eritrean Styles | Diamond Design',
+    seoDescription: 'Explore chiffon Habesha dresses with light, flowing Ethiopian and Eritrean designs. Perfect for weddings, holidays, and elegant events. Shop Diamond Design.',
+    h1: 'Chiffon Habesha Dresses',
+    body: 'Discover chiffon Habesha dresses designed for weddings, holidays, and special events. Light, flowing, and elegant, these Ethiopian and Eritrean styles offer comfort and beauty with a modern and graceful finish.',
   },
   holiday: {
-    title: 'Holidays',
-    description: 'Festive attire for special celebrations',
-    seoTitle: 'Holidays | Diamond Design – Ethiopian Festive Attire',
-    seoDescription: "Celebrate in style with Diamond Design's holiday Habesha collection. Traditional Ethiopian festive dresses for Timkat, Enkutatash, and every celebration.",
+    title: 'Events & Holiday Habesha Dresses',
+    description: 'Habesha holiday dresses for Ethiopian and Eritrean celebrations like Timkat, Enkutatash, and Meskel, blending festive traditional elegance with modern style for special occasions.',
+    seoTitle: 'Habesha Holiday Dresses for Timket & Enkutatash | Diamond Design',
+    seoDescription: 'Shop Habesha holiday dresses for Ethiopian and Eritrean celebrations like Timkat, Enkutatash, and Meskel. Elegant traditional styles for your special moments at Diamond Design.',
+    h1: 'Events and Holiday Habesha Dresses',
+    body: 'Celebrate in style with Habesha holiday and graduation dresses designed for Ethiopian and Eritrean events like Enkutatash, Meskel, birthday and graduation ceremonies. These traditional designs blend festive elegance with modern fashion for unforgettable cultural moments.',
   },
   group: {
-    title: 'Group Outfits',
-    description: 'Coordinated sets for family and friends',
-    seoTitle: 'Group Outfits | Diamond Design – Matching Ethiopian Family Sets',
-    seoDescription: 'Shop coordinated Habesha group outfits at Diamond Design. Matching Ethiopian traditional dress sets for families, bridal parties, and special events.',
+    title: 'Habesha Group Outfits',
+    description: 'Habesha group outfits for families and friends, with matching Ethiopian and Eritrean traditional designs for special events.',
+    seoTitle: 'Habesha Family Group Outfits – Matching Ethiopian Styles | Diamond Design',
+    seoDescription: 'Shop matching Habesha group outfits for families and friends. Coordinated Ethiopian and Eritrean designs perfect for weddings, holidays, graduation and special events.',
+    h1: 'Habesha Group Outfits for Families & Special Events',
+    body: 'Shop matching Habesha group outfits for families and friends, perfect for weddings, holidays, and special events. These Ethiopian and Eritrean designs create a coordinated and elegant look for memorable occasions.',
   },
   mens: {
-    title: "Men's Collection",
-    description: 'Traditional Ethiopian menswear with modern style',
-    seoTitle: "Men's Collection | Diamond Design – Traditional Ethiopian Menswear",
-    seoDescription: "Shop Diamond Design's men's Habesha collection. Authentic traditional Ethiopian menswear crafted with quality fabrics and modern style.",
+    title: "Habesha Men's Traditional Clothing",
+    description: 'Habesha menswear featuring traditional Ethiopian and Eritrean clothing with modern style and premium craftsmanship.',
+    seoTitle: 'Habesha Menswear – Traditional Ethiopian & Eritrean Clothing | Diamond Design',
+    seoDescription: 'Explore Habesha menswear featuring traditional Ethiopian and Eritrean clothing with modern style. Perfect for weddings, holidays, and cultural events.',
+    h1: "Habesha Men's Traditional Clothing",
+    body: 'Explore traditional Habesha menswear designed for Ethiopian and Eritrean weddings, holidays, and special events. Each piece combines authentic craftsmanship with modern style for a refined and confident look.',
   },
   couples: {
-    title: 'Couples Collection',
-    description: 'Matching collections for the perfect pair',
-    seoTitle: 'Couples Collection | Diamond Design – Matching Ethiopian Dress Sets',
-    seoDescription: 'Find matching Habesha couples outfits at Diamond Design. Coordinated Ethiopian traditional dress sets for weddings, holidays, and special occasions.',
+    title: 'Matching Habesha Couples Outfits',
+    description: 'Matching Habesha couples outfits with coordinated Ethiopian and Eritrean designs, perfect for weddings, shimgilina and celebrations.',
+    seoTitle: 'Matching Habesha Couples Outfits for Weddings & Holidays | Diamond Design',
+    seoDescription: 'Discover matching Habesha couples outfits with elegant Ethiopian and Eritrean designs. Perfect for weddings, holidays, and special celebrations.',
+    h1: 'Matching Habesha Couples Outfits',
+    body: 'Discover matching Habesha couples outfits designed for Ethiopian and Eritrean weddings, holidays, and special events. These coordinated designs offer elegance, unity, and a modern touch for unforgettable moments together.',
   },
 };
 
@@ -225,7 +239,7 @@ const handlePageChange = (pageNumber) => {
           {category !== 'mens' && category !== 'couples' && (
             <>
               {/* ✅ "Dresses" is a clickable link */}
-              <a href="/collections/simple-dresses" className="text-gray-500 hover:text-brand transition-colors">
+             <a href="/collections/habesha-kemis-simple" className="text-gray-500 hover:text-brand transition-colors">
                 Dresses
               </a>
               <HiChevronRight className="w-4 h-4 text-gray-400" />
@@ -241,13 +255,12 @@ const handlePageChange = (pageNumber) => {
           transition={{ duration: 0.6 }}
           className="mb-8"
         >
-          <h1 className="text-2xl md:text-3npm runxl font-bold text-gray-900 mb-4" style={{ fontFamily: 'Roboto, sans-serif' }}>
-            {categoryData.title}
-          </h1>
-          <p className="text-lg text-gray-600 max-w-3xl leading-relaxed" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
-            Discover our collection of {categoryData.title.toLowerCase()} featuring authentic Ethiopian craftsmanship.
-            Each piece is carefully selected to bring you the finest quality and traditional designs with a modern touch.
-          </p>
+          <h1 className="text-2xl md:text-3xl font-medium text-gray-900 mb-4" style={{ fontFamily: 'Roboto, sans-serif' }}>
+          {categoryData.h1}
+        </h1>
+        <p className="text-medium text-gray-600 max-w-3xl leading-relaxed" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
+          {categoryData.body}
+        </p>
         </motion.div>
 
         {/* Filters Bar */}

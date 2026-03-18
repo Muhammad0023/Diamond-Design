@@ -53,13 +53,13 @@ export default function LatestDesignsPage() {
 
       {/* ✅ ADDED: Helmet was completely missing from this page */}
       <Helmet>
-        <title>Latest Designs | Diamond Design – New Habesha Dress Arrivals</title>
-        <meta name="description" content="Discover Diamond Design's newest Habesha Kemis arrivals. Fresh Ethiopian traditional dress styles for women, men, and couples added regularly." />
-        <meta property="og:title" content="Latest Designs | Diamond Design" />
+        <title>Latest Habesha Styles – Ethiopian & Eritrean styles| Diamond Design</title>
+        <meta name="description" content="Discover Diamond Design's latest Habesha styles, including habesha dresses, chiffon, couples outfits, and menswear. Explore trending Ethiopian and Eritrean styles perfect for weddings, graduations, holidays, and special events." />
+        <meta property="og:title" content="Latest Habesha Styles | Diamond Design" />
         <meta property="og:description" content="Shop the newest Ethiopian Habesha dress arrivals at Diamond Design." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.diamonddesignstore.com/latest-designs" />
-        <link rel="canonical" href="https://www.diamonddesignstore.com/latest-designs" />
+        <meta property="og:url" content="https://www.diamonddesignstore.com/latest-habesha-styles" />
+        <link rel="canonical" href="https://www.diamonddesignstore.com/latest-habesha-styles" />
       </Helmet>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -71,16 +71,16 @@ export default function LatestDesignsPage() {
             Home
           </a>
           <HiChevronRight className="w-4 h-4 text-gray-400" />
-          <span className="text-gray-900 font-medium">Latest Designs</span>
+          <span className="text-gray-900 font-medium">Latest Habesha Styles</span>
         </nav>
 
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3" style={{ fontFamily: 'Roboto, sans-serif' }}>
-            Latest Designs
+          <h1 className="text-4xl md:text-3xl font-medium text-gray-900 mb-3" style={{ fontFamily: 'Roboto, sans-serif' }}>
+            Latest Habesha Styles
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
-            Discover our newest arrivals and trending styles
+          <p className="text-medium text-gray-600 max-w-2xl" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
+            Discover Diamond Design's newest Habesha styles, featuring habesha dresses, chiffon, couples outfits, and menswear. These authentic Ethiopian and Eritrean designs are perfect for weddings, graduations, holidays, and special events, bringing traditional craftsmanship together with modern elegance.
           </p>
         </div>
 

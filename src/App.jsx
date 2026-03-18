@@ -69,7 +69,7 @@ function App() {
                         <main className="flex-grow">
                           <Routes>
                             <Route path="/" element={<HomePage />} />
-                            <Route path="/latest-designs" element={<LatestDesignsPage />} />
+                            <Route path="/latest-habesha-styles" element={<LatestDesignsPage />} />
                             <Route path="/product/:slug" element={<ProductDetail />} />
                             <Route path="/search" element={<SearchResults />} />
 

@@ -36,13 +36,13 @@ export default function Header() {
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
-  const dressCategories = [
-    { name: 'Simple Dresses',  url: '/collections/simple-dresses' },
-    { name: 'Wedding Dresses', url: '/collections/wedding-dresses' },
-    { name: 'Chiffon',         url: '/collections/chiffon' },
-    { name: 'Holidays',        url: '/collections/holidays' },
-    { name: 'Group Outfits',   url: '/collections/group-outfits' },
-  ];
+ const dressCategories = [
+  { name: 'Simple Habesha Kemis',  url: '/collections/habesha-kemis-simple' },
+  { name: 'Wedding Dresses',       url: '/collections/habesha-wedding-dresses' },
+  { name: 'Chiffon',               url: '/collections/habesha-chiffon-dresses' },
+  { name: 'Holidays',              url: '/collections/event-holiday-habesha-dresses' },
+  { name: 'Group Outfits',         url: '/collections/habesha-family-group-outfits' },
+];
 
   return (
     <>
@@ -127,11 +127,11 @@ export default function Header() {
                   </AnimatePresence>
                 </div>
 
-                <Link to="/collections/mens-collection" className="relative group text-sm font-medium text-gray-700 py-2">
+                <Link to="/collections/habesha-mens-traditional-clothing" className="relative group text-sm font-medium text-gray-700 py-2">
                   Men's
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-brand scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
                 </Link>
-                <Link to="/collections/couples-collection" className="relative group text-sm font-medium text-gray-700 py-2">
+                <Link to="/collections/matching-habesha-couples" className="relative group text-sm font-medium text-gray-700 py-2">
                   Couples
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-brand scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
                 </Link>
@@ -214,8 +214,8 @@ export default function Header() {
                       </ul>
                     )}
                   </li>
-                  <li><Link to="/collections/mens-collection" className="text-xl font-medium text-gray-900 block" onClick={toggleMobileMenu}>Men's</Link></li>
-                  <li><Link to="/collections/couples-collection" className="text-xl font-medium text-gray-900 block" onClick={toggleMobileMenu}>Couples</Link></li>
+                  <li><Link to="/collections/habesha-mens-traditional-clothing" className="text-xl font-medium text-gray-900 block" onClick={toggleMobileMenu}>Men's</Link></li>
+                  <li><Link to="/collections/matching-habesha-couples" className="text-xl font-medium text-gray-900 block" onClick={toggleMobileMenu}>Couples</Link></li>
                   <li className="pt-4 border-t border-gray-100 space-y-6">
                     <Link to="/about" className="text-lg font-light text-gray-400 block" onClick={toggleMobileMenu}>About Us</Link>
                     <Link to="/contact" className="text-lg font-light text-gray-400 block" onClick={toggleMobileMenu}>Contact Us</Link>

@@ -55,8 +55,8 @@ export default function About() {
             className="h-24 w-auto mx-auto mb-8"
             whileHover={{ scale: 1.05 }}
           />
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6" style={{ fontFamily: 'Roboto, sans-serif' }}>
-            Our Heritage, Your Elegance
+          <h1 className="text-4xl md:text-5xl font-semibold text-gray-900 mb-6" style={{ fontFamily: 'Roboto, sans-serif' }}>
+           Celebrate in Habesha Style
           </h1>
           <motion.div 
             className="w-24 h-1 bg-brand mx-auto"
@@ -69,20 +69,26 @@ export default function About() {
         {/* Content Section */}
         <div className="prose prose-lg mx-auto text-gray-600 space-y-8" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
           <motion.p variants={itemVariants} className="text-xl leading-relaxed text-center md:text-left">
-            Welcome to <strong className="text-gray-900 font-bold">Diamond Design</strong>, the premier destination for authentic Habesha Kemis. 
-            Born in the heart of Addis Ababa, our mission is to preserve the rich weaving traditions 
-            of Ethiopia while introducing them to the modern global fashion stage.
+            Welcome to <strong className="text-gray-900 font-bold">Diamond Design</strong>, your premier destination for authentic Habesha Kemis and traditional Ethiopian 
+and Eritrean dresses. Born in the heart of Addis Ababa, we honor rich weaving traditions and intricate "Tilf" 
+embroidery, bringing timeless handcrafted designs to weddings, graduations, holidays, and cultural celebrations 
+worldwide. Our collection is available for purchase online, with <strong className="text-gray-900 font-semibold">fast worldwide shipping </strong> 
+ so you can enjoy authentic Habesha styles no matter where you are.
           </motion.p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 py-10">
             <motion.div variants={itemVariants} className="bg-gray-50 p-8 rounded-2xl border-l-4 border-brand">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">The Craftsmanship</h3>
-              <p>Every dress in our collection is handcrafted by skilled artisans. We use the finest cotton and intricate "Tilf" embroidery to ensure that every Diamond Design piece is a unique work of art.</p>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">The Expert Craftsmanship</h3>
+              <p>Every dress in our collection is carefully handcrafted by skilled artisans. Using the finest cotton and 
+    traditional embroidery techniques, each Diamond Design piece is a unique work of art that combines 
+    cultural heritage with modern elegance.</p>
             </motion.div>
 
             <motion.div variants={itemVariants} className="bg-gray-50 p-8 rounded-2xl border-l-4 border-brand">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Our Vision</h3>
-              <p>We believe that Habesha clothing is more than just a garment—it is a symbol of pride, identity, and celebration. We strive to make these timeless designs accessible to everyone, everywhere.</p>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">Our Vision</h3>
+              <p>At Diamond Design, we believe Habesha clothing is more than just a garment—it is a symbol of pride, 
+    identity, and celebration. Our mission is to make these timeless designs accessible to everyone, 
+    everywhere, so you can experience elegance, beauty, and tradition in every special moment.</p>
             </motion.div>
           </div>
 

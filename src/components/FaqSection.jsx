@@ -30,7 +30,7 @@ export default function FaqSection() {
   return (
     <section className="py-16 px-4 bg-white">
       <div className="max-w-3xl mx-auto">
-        <h2 className="text-xl font-medium text-gray-900 mb-8 text-center" style={{ fontFamily: 'Roboto, sans-serif' }}>
+        <h2 className="text-xl font-semibold text-gray-900 mb-8 text-center" style={{ fontFamily: 'Roboto, sans-serif' }}>
           Frequently Asked Questions
         </h2>
         
