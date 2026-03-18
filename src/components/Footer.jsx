@@ -66,10 +66,10 @@ export default function Footer() {
             <h4 className="font-bold text-lg mb-4" style={{ fontFamily: 'Roboto, sans-serif' }}>SHOP</h4>
             <ul className="space-y-2">
               {[
-                { name: "Wedding Dresses",  path: "/collections/wedding-dresses" },
-                { name: "Holidays",         path: "/collections/holidays" },
-                { name: "Simple Dresses",   path: "/collections/simple-dresses" },
-                { name: "Men's Collection", path: "/collections/mens-collection" },
+                { name: "Wedding Dresses",  path: "/collections/habesha-wedding-dresses" },
+                { name: "Holidays",         path: "/collections/event-holiday-habesha-dresses" },
+                { name: "Simple Dresses",   path: "/collections/habesha-kemis-simple" },
+                { name: "Men's Collection", path: "/collections/habesha-mens-traditional-clothing" },
               ].map((item) => (
                 <li key={item.name}>
                   <Link 
