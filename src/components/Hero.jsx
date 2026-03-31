@@ -1,3 +1,4 @@
+'use client'
 import { motion } from 'framer-motion';
 import heroImage from '../assets/Hero.webp';
 
@@ -35,7 +36,7 @@ export default function Hero() {
         transition={{ duration: 1.5, ease: "easeOut" }}
         className="absolute inset-0 w-full h-full bg-cover bg-no-repeat"
         style={{ 
-          backgroundImage: `url(${heroImage})`,
+          backgroundImage: `url(${heroImage.src})`,
           backgroundPosition: '20% center' 
         }}
         // ✅ ADDED: role + aria-label on the background div since it's a CSS bg image

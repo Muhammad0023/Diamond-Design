@@ -1,3 +1,4 @@
+'use client'
 import React, { useState, useEffect } from 'react';
 import { IoChevronUpOutline } from "react-icons/io5";
 import { motion, AnimatePresence } from 'framer-motion';

@@ -1,6 +1,7 @@
+'use client'
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useRouter, usePathname } from 'next/navigation';
 import { HiOutlineSearch, HiX, HiClock } from 'react-icons/hi';
 import { useSearch } from '../context/SearchContext';
 
@@ -29,8 +30,8 @@ export default function SearchBar({ isMobile = false }) {
   const inputRef = useRef(null);
   const containerRef = useRef(null);
   
-  const navigate = useNavigate();
-  const location = useLocation();
+  const router = useRouter()
+  const pathname = usePathname()
   const { performSearch } = useSearch();
 
  useEffect(() => {
@@ -38,7 +39,7 @@ export default function SearchBar({ isMobile = false }) {
   setInputValue('');
   setDropdownResults([]);
   document.body.style.overflow = 'unset';
-}, [location.pathname]);
+}, [pathname]);
 
   useEffect(() => {
     if (isMobile && isOpen) {
@@ -82,14 +83,14 @@ export default function SearchBar({ isMobile = false }) {
   const goToSearchResults = (e) => {
     if (e) { e.preventDefault(); e.stopPropagation(); }
     if (inputValue.trim() !== '') {
-      navigate(`/search?q=${encodeURIComponent(inputValue.trim())}`);
+      router.push(`/search?q=${encodeURIComponent(inputValue.trim())}`);
     }
   };
 const goToProduct = (product) => {
   saveToHistory(product);
   setDropdownResults([]);
   setInputValue('');
-  navigate(`/product/${product.slug}`);
+  router.push(`/product/${product.slug}`);
 };
 
   const handleKeyDown = (e) => {

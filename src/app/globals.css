@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+/* --- 1. GLOBAL DEFAULTS --- */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom Minimalist Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f9f9f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d1d1; /* Soft gray base */
+  border-radius: 10px;
+  border: 2px solid #f9f9f9; /* Creates a "floating" effect */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d29e0e; /* Changes to your brand color on hover */
+}
+
+/* --- 2. THEME VARIABLES --- */
+@theme {
+  --color-brand: #d29e0e;
+  --color-brand-dark: #b8860b;
+  --color-brand-light: #e6b323;
+  
+  --font-display: "Playfair Display", serif;
+  --font-body: "Inter", sans-serif;
+}
+
+/* --- 3. UTILITY CLASSES --- */
+@layer utilities {
+  /* Simple fade animation for hero elements */
+  .animate-fade-in {
+    animation: fadeIn 0.8s ease-in;
+  }
+  
+  /* One-time slide animation (useful for things visible on load) */
+  .animate-slide-up {
+    animation: slideUp 0.8s ease-out;
+  }
+
+  /* Utility to hide scrollbars while keeping functionality */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* --- 4. KEYFRAMES --- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- 5. SCROLL REVEAL ENGINE --- */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  visibility: hidden; 
+  will-change: transform, opacity;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
