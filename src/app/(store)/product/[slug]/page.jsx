@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 import ProductDetailClient from './ProductDetailClient'
 import JsonLd from '../../../../components/JsonLd'
 

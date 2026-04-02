@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 import CategoryClient from './CategoryClient'
 import JsonLd from '../../../../components/JsonLd'
 
