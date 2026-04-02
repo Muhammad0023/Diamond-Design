@@ -1,15 +1,18 @@
-import { Link, useNavigate, useLocation } from 'react-router-dom'; 
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { HiOutlineShoppingBag } from 'react-icons/hi';
-import { IoClose } from 'react-icons/io5';
-import { useCart } from '../context/CartContext';
-import SearchBar from './SearchBar'; 
-import logo from '../assets/logo.png'; 
+'use client'
+
+import Link from 'next/link'
+import { useRouter, usePathname } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { HiOutlineShoppingBag } from 'react-icons/hi'
+import { IoClose } from 'react-icons/io5'
+import { useCart } from '../context/CartContext'
+import SearchBar from './SearchBar'
+import logo from '../assets/logo.png' 
 
 export default function Header() {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const router = useRouter()
+  const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDressesOpen, setIsDressesOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -24,12 +27,12 @@ export default function Header() {
 
   const handleHomeClick = (e) => {
     e.preventDefault();
-    if (location.pathname === '/') {
+    if (pathname=== '/') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       sessionStorage.removeItem('heroAnimated');
       setTimeout(() => window.location.reload(), 100); 
     } else {
-      navigate('/');
+      router.push('/');
     }
     setIsMobileMenuOpen(false);
   };
@@ -88,7 +91,7 @@ export default function Header() {
                   initial={{ scale: 1.5, opacity: 0 }}
                   animate={{ scale: scrolled ? 0.8 : 1, opacity: 1 }}
                   transition={{ duration: 0.8, ease: "easeOut" }}
-                  src={logo} 
+                  src={logo.src} 
                   alt="Diamond Design" 
                   className="w-auto h-16 object-contain origin-left" 
                 />
@@ -118,7 +121,7 @@ export default function Header() {
                         className="absolute left-0 mt-2 w-52 bg-white border border-gray-100 shadow-2xl rounded-xl overflow-hidden"
                       >
                         {dressCategories.map((cat) => (
-                          <Link key={cat.url} to={cat.url} className="block px-5 py-3 text-sm text-gray-600 hover:bg-brand/10 hover:text-brand transition-all border-b border-white/20 last:border-0">
+                          <Link key={cat.url} href={cat.url} className="block px-5 py-3 text-sm text-gray-600 hover:bg-brand/10 hover:text-brand transition-all border-b border-white/20 last:border-0">
                             {cat.name}
                           </Link>
                         ))}
@@ -127,11 +130,11 @@ export default function Header() {
                   </AnimatePresence>
                 </div>
 
-                <Link to="/collections/habesha-mens-traditional-clothing" className="relative group text-sm font-medium text-gray-700 py-2">
+                <Link href="/collections/habesha-mens-traditional-clothing" className="relative group text-sm font-medium text-gray-700 py-2">
                   Men's
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-brand scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
                 </Link>
-                <Link to="/collections/matching-habesha-couples" className="relative group text-sm font-medium text-gray-700 py-2">
+                <Link href="/collections/matching-habesha-couples" className="relative group text-sm font-medium text-gray-700 py-2">
                   Couples
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-brand scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
                 </Link>
@@ -143,7 +146,7 @@ export default function Header() {
                 <motion.img 
                   initial={{ scale: 0.8 }}
                   animate={{ scale: scrolled ? 0.8 : 1 }}
-                  src={logo} 
+                  src={logo.src} 
                   alt="Diamond Design" 
                   className="w-auto h-12 object-contain" 
                 />
@@ -192,7 +195,7 @@ export default function Header() {
               className="absolute top-0 left-0 h-full w-[300px] bg-white/90 backdrop-blur-md shadow-2xl overflow-y-auto"
             >
               <div className="flex items-center justify-between p-6 border-b border-gray-50">
-                <img src={logo} alt="Diamond Design" className="h-10 w-auto" />
+                <img src={logo.src} alt="Diamond Design" className="h-10 w-auto" />
                 <button onClick={toggleMobileMenu} className="p-2">
                   <IoClose className="w-6 h-6 text-gray-400" />
                 </button>
@@ -208,17 +211,17 @@ export default function Header() {
                       <ul className="ml-4 mt-4 space-y-4">
                         {dressCategories.map(cat => (
                           <li key={cat.url}>
-                            <Link to={cat.url} className="text-gray-500 text-lg block" onClick={toggleMobileMenu}>{cat.name}</Link>
+                            <Link href={cat.url} className="text-gray-500 text-lg block" onClick={toggleMobileMenu}>{cat.name}</Link>
                           </li>
                         ))}
                       </ul>
                     )}
                   </li>
-                  <li><Link to="/collections/habesha-mens-traditional-clothing" className="text-xl font-medium text-gray-900 block" onClick={toggleMobileMenu}>Men's</Link></li>
-                  <li><Link to="/collections/matching-habesha-couples" className="text-xl font-medium text-gray-900 block" onClick={toggleMobileMenu}>Couples</Link></li>
+                  <li><Link href="/collections/habesha-mens-traditional-clothing" className="text-xl font-medium text-gray-900 block" onClick={toggleMobileMenu}>Men's</Link></li>
+                  <li><Link href="/collections/matching-habesha-couples" className="text-xl font-medium text-gray-900 block" onClick={toggleMobileMenu}>Couples</Link></li>
                   <li className="pt-4 border-t border-gray-100 space-y-6">
-                    <Link to="/about" className="text-lg font-light text-gray-400 block" onClick={toggleMobileMenu}>About Us</Link>
-                    <Link to="/contact" className="text-lg font-light text-gray-400 block" onClick={toggleMobileMenu}>Contact Us</Link>
+                    <Link href="/about" className="text-lg font-light text-gray-400 block" onClick={toggleMobileMenu}>About Us</Link>
+                    <Link href="/contact" className="text-lg font-light text-gray-400 block" onClick={toggleMobileMenu}>Contact Us</Link>
                   </li>
                 </ul>
               </nav>

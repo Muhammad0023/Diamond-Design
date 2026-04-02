@@ -1,5 +1,6 @@
+'use client'
+import { useRouter } from 'next/navigation'
 import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 
@@ -29,7 +30,7 @@ function ProductCarouselSkeleton() {
 
 export default function ProductCarousel({ title, products, viewAllLink = "#" }) {
   const scrollContainerRef = useRef(null);
-  const navigate = useNavigate();
+  const router = useRouter()
 
   if (!products) return <ProductCarouselSkeleton />;
 
@@ -52,7 +53,7 @@ export default function ProductCarousel({ title, products, viewAllLink = "#" }) 
                 {title}
               </h2>
           <button
-            onClick={() => navigate(viewAllLink)}
+            onClick={() => router.push(viewAllLink)}
             className="text-brand font-semibold hover:text-brand-dark transition-colors flex items-center gap-1 cursor-pointer group"
             style={{ fontFamily: 'Roboto, sans-serif' }}
           >
@@ -81,7 +82,7 @@ export default function ProductCarousel({ title, products, viewAllLink = "#" }) 
             {hasMoreProducts && (
               <div 
                 className="flex-none w-[38%] sm:w-[calc(40%-0.5rem)] lg:w-[calc(20%-1.2rem)] snap-start cursor-pointer"
-                onClick={() => navigate(viewAllLink)}
+                onClick={() => router.push(viewAllLink)}
               >
                 <div className="bg-brand h-full flex flex-col items-center justify-center p-8 hover:bg-brand-dark transition-colors">
                   <span className="text-white text-4xl mb-2">+{products.length - 13}</span>
@@ -107,7 +108,7 @@ export default function ProductCarousel({ title, products, viewAllLink = "#" }) 
 
 function ProductCard({ product }) {
   const [isHovered, setIsHovered] = useState(false);
-  const navigate = useNavigate();
+  const router = useRouter()
 
   const mainImage = product.images?.[0] || product.image;
   const hoverImage = product.images?.[1] || product.hoverImage || mainImage;
@@ -121,7 +122,7 @@ function ProductCard({ product }) {
       className="flex-none w-[38%] sm:w-[calc(40%-0.5rem)] lg:w-[calc(20%-1.2rem)] snap-start cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={() => navigate(`/product/${product.slug}`)}
+      onClick={() => router.push(`/product/${product.slug}`)}
     >
       <div className="bg-white overflow-hidden shadow-sm transition-shadow duration-300 hover:shadow-lg">
         <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">

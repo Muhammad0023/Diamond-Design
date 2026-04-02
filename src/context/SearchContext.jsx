@@ -1,3 +1,4 @@
+'use client'
 import { createContext, useContext, useCallback } from 'react';
 import { useProducts } from './ProductsContext';
 

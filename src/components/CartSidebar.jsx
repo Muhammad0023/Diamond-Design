@@ -1,3 +1,4 @@
+'use client'
 import { useCart } from '../context/CartContext';
 import { IoClose } from 'react-icons/io5';
 import { HiMinus, HiPlus, HiTrash } from 'react-icons/hi';

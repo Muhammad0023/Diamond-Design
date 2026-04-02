@@ -1,5 +1,7 @@
+'use client'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion';
-import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 function ProductGridSkeleton() {
@@ -25,7 +27,7 @@ function ProductGridSkeleton() {
 }
 
 export default function ProductGrid({ title, products, viewAllLink }) {
-  const navigate = useNavigate();
+  const router = useRouter()
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -55,8 +57,7 @@ export default function ProductGrid({ title, products, viewAllLink }) {
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900" style={{ fontFamily: 'Roboto, sans-serif' }}>
             {title}
           </h2>
-          <Link 
-            to={viewAllLink} 
+          <Link href={viewAllLink} 
             className="group flex items-center gap-1 text-brand font-semibold hover:text-brand-dark transition-colors"
           >
             View All 
@@ -72,7 +73,7 @@ export default function ProductGrid({ title, products, viewAllLink }) {
           className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
         >
           {products.slice(0, 8).map((product) => (
-            <ProductCardItem key={product.id} product={product} navigate={navigate} itemVariants={itemVariants} />
+            <ProductCardItem key={product.id} product={product} navigate={router.push} itemVariants={itemVariants} />
           ))}
         </motion.div>
       </div>

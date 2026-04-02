@@ -1,22 +1,24 @@
-import React from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { FaFacebookF, FaInstagram, FaTiktok, FaPinterestP, FaYoutube } from 'react-icons/fa';
-import { IoLocationOutline, IoCallOutline } from "react-icons/io5";
-import { MdOutlineEmail } from "react-icons/md";
+'use client'
+import Link from 'next/link'
+import { useRouter, usePathname } from 'next/navigation'
+import { FaFacebookF, FaInstagram, FaTiktok, FaPinterestP, FaYoutube } from 'react-icons/fa'
+import { IoLocationOutline, IoCallOutline } from "react-icons/io5"
+import { MdOutlineEmail } from "react-icons/md"
+import logo from '../assets/logo.png'
 
 export default function Footer() {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const router = useRouter()
+  const pathname = usePathname()
   const currentYear = new Date().getFullYear();
 
   const handleHomeClick = (e) => {
     e.preventDefault();
-    if (location.pathname === '/') {
+    if (pathname === '/') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       sessionStorage.removeItem('heroAnimated');
       setTimeout(() => window.location.reload(), 100);
     } else {
-      navigate('/');
+      router.push('/');
     }
   };
 
@@ -27,15 +29,15 @@ export default function Footer() {
           
           {/* Column 1: Brand & Social Media */}
           <div>
-            <h3 
-              onClick={handleHomeClick}
-              className="font-roboto text-2xl font-bold mb-4 cursor-pointer group transition-all duration-300"
-            >
-              Diamond
-              <span className="text-brand transition-colors duration-300 ml-1">
-                      Design
-                    </span>
-            </h3>
+        <h3 
+          onClick={handleHomeClick}
+          className="font-roboto text-2xl font-bold mb-4 cursor-pointer group transition-all duration-300"
+        >
+          Diamond
+          <span className="text-brand transition-colors duration-300 ml-1">
+            Design
+          </span>
+        </h3>
             <p className="text-gray-400 leading-relaxed mb-6" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
               Habesha Kemis designs inspired by Habesha culture, elegance, and timeless beauty.
             </p>
@@ -72,8 +74,7 @@ export default function Footer() {
                 { name: "Men's Collection", path: "/collections/habesha-mens-traditional-clothing" },
               ].map((item) => (
                 <li key={item.name}>
-                  <Link 
-                    to={item.path} 
+                  <Link href={item.path} 
                     className="text-gray-400 hover:text-brand hover:translate-x-1 inline-block transition-all duration-200" 
                     style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}
                   >
@@ -95,8 +96,8 @@ export default function Footer() {
                 { name: "Size Guide", path: "/size-guide" }
               ].map((item) => (
                 <li key={item.name}>
-                  <Link 
-                    to={item.path} 
+                  <Link href={item.path} 
+                    
                     className="text-gray-400 hover:text-brand hover:translate-x-1 inline-block transition-all duration-200" 
                     style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}
                   >
