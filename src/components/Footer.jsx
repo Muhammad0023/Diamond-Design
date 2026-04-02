@@ -131,7 +131,13 @@ export default function Footer() {
                 <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-brand transition-colors duration-300">
                   <MdOutlineEmail className="w-5 h-5 text-brand group-hover:text-white" />
                 </div>
-                <a href="mailto:diamonddesign907@gmail.com" className="hover:text-brand transition-colors" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
+                                <a 
+                  href="mailto:diamonddesign907@gmail.com" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-brand transition-colors" 
+                  style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}
+                >
                   diamonddesign907@gmail.com
                 </a>
               </li>
