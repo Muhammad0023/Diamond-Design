@@ -21,20 +21,7 @@ function saveToHistory(product) {
 }
 
 export default function SearchBar({ isMobile = false }) {
-  const [isOpen, setIsOpen] = useState(false);const handleInputChange = (e) => {
-  const query = e.target.value;
-  setInputValue(query);
-  if (query.trim() === '') {
-    setDropdownResults([]);
-    return;
-  }
-  // Debounce search
-  clearTimeout(window._searchTimeout);
-  window._searchTimeout = setTimeout(() => {
-    const results = performSearch(query);
-    setDropdownResults(results.slice(0, 5));
-  }, 200);
-};
+  const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [dropdownResults, setDropdownResults] = useState([]);
   const [history, setHistory] = useState([]);
@@ -77,15 +64,18 @@ export default function SearchBar({ isMobile = false }) {
   }, []);
 
   const handleInputChange = (e) => {
-    const query = e.target.value;
-    setInputValue(query);
-    if (query.trim() === '') {
-      setDropdownResults([]);
-      return;
-    }
+  const query = e.target.value;
+  setInputValue(query);
+  if (query.trim() === '') {
+    setDropdownResults([]);
+    return;
+  }
+  clearTimeout(window._searchTimeout);
+  window._searchTimeout = setTimeout(() => {
     const results = performSearch(query);
     setDropdownResults(results.slice(0, 5));
-  };
+  }, 200);
+};
 
   const clearHistory = (e) => {
     if (e) { e.preventDefault(); e.stopPropagation(); }
