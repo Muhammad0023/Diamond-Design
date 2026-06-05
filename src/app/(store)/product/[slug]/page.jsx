@@ -8,10 +8,13 @@ export async function generateMetadata({ params }) {
   return {
     title: `${productName} | Diamond Design`,
     description: `Shop ${productName} at Diamond Design. Premium handcrafted Habesha fashion with worldwide shipping.`,
-   openGraph: {
-  title: `${productName} | Diamond Design`,
-  type: 'website',  
-},
+    alternates: {
+      canonical: `https://www.diamonddesignstore.com/product/${slug}`,
+    },
+    openGraph: {
+      title: `${productName} | Diamond Design`,
+      type: 'website',
+    },
   }
 }
 

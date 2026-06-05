@@ -34,9 +34,6 @@ export const metadata = {
     description: 'Authentic Habesha Kemis and elegant Ethiopian and Eritrean dresses crafted for weddings, holidays, and unforgettable moments.',
     images: ['https://www.diamonddesignstore.com/og-image.jpg'],
   },
-  alternates: {
-    canonical: 'https://www.diamonddesignstore.com',
-  },
   other: {
     'p:domain_verify': '83d6370c60a575dcaf2873ffbc4bb26e',
   },

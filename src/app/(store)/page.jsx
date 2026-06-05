@@ -4,6 +4,9 @@ import JsonLd from '../../components/JsonLd'
 export const metadata = {
   title: 'Habesha Kemis – Authentic Habesha Dresses | Diamond Design',
   description: 'Shop Diamond Design\'s online collection of Habesha Kemis.',
+  alternates: {
+    canonical: 'https://www.diamonddesignstore.com',
+  },
 }
 
 export default function HomePage() {

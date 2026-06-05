@@ -39,6 +39,9 @@ export async function generateMetadata({ params }) {
   return {
     title: meta?.title || `${slug.replace(/-/g, ' ')} | Diamond Design`,
     description: meta?.description || `Shop our ${slug.replace(/-/g, ' ')} collection at Diamond Design.`,
+    alternates: {
+      canonical: `https://www.diamonddesignstore.com/collections/${slug}`,
+    },
   }
 }
 
