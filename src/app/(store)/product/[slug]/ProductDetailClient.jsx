@@ -584,7 +584,7 @@ export default function ProductDetailClient({ slug }) {
                     className="cursor-pointer group" 
                     onClick={() => { router.push(`/product/${relProduct.slug}`); window.scrollTo(0, 0); }}
                   >
-                    <div className="bg-white overflow-hidden shadow-sm mb-4 relative">
+                    <div className="bg-white overflow-hidden shadow-sm mb-4 relative aspect-[3/4]">
                       {relProduct.hoverImage && relProduct.hoverImage !== relProduct.image ? (
                         <>
                           <Image src={relProduct.image} alt={`${relProduct.name} - Related Product`}
