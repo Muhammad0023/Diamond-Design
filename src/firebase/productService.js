@@ -10,6 +10,7 @@ import {
   query,
   where,
   orderBy,
+  limit,
   onSnapshot
 } from "firebase/firestore";
 
@@ -170,4 +171,35 @@ export const listenToProducts = (callback) => {
   );
 
   return unsubscribe; // Call this to stop listening
+  };
+  // Get products by category with limit
+export const getProductsByCategoryLimited = async (category, maxCount = 8) => {
+  try {
+    const q = query(
+      collection(db, PRODUCTS_COLLECTION),
+      where('category', '==', category),
+      limit(maxCount)
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  } catch (error) {
+    console.error('Error fetching limited products by category:', error);
+    throw error;
+  }
+};
+
+// Get latest products with limit
+export const getLatestProductsLimited = async (maxCount = 13) => {
+  try {
+    const q = query(
+      collection(db, PRODUCTS_COLLECTION),
+      where('isNew', '==', true),
+      limit(maxCount)
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  } catch (error) {
+    console.error('Error fetching latest products limited:', error);
+    throw error;
+  }
 };

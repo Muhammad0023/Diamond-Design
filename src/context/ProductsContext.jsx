@@ -1,6 +1,6 @@
 'use client'
 import { createContext, useContext, useState, useEffect } from 'react';
-import { getAllProducts } from '../firebase/productService';
+import { getAllProducts, getProductsByCategoryLimited, getLatestProductsLimited } from '../firebase/productService';
 
 const ProductsContext = createContext();
 
@@ -14,6 +14,7 @@ export function useProducts() {
 
 export function ProductsProvider({ children }) {
   const [products, setProducts] = useState([]);
+  const [homeProducts, setHomeProducts] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -43,6 +44,19 @@ export function ProductsProvider({ children }) {
         }));
         setProducts(sanitizedProducts);
         setError(null);
+
+        // Fetch limited products for homepage
+        const [latest, simple, wedding, chiffon, holiday, group, mens, couples] = await Promise.all([
+          getLatestProductsLimited(13),
+          getProductsByCategoryLimited('simple', 8),
+          getProductsByCategoryLimited('wedding', 8),
+          getProductsByCategoryLimited('chiffon', 8),
+          getProductsByCategoryLimited('holiday', 8),
+          getProductsByCategoryLimited('group', 8),
+          getProductsByCategoryLimited('mens', 8),
+          getProductsByCategoryLimited('couples', 8),
+        ]);
+        setHomeProducts({ latest, simple, wedding, chiffon, holiday, group, mens, couples });
       } catch (err) {
         console.error('Error fetching products:', err);
         setError('Failed to load products. Please refresh the page.');
@@ -86,6 +100,7 @@ export function ProductsProvider({ children }) {
 
   const value = {
     products,
+    homeProducts,
     loading,
     error,
     getProductsByCategory,

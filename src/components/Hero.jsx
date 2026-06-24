@@ -36,7 +36,8 @@ export default function Hero() {
         alt="Model wearing an elegant Habesha Kemis dress – Diamond Design Ethiopian traditional fashion"
         fill
         priority
-        quality={85}
+        quality={90}
+        sizes="100vw"
         className="object-cover"
         style={{ objectPosition: '20% center' }}
       />

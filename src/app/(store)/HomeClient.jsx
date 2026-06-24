@@ -5,8 +5,8 @@ import ProductCarousel from '../../components/ProductCarousel'
 import ProductGrid from '../../components/ProductGrid'
 import { useProducts } from '../../context/ProductsContext'
 
-export default function HomeClient() {  const { loading, error, getProductsByCategoryGroups } = useProducts();
-  const productGroups = getProductsByCategoryGroups();
+export default function HomeClient() {  const { loading, error, homeProducts } = useProducts();
+  const productGroups = homeProducts;
 
   return (
     <div className="overflow-hidden bg-white">
@@ -44,22 +44,22 @@ export default function HomeClient() {  const { loading, error, getProductsByCat
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-                          <ProductCarousel 
-                  title="Latest Styles" 
-                  products={loading ? null : productGroups.latest} 
+                     <ProductCarousel
+                  title="Latest Styles"
+                  products={loading || !productGroups ? null : productGroups.latest}
                   viewAllLink="/latest-habesha-styles"
                 />
           </motion.div>
           
           <div className="space-y-4">
                       {[
-            { title: "Simple Dresses", products: productGroups.simple, link: "/collections/habesha-kemis-simple" },
-            { title: "Wedding Dresses", products: productGroups.wedding, link: "/collections/habesha-wedding-dresses" },
-            { title: "Chiffon", products: productGroups.chiffon, link: "/collections/habesha-chiffon-dresses" },
-            { title: "Holidays", products: productGroups.holiday, link: "/collections/event-holiday-habesha-dresses" },
-            { title: "Group Outfits", products: productGroups.group, link: "/collections/habesha-family-group-outfits" },
-            { title: "Men's", products: productGroups.mens, link: "/collections/habesha-mens-traditional-clothing" },
-            { title: "Couples", products: productGroups.couples, link: "/collections/matching-habesha-couples" },
+            { title: "Simple Dresses", products: loading || !productGroups ? null : productGroups.simple, link: "/collections/habesha-kemis-simple" },
+            { title: "Wedding Dresses", products: loading || !productGroups ? null : productGroups.wedding, link: "/collections/habesha-wedding-dresses" },
+            { title: "Chiffon", products: loading || !productGroups ? null : productGroups.chiffon, link: "/collections/habesha-chiffon-dresses" },
+            { title: "Holidays", products: loading || !productGroups ? null : productGroups.holiday, link: "/collections/event-holiday-habesha-dresses" },
+            { title: "Group Outfits", products: loading || !productGroups ? null : productGroups.group, link: "/collections/habesha-family-group-outfits" },
+            { title: "Men's", products: loading || !productGroups ? null : productGroups.mens, link: "/collections/habesha-mens-traditional-clothing" },
+            { title: "Couples", products: loading || !productGroups ? null : productGroups.couples, link: "/collections/matching-habesha-couples" },
           ].map((group) => (
             <motion.div
               key={group.title}
