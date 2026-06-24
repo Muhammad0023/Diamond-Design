@@ -8,6 +8,7 @@ import { HiOutlineShoppingBag } from 'react-icons/hi'
 import { IoClose } from 'react-icons/io5'
 import { useCart } from '../context/CartContext'
 import SearchBar from './SearchBar'
+import Image from 'next/image';
 import logo from '../assets/logo.png' 
 
 export default function Header() {
@@ -87,14 +88,13 @@ export default function Header() {
               </button>
 
               <a href="/" onClick={handleHomeClick} className="hidden md:block">
-                <motion.img 
+                <motion.div
                   initial={{ scale: 1.5, opacity: 0 }}
                   animate={{ scale: scrolled ? 0.8 : 1, opacity: 1 }}
                   transition={{ duration: 0.8, ease: "easeOut" }}
-                  src={logo.src} 
-                  alt="Diamond Design" 
-                  className="w-auto h-16 object-contain origin-left" 
-                />
+                >
+                  <Image src={logo} alt="Diamond Design" height={64} className="w-auto h-16 object-contain origin-left" />
+                </motion.div>
               </a>
 
               <nav className="hidden md:flex items-center space-x-8">
@@ -143,13 +143,12 @@ export default function Header() {
 
             <div className="md:hidden absolute left-1/2 -translate-x-1/2">
               <a href="/" onClick={handleHomeClick}>
-                <motion.img 
+                <motion.div
                   initial={{ scale: 0.8 }}
                   animate={{ scale: scrolled ? 0.8 : 1 }}
-                  src={logo.src} 
-                  alt="Diamond Design" 
-                  className="w-auto h-12 object-contain" 
-                />
+                >
+                  <Image src={logo} alt="Diamond Design" height={48} className="w-auto h-12 object-contain" />
+                </motion.div>
               </a>
             </div>
 
@@ -195,7 +194,7 @@ export default function Header() {
               className="absolute top-0 left-0 h-full w-[300px] bg-white/90 backdrop-blur-md shadow-2xl overflow-y-auto"
             >
               <div className="flex items-center justify-between p-6 border-b border-gray-50">
-                <img src={logo.src} alt="Diamond Design" className="h-10 w-auto" />
+                <Image src={logo} alt="Diamond Design" height={40} className="h-10 w-auto" />
                 <button onClick={toggleMobileMenu} className="p-2">
                   <IoClose className="w-6 h-6 text-gray-400" />
                 </button>

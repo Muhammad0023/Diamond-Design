@@ -20,28 +20,36 @@ export function ProductsProvider({ children }) {
   // Fetch products on mount
   useEffect(() => {
     const fetchProducts = async () => {
-  try {
-    setLoading(true);
-    const fetchedProducts = await getAllProducts();
+      try {
+        setLoading(true);
+        // Check cache first
+        const cached = sessionStorage.getItem('dd_products');
+        const cachedTime = sessionStorage.getItem('dd_products_time');
+        const cacheAge = Date.now() - parseInt(cachedTime || '0');
+        const cacheValid = cached && cacheAge < 5 * 60 * 1000; // 5 minutes
 
-    // INNOVATIVE FIX: Ensure every product has an image2
-    const sanitizedProducts = fetchedProducts.map(product => ({
-      ...product,
-      // If image2 is missing in Firebase, we use the first image as a backup
-      // This prevents the hover effect from showing a broken/blank space
-      image2: product.image2 || product.image 
-    }));
+        let fetchedProducts;
+        if (cacheValid) {
+          fetchedProducts = JSON.parse(cached);
+        } else {
+          fetchedProducts = await getAllProducts();
+          sessionStorage.setItem('dd_products', JSON.stringify(fetchedProducts));
+          sessionStorage.setItem('dd_products_time', Date.now().toString());
+        }
 
-    setProducts(sanitizedProducts);
-    setError(null);
-  } catch (err) {
-    console.error('Error fetching products:', err);
-    setError('Failed to load products. Please refresh the page.');
-  } finally {
-    setLoading(false);
-  }
-};
-
+        const sanitizedProducts = fetchedProducts.map(product => ({
+          ...product,
+          image2: product.image2 || product.image
+        }));
+        setProducts(sanitizedProducts);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching products:', err);
+        setError('Failed to load products. Please refresh the page.');
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchProducts();
   }, []);
 

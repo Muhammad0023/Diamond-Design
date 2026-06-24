@@ -1,5 +1,6 @@
 'use client'
 import { useState, useRef, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { createPortal } from 'react-dom';
 import { useRouter, usePathname } from 'next/navigation';
 import { HiOutlineSearch, HiX, HiClock } from 'react-icons/hi';
@@ -183,7 +184,7 @@ const goToProduct = (product) => {
                     </div>
                     {history.map((product) => (
                       <div key={product.id} onMouseDown={() => goToProduct(product)} className="flex items-center gap-3 py-3 border-b border-gray-50 last:border-0">
-                        <img src={product.image} className="w-12 h-12 object-cover rounded-lg" alt="" />
+                        <Image src={product.image} width={48} height={48} className="object-cover rounded-lg" alt="" />
                         <div className="flex-1">
                           <h4 className="text-sm font-medium text-gray-800">{product.name}</h4>
                           <p className="text-brand font-bold">${product.price}</p>
@@ -197,7 +198,7 @@ const goToProduct = (product) => {
                   <div className="bg-white p-4 shadow-xl rounded-b-2xl">
                     {dropdownResults.map((product) => (
                       <div key={product.id} onMouseDown={() => goToProduct(product)} className="flex gap-3 p-3 hover:bg-gray-50 rounded-lg">
-                        <img src={product.image} className="w-12 h-12 object-cover rounded-lg" alt="" />
+                        <Image src={product.image} width={48} height={48} className="object-cover rounded-lg" alt="" />
                         <div className="flex-1">
                           <h4 className="text-sm font-medium text-gray-800">{product.name}</h4>
                           <p className="text-brand font-bold">${product.price}</p>
@@ -261,7 +262,7 @@ const goToProduct = (product) => {
               </div>
               {history.map((product) => (
                 <div key={product.id} onMouseDown={() => goToProduct(product)} className="flex gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
-                  <img src={product.image} className="w-10 h-10 object-cover rounded-md" alt="" />
+                  <Image src={product.image} width={40} height={40} className="object-cover rounded-md" alt="" />
                   <div className="flex-1 min-w-0">
                     <h4 className="text-sm font-medium truncate text-gray-800">{product.name}</h4>
                     <p className="text-brand font-bold text-xs">${product.price}</p>
@@ -276,7 +277,7 @@ const goToProduct = (product) => {
             <div className="p-2 border-t border-gray-50">
               {dropdownResults.map((product) => (
                 <div key={product.id} onMouseDown={() => goToProduct(product)} className="flex gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
-                  <img src={product.image} className="w-10 h-10 object-cover rounded-md" alt="" />
+                  <Image src={product.image} width={40} height={40} className="object-cover rounded-md" alt="" />
                   <div className="flex-1 min-w-0">
                     <h4 className="text-sm font-medium truncate text-gray-800">{product.name}</h4>
                     <p className="text-brand font-bold text-xs">${product.price}</p>

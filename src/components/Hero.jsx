@@ -1,5 +1,6 @@
 'use client'
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import heroImage from '../assets/Hero.webp';
 
 export default function Hero() {
@@ -30,21 +31,16 @@ export default function Hero() {
       aria-label="Diamond Design – Habesha Kemis Collection Hero"
     >
       {/* BACKGROUND IMAGE */}
-      <motion.div 
-        initial={{ scale: 1.1, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 1.5, ease: "easeOut" }}
-        className="absolute inset-0 w-full h-full bg-cover bg-no-repeat"
-        style={{ 
-          backgroundImage: `url(${heroImage.src})`,
-          backgroundPosition: '20% center' 
-        }}
-        // ✅ ADDED: role + aria-label on the background div since it's a CSS bg image
-        role="img"
-        aria-label="Model wearing an elegant Habesha Kemis dress – Diamond Design Ethiopian traditional fashion"
-      >
-        <div className="absolute inset-0 bg-white/20 md:hidden"></div>
-      </motion.div>
+     <Image
+        src={heroImage}
+        alt="Model wearing an elegant Habesha Kemis dress – Diamond Design Ethiopian traditional fashion"
+        fill
+        priority
+        quality={85}
+        className="object-cover"
+        style={{ objectPosition: '20% center' }}
+      />
+      <div className="absolute inset-0 bg-white/20 md:hidden"></div>
 
       {/* CONTENT */}
       <div className="relative z-10 w-full h-full">

@@ -1,6 +1,7 @@
 'use client'
 import { useRouter } from 'next/navigation'
 import { useState, useRef } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 
@@ -129,16 +130,19 @@ function ProductCard({ product }) {
 
           {hoverImage !== mainImage ? (
   <>
-    <img src={mainImage} alt={`${product.name} – Ethiopian Habesha Dress`}
-      className={`w-full h-full object-cover transition-all duration-500 absolute inset-0 ${isHovered ? 'opacity-0 scale-105' : 'opacity-100 scale-100'}`}
+    <Image src={mainImage} alt={`${product.name} – Ethiopian Habesha Dress`}
+      fill sizes="(max-width: 768px) 38vw, 20vw"
+      className={`object-cover transition-all duration-500 absolute inset-0 ${isHovered ? 'opacity-0 scale-105' : 'opacity-100 scale-100'}`}
     />
-    <img src={hoverImage} alt={`${product.name} – hover`}
-      className={`w-full h-full object-cover transition-all duration-500 ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
+    <Image src={hoverImage} alt={`${product.name} – hover`}
+      fill sizes="(max-width: 768px) 38vw, 20vw"
+      className={`object-cover transition-all duration-500 ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
     />
   </>
 ) : (
-  <img src={mainImage} alt={`${product.name} – Ethiopian Habesha Dress`}
-    className={`w-full h-full object-cover transition-all duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
+  <Image src={mainImage} alt={`${product.name} – Ethiopian Habesha Dress`}
+    fill sizes="(max-width: 768px) 38vw, 20vw"
+    className={`object-cover transition-all duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
   />
 )}
           {product.isNew && (

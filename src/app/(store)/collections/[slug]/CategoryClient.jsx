@@ -2,6 +2,7 @@
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { HiHome, HiChevronRight, HiChevronLeft } from 'react-icons/hi';
 import { motion } from 'framer-motion';
 import { useProducts } from '../../../../context/ProductsContext';
@@ -359,16 +360,19 @@ function ProductGridItem({ product, navigate, variants }) {
         <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
           {product.hoverImage && product.hoverImage !== product.image ? (
   <>
-    <img src={product.image} alt={`${product.name} – Ethiopian Habesha Dress`}
-      className={`w-full h-full object-cover transition-all duration-500 absolute inset-0 ${isHovered ? 'opacity-0 scale-105' : 'opacity-100 scale-100'}`}
+    <Image src={product.image} alt={`${product.name} – Ethiopian Habesha Dress`}
+      fill sizes="(max-width: 768px) 50vw, 25vw"
+      className={`object-cover transition-all duration-500 absolute inset-0 ${isHovered ? 'opacity-0 scale-105' : 'opacity-100 scale-100'}`}
     />
-    <img src={product.hoverImage} alt={`${product.name} – alternate view`}
-      className={`w-full h-full object-cover transition-all duration-500 ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
+    <Image src={product.hoverImage} alt={`${product.name} – alternate view`}
+      fill sizes="(max-width: 768px) 50vw, 25vw"
+      className={`object-cover transition-all duration-500 ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
     />
   </>
 ) : (
-  <img src={product.image} alt={`${product.name} – Ethiopian Habesha Dress`}
-    className={`w-full h-full object-cover transition-all duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
+  <Image src={product.image} alt={`${product.name} – Ethiopian Habesha Dress`}
+    fill sizes="(max-width: 768px) 50vw, 25vw"
+    className={`object-cover transition-all duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
   />
 )}
           {product.isNew && (

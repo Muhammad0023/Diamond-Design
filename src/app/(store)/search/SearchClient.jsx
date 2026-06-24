@@ -1,5 +1,6 @@
 'use client'
 import { useState, useMemo } from 'react';
+import Image from 'next/image';
 import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import { useSearch } from '../../../context/SearchContext'
@@ -131,16 +132,19 @@ export default function SearchClient() {
   <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
     {(product.hoverImage && product.hoverImage !== product.image) ? (
       <>
-        <img src={product.image} alt={`${product.name} – Ethiopian Habesha Dress | Diamond Design`}
-          className="w-full h-full object-cover transition-all duration-500 absolute inset-0 group-hover:opacity-0 group-hover:scale-105"
+        <Image src={product.image} alt={`${product.name} – Ethiopian Habesha Dress | Diamond Design`}
+          fill sizes="(max-width: 768px) 50vw, 25vw"
+          className="object-cover transition-all duration-500 absolute inset-0 group-hover:opacity-0 group-hover:scale-105"
         />
-        <img src={product.hoverImage} alt={`${product.name} – hover`}
-          className="w-full h-full object-cover transition-all duration-500 opacity-0 scale-105 group-hover:opacity-100 group-hover:scale-100"
+        <Image src={product.hoverImage} alt={`${product.name} – hover`}
+          fill sizes="(max-width: 768px) 50vw, 25vw"
+          className="object-cover transition-all duration-500 opacity-0 scale-105 group-hover:opacity-100 group-hover:scale-100"
         />
       </>
     ) : (
-      <img src={product.image} alt={`${product.name} – Ethiopian Habesha Dress | Diamond Design`}
-        className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+      <Image src={product.image} alt={`${product.name} – Ethiopian Habesha Dress | Diamond Design`}
+        fill sizes="(max-width: 768px) 50vw, 25vw"
+        className="object-cover transition-all duration-500 group-hover:scale-110"
       />
     )}
   </div>

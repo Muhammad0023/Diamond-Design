@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import Image from 'next/image';
 
 function ProductGridSkeleton() {
   return (
@@ -103,16 +104,22 @@ function ProductCardItem({ product, navigate, itemVariants }) {
         <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
                 {hoverImage !== mainImage ? (
   <>
-    <img src={mainImage} alt={`${product.name} – Ethiopian Habesha Dress | Diamond Design`}
-  className={`w-full h-full object-cover transition-all duration-500 absolute inset-0 ${isHovered ? 'opacity-0 scale-105' : 'opacity-100 scale-100'}`}
+    <Image src={mainImage} alt={`${product.name} – Ethiopian Habesha Dress | Diamond Design`}
+  fill
+  sizes="(max-width: 768px) 50vw, 25vw"
+  className={`object-cover transition-all duration-500 absolute inset-0 ${isHovered ? 'opacity-0 scale-105' : 'opacity-100 scale-100'}`}
 />
-<img src={hoverImage} alt={`${product.name} – hover`}
-  className={`w-full h-full object-cover transition-all duration-500 ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
+<Image src={hoverImage} alt={`${product.name} – hover`}
+  fill
+  sizes="(max-width: 768px) 50vw, 25vw"
+  className={`object-cover transition-all duration-500 ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
 />
   </>
 ) : (
-  <img src={mainImage} alt={`${product.name} – Ethiopian Habesha Dress | Diamond Design`}
-    className={`w-full h-full object-cover transition-all duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
+  <Image src={mainImage} alt={`${product.name} – Ethiopian Habesha Dress | Diamond Design`}
+    fill
+    sizes="(max-width: 768px) 50vw, 25vw"
+    className={`object-cover transition-all duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
   />
 )}
           {product.isNew && (

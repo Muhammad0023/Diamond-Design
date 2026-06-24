@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { HiOutlineMagnifyingGlassPlus } from 'react-icons/hi2';
@@ -586,16 +587,19 @@ export default function ProductDetailClient({ slug }) {
                     <div className="bg-white overflow-hidden shadow-sm mb-4 relative">
                       {relProduct.hoverImage && relProduct.hoverImage !== relProduct.image ? (
                         <>
-                          <img src={relProduct.image} alt={`${relProduct.name} - Related Product`}
-                            className="w-full aspect-[3/4] object-cover transition-all duration-500 absolute inset-0 group-hover:opacity-0 group-hover:scale-105"
+                          <Image src={relProduct.image} alt={`${relProduct.name} - Related Product`}
+                            fill sizes="(max-width: 768px) 50vw, 25vw"
+                            className="object-cover transition-all duration-500 absolute inset-0 group-hover:opacity-0 group-hover:scale-105"
                           />
-                          <img src={relProduct.hoverImage} alt={`${relProduct.name} – hover`}
-                            className="w-full aspect-[3/4] object-cover transition-all duration-500 opacity-0 scale-105 group-hover:opacity-100 group-hover:scale-100"
+                          <Image src={relProduct.hoverImage} alt={`${relProduct.name} – hover`}
+                            fill sizes="(max-width: 768px) 50vw, 25vw"
+                            className="object-cover transition-all duration-500 opacity-0 scale-105 group-hover:opacity-100 group-hover:scale-100"
                           />
                         </>
                       ) : (
-                        <img src={relProduct.image} alt={`${relProduct.name} - Related Product`}
-                          className="w-full aspect-[3/4] object-cover transition-all duration-500 group-hover:scale-110"
+                        <Image src={relProduct.image} alt={`${relProduct.name} - Related Product`}
+                          fill sizes="(max-width: 768px) 50vw, 25vw"
+                          className="object-cover transition-all duration-500 group-hover:scale-110"
                         />
                       )}
                     </div>
