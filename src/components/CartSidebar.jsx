@@ -69,7 +69,7 @@ export default function CartSidebar() {
           <h2 className="text-xl font-bold text-gray-800 drop-shadow-sm" style={{ fontFamily: 'Roboto, sans-serif' }}>
             Shopping Cart
           </h2>
-          <button onClick={toggleCart} className="p-2 rounded-full hover:bg-white/50 bg-white/20 border border-white/40 shadow-sm transition-colors">
+          <button onClick={toggleCart} className="p-2 rounded-full hover:bg-white/50 bg-white/20 border border-white/40 shadow-sm transition-colors" aria-label="Close cart">
             <IoClose className="w-6 h-6 text-gray-900" />
           </button>
         </div>

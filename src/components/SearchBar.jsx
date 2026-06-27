@@ -119,7 +119,7 @@ const goToProduct = (product) => {
   if (isMobile) {
     return (
       <div ref={containerRef}>
-        <button onClick={() => setIsOpen(true)} className="p-2 text-gray-700">
+        <button onClick={() => setIsOpen(true)} className="p-2 text-gray-700" aria-label="Open search">
           <HiOutlineSearch className="w-6 h-6" />
         </button>
 

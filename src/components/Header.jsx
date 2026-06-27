@@ -79,7 +79,7 @@ export default function Header() {
           <div className="flex items-center justify-between h-full relative">
             
             <div className="flex items-center space-x-8">
-              <button onClick={toggleMobileMenu} className="md:hidden p-2 z-50">
+              <button onClick={toggleMobileMenu} className="md:hidden p-2 z-50" aria-label="Open menu">
                 <div className="space-y-1.5">
                   <span className={`block h-0.5 w-6 bg-gray-900 transition-all ${isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
                   <span className={`block h-0.5 w-6 bg-gray-900 ${isMobileMenuOpen ? 'opacity-0' : ''}`}></span>
@@ -87,7 +87,7 @@ export default function Header() {
                 </div>
               </button>
 
-              <a href="/" onClick={handleHomeClick} className="hidden md:block">
+              <a href="/" onClick={handleHomeClick} className="hidden md:block" aria-label="Diamond Design home">
                 <motion.div
                   initial={{ scale: 1.5, opacity: 0 }}
                   animate={{ scale: scrolled ? 0.8 : 1, opacity: 1 }}
@@ -142,7 +142,7 @@ export default function Header() {
             </div>
 
             <div className="md:hidden absolute left-1/2 -translate-x-1/2">
-              <a href="/" onClick={handleHomeClick}>
+              <a href="/" onClick={handleHomeClick} aria-label="Diamond Design home">
                 <motion.div
                   initial={{ scale: 0.8 }}
                   animate={{ scale: scrolled ? 0.8 : 1 }}
@@ -161,7 +161,7 @@ export default function Header() {
                   e.preventDefault();
                   toggleCart();
                 }} 
-                className="relative p-2 text-gray-700 hover:text-brand transition-all hover:scale-110 cursor-pointer"
+                className="relative p-2 text-gray-700 hover:text-brand transition-all hover:scale-110 cursor-pointer" aria-label="Open cart"
               >
                 <HiOutlineShoppingBag className="w-6 h-6" />
                 {getCartCount() > 0 && (
@@ -195,7 +195,7 @@ export default function Header() {
             >
               <div className="flex items-center justify-between p-6 border-b border-gray-50">
                 <Image src={logo} alt="Diamond Design" height={40} className="h-10 w-auto" />
-                <button onClick={toggleMobileMenu} className="p-2">
+                <button onClick={toggleMobileMenu} className="p-2" aria-label="Close menu">
                   <IoClose className="w-6 h-6 text-gray-400" />
                 </button>
               </div>
@@ -203,7 +203,7 @@ export default function Header() {
                 <ul className="space-y-8">
                   <li><a href="/" className="text-xl font-medium text-gray-900 block" onClick={handleHomeClick}>Home</a></li>
                   <li>
-                    <button onClick={() => setIsDressesOpen(!isDressesOpen)} className="w-full flex justify-between items-center text-xl font-medium text-gray-900">
+                    <button onClick={() => setIsDressesOpen(!isDressesOpen)} className="w-full flex justify-between items-center text-xl font-medium text-gray-900" aria-label="Toggle dresses menu">
                       Dresses <span className={isDressesOpen ? 'rotate-90' : ''}>›</span>
                     </button>
                     {isDressesOpen && (

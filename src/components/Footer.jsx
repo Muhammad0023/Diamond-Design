@@ -44,17 +44,18 @@ export default function Footer() {
             
             <div className="flex gap-3">
               {[
-                { icon: <FaFacebookF />, link: "https://web.facebook.com/profile.php?id=61583397116912" },
-                { icon: <FaInstagram />, link: "https://www.instagram.com/diamond__design_" },
-                { icon: <FaTiktok />, link: "https://www.tiktok.com/@diamonddesign1_1" },
-                { icon: <FaPinterestP />, link: "https://www.pinterest.com/diamond__design/" },
-                { icon: <FaYoutube />, link: "https://www.youtube.com/@DiamondDesign1" }
+              { icon: <FaFacebookF />, link: "https://web.facebook.com/profile.php?id=61583397116912", label: "Follow us on Facebook" },
+              { icon: <FaInstagram />, link: "https://www.instagram.com/diamond__design_", label: "Follow us on Instagram" },
+              { icon: <FaTiktok />, link: "https://www.tiktok.com/@diamonddesign1_1", label: "Follow us on TikTok" },
+              { icon: <FaPinterestP />, link: "https://www.pinterest.com/diamond__design/", label: "Follow us on Pinterest" },
+              { icon: <FaYoutube />, link: "https://www.youtube.com/@DiamondDesign1", label: "Follow us on YouTube" }
               ].map((social, idx) => (
                 <a 
                   key={idx}
                   href={social.link} 
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={social.label}
                   className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-brand hover:scale-110 transition-all duration-300"
                 >
                   <span className="text-white text-sm">{social.icon}</span>
