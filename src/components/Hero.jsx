@@ -76,7 +76,7 @@ export default function Hero() {
               <motion.div variants={itemVariants}>
                 <button 
                   onClick={() => document.getElementById('shop-now')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="bg-[#8B6508] text-white px-10 py-3.5 rounded-full text-sm font-bold tracking-[0.2em] shadow-2xl hover:bg-[#6d4f06] hover:shadow-brand/50 transition-all duration-300 active:scale-95"
+                  className="bg-[#A67C00] text-white px-10 py-3.5 rounded-full text-sm font-bold tracking-[0.2em] shadow-2xl hover:bg-[#8B6508] hover:shadow-brand/50 transition-all duration-300 active:scale-95"
                 >
                   VIEW COLLECTION
                 </button>
