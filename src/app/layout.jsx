@@ -43,10 +43,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={roboto.className}>
       <head>
-        <link rel="icon" media="(prefers-color-scheme: dark)" href="/favicon-light.png" />
-        <link rel="icon" media="(prefers-color-scheme: light)" href="/favicon-dark.png" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-      </head>
+          <link rel="icon" media="(prefers-color-scheme: dark)" href="/favicon-light.png" />
+          <link rel="icon" media="(prefers-color-scheme: light)" href="/favicon-dark.png" />
+          <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+          <link rel="preconnect" href="https://diamond-design-49de2.firebaseapp.com" />
+          <link rel="preconnect" href="https://firestore.googleapis.com" />
+          <link rel="preconnect" href="https://www.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        </head>
       <body className="flex flex-col min-h-screen">
         <Providers>
           {children}
