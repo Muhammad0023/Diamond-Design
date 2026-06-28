@@ -117,7 +117,15 @@ const category = slugToCategory[slug]
 
   useEffect(() => {
     window.history.scrollRestoration = 'manual';
-    window.scrollTo(0, 0);
+    const savedScroll = sessionStorage.getItem(`scroll-${slug}`);
+    if (savedScroll) {
+      setTimeout(() => {
+        window.scrollTo(0, parseInt(savedScroll));
+        sessionStorage.removeItem(`scroll-${slug}`);
+      }, 300);
+    } else {
+      window.scrollTo(0, 0);
+    }
   }, []);
 
   useEffect(() => {
@@ -355,8 +363,10 @@ function ProductGridItem({ product, navigate, variants }) {
   return (
     <motion.div
       variants={variants}
-      onClick={() => navigate(`/product/${product.slug}`)}
-      onMouseEnter={() => { if (window.matchMedia('(hover: hover)').matches) setIsHovered(true); }}
+      onClick={() => {
+        sessionStorage.setItem(`scroll-${window.location.pathname.split('/').pop()}`, window.scrollY);
+        navigate(`/product/${product.slug}`);
+      }}      onMouseEnter={() => { if (window.matchMedia('(hover: hover)').matches) setIsHovered(true); }}
       onMouseLeave={() => setIsHovered(false)}
       className="cursor-pointer group"
     >
