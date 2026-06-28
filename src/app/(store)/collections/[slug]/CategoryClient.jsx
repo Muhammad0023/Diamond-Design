@@ -100,6 +100,7 @@ const category = slugToCategory[slug]
   const [sortBy, setSortBy] = useState('default');
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [skipAnimation, setSkipAnimation] = useState(false);
   const productsPerPage = 20;
 
   const categoryData = categoryConfig[category];
@@ -119,6 +120,7 @@ const category = slugToCategory[slug]
     window.history.scrollRestoration = 'manual';
     const savedScroll = sessionStorage.getItem(`scroll-${slug}`);
     if (savedScroll) {
+      setSkipAnimation(true);
       sessionStorage.removeItem(`scroll-${slug}`);
       setTimeout(() => {
         window.scrollTo({ top: parseInt(savedScroll), behavior: 'instant' });
@@ -272,9 +274,9 @@ const handlePageChange = (pageNumber) => {
         {currentProducts.length > 0 ? (
           <>
             <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
+              variants={skipAnimation ? {} : containerVariants}
+              initial={skipAnimation ? false : "hidden"}
+              animate={skipAnimation ? false : "visible"}
               className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
             >
               {currentProducts.map((product) => (
