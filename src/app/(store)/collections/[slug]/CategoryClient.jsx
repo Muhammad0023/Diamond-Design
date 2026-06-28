@@ -1,5 +1,5 @@
 'use client'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
@@ -99,7 +99,8 @@ export default function CategoryClient({ slug }) {
 const category = slugToCategory[slug]
   const [sortBy, setSortBy] = useState('default');
   const [products, setProducts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const searchParams = useSearchParams();
+  const currentPage = parseInt(searchParams.get('page') || '1');
   const [skipAnimation, setSkipAnimation] = useState(false);
   const productsPerPage = 20;
 
@@ -118,10 +119,10 @@ const category = slugToCategory[slug]
 
   useEffect(() => {
     window.history.scrollRestoration = 'manual';
-    const savedScroll = sessionStorage.getItem(`scroll-${slug}`);
+    const savedScroll = sessionStorage.getItem(`scroll-${slug}-${currentPage}`);
     if (savedScroll) {
       setSkipAnimation(true);
-      sessionStorage.removeItem(`scroll-${slug}`);
+      sessionStorage.removeItem(`scroll-${slug}-${currentPage}`);
       setTimeout(() => {
         window.scrollTo({ top: parseInt(savedScroll), behavior: 'instant' });
       }, 50);
@@ -135,9 +136,7 @@ const category = slugToCategory[slug]
       if (!loading) router.push('/');
       return;
     }
-    setProducts(getProductsByCategory(category));
-    setCurrentPage(1);
-  }, [category, categoryData, router.push, getProductsByCategory, loading]);
+     setProducts(getProductsByCategory(category));  }, [category, categoryData, router.push, getProductsByCategory, loading]);
 
   useEffect(() => {
     if (!categoryData) return;
@@ -146,7 +145,6 @@ const category = slugToCategory[slug]
     else if (sortBy === 'price-high') sorted.sort((a, b) => b.price - a.price);
     else if (sortBy === 'name') sorted.sort((a, b) => a.name.localeCompare(b.name));
     setProducts(sorted);
-    setCurrentPage(1);
   }, [sortBy, category, categoryData, getProductsByCategory]);
 
   const indexOfLastProduct = currentPage * productsPerPage;
@@ -155,11 +153,7 @@ const category = slugToCategory[slug]
   const totalPages = Math.ceil(products.length / productsPerPage);
 
 const handlePageChange = (pageNumber) => {
-  setCurrentPage(pageNumber);
-  // Use setTimeout to ensure scroll happens after state update
-  setTimeout(() => {
-    window.scrollTo(0, 0);
-  }, 100);
+  router.push(`/collections/${slug}?page=${pageNumber}`);
 };
 
   if (!categoryData) return null;
@@ -366,7 +360,7 @@ function ProductGridItem({ product, navigate, variants }) {
     <motion.div
       variants={variants}
       onClick={() => {
-        sessionStorage.setItem(`scroll-${window.location.pathname.split('/').pop()}`, window.scrollY);
+        sessionStorage.setItem(`scroll-${slug}-${currentPage}`, window.scrollY);
         navigate(`/product/${product.slug}`);
       }}      onMouseEnter={() => { if (window.matchMedia('(hover: hover)').matches) setIsHovered(true); }}
       onMouseLeave={() => setIsHovered(false)}
