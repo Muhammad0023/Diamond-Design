@@ -94,7 +94,10 @@ function ProductCardItem({ product, navigate, itemVariants }) {
   return (
     <motion.div
       variants={itemVariants}
-      onClick={() => navigate(`/product/${product.slug}`)}
+     onClick={() => {
+        sessionStorage.setItem('scroll-home', window.scrollY);
+        navigate(`/product/${product.slug}`);
+      }}
       onMouseEnter={() => { if (!isTouchDevice()) setIsHovered(true); }}
       onMouseLeave={() => { if (!isTouchDevice()) setIsHovered(false); }}
       className="cursor-pointer group"
