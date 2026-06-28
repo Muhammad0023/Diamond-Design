@@ -14,8 +14,10 @@ export default function HomeClient() {
     const savedScroll = sessionStorage.getItem('scroll-home');
     if (savedScroll) {
       sessionStorage.removeItem('scroll-home');
+      document.documentElement.style.visibility = 'hidden';
       setTimeout(() => {
         window.scrollTo({ top: parseInt(savedScroll), behavior: 'instant' });
+        document.documentElement.style.visibility = 'visible';
       }, 500);
     } else {
       window.scrollTo(0, 0);
