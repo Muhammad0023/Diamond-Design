@@ -123,7 +123,11 @@ function ProductCard({ product }) {
       className="flex-none w-[38%] sm:w-[calc(40%-0.5rem)] lg:w-[calc(20%-1.2rem)] snap-start cursor-pointer"
      onMouseEnter={() => { if (window.matchMedia('(hover: hover)').matches) setIsHovered(true); }}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={() => router.push(`/product/${product.slug}`)}
+      onClick={() => {
+        const key = window.location.pathname === '/' ? 'scroll-home' : `scroll-${window.location.pathname.split('/').pop()}`;
+        sessionStorage.setItem(key, window.scrollY);
+        router.push(`/product/${product.slug}`);
+      }}
     >
       <div className="bg-white overflow-hidden shadow-sm transition-shadow duration-300 hover:shadow-lg">
         <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">

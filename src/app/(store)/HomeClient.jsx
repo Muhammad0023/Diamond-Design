@@ -3,9 +3,24 @@ import { motion } from 'framer-motion';
 import Hero from '../../components/Hero'
 import ProductCarousel from '../../components/ProductCarousel'
 import ProductGrid from '../../components/ProductGrid'
+import { useEffect } from 'react';
 import { useProducts } from '../../context/ProductsContext'
 
-export default function HomeClient() {  const { loading, error, homeProducts } = useProducts();
+export default function HomeClient() {  
+  const { loading, error, homeProducts } = useProducts();
+
+  useEffect(() => {
+    window.history.scrollRestoration = 'manual';
+    const savedScroll = sessionStorage.getItem('scroll-home');
+    if (savedScroll) {
+      sessionStorage.removeItem('scroll-home');
+      setTimeout(() => {
+        window.scrollTo({ top: parseInt(savedScroll), behavior: 'instant' });
+      }, 50);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, []);
   const productGroups = homeProducts;
 
   return (
