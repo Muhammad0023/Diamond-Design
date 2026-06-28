@@ -39,7 +39,7 @@ const fadeFromRight = {
   visible: {
     opacity: 1,
     x: 0,
-    transition: { duration: 0.7, ease: "easeOut" }
+    transition: { duration: 0.7, ease: "easeOut", delay: 0.4 }
   },
 };
 };
