@@ -25,12 +25,23 @@ const wipeVariants = {
 };
 
 // Soft fade for subtitle and button
-const fadeVariants = {
-  hidden: { opacity: 0 },
+const fadeFromLeft = {
+  hidden: { opacity: 0, x: -40 },
   visible: {
     opacity: 1,
+    x: 0,
     transition: { duration: 0.7, ease: "easeOut" }
   },
+};
+
+const fadeFromRight = {
+  hidden: { opacity: 0, x: 40 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.7, ease: "easeOut" }
+  },
+};
 };
   return (
     <section 
@@ -70,15 +81,15 @@ const fadeVariants = {
                   <motion.span variants={wipeVariants} className="block">Designs</motion.span>
                 </h1>
                 
-                <motion.p 
-                  variants={fadeVariants}
+               <motion.p 
+                  variants={fadeFromLeft}
                   className="font-sans font-light text-gray-600 tracking-[0.2em] text-xs sm:text-sm uppercase mt-2"
                 >
                   Elegance and Beauty for a Queen
                 </motion.p>
               </div>
 
-               <motion.div variants={fadeVariants}>
+               <motion.div variants={fadeFromRight}>
                 <button 
                   onClick={() => document.getElementById('shop-now')?.scrollIntoView({ behavior: 'smooth' })}
                   className="bg-[#A67C00] text-white px-10 py-3.5 rounded-full text-sm font-bold tracking-[0.2em] shadow-2xl hover:bg-[#8B6508] hover:shadow-brand/50 transition-all duration-300 active:scale-95"
