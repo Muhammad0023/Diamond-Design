@@ -14,7 +14,7 @@ export default function HomeClient() {
     const savedScroll = sessionStorage.getItem('scroll-home');
     if (savedScroll) {
       sessionStorage.removeItem('scroll-home');
-      etTimeout(() => {
+      setTimeout(() => {
         window.scrollTo({ top: parseInt(savedScroll), behavior: 'instant' });
       }, 500);
     } else {
