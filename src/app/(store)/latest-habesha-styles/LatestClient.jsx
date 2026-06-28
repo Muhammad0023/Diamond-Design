@@ -1,5 +1,5 @@
 'use client'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { HiHome, HiChevronRight, HiChevronLeft } from 'react-icons/hi';
@@ -10,13 +10,26 @@ export default function LatestClient() {
   const router = useRouter()
   const { getLatestProducts, loading } = useProducts();
   
-  const [currentPage, setCurrentPage] = useState(1);
+  const searchParams = useSearchParams();
+  const currentPage = parseInt(searchParams.get('page') || '1');
   const [allProducts, setAllProducts] = useState([]);
   
   const productsPerPage = 20; // 5 rows x 4 columns
 
   useEffect(() => {
-    // Get latest products (sorted by createdAt)
+    window.history.scrollRestoration = 'manual';
+    const savedScroll = sessionStorage.getItem(`scroll-latest-${currentPage}`);
+    if (savedScroll) {
+      sessionStorage.removeItem(`scroll-latest-${currentPage}`);
+      setTimeout(() => {
+        window.scrollTo({ top: parseInt(savedScroll), behavior: 'instant' });
+      }, 50);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, []);
+
+  useEffect(() => {
     const latest = getLatestProducts();
     setAllProducts(latest);
   }, [getLatestProducts]);
@@ -28,8 +41,8 @@ export default function LatestClient() {
   const currentProducts = allProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
   const goToPage = (pageNumber) => {
-    setCurrentPage(pageNumber);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    router.push(`/latest-habesha-styles?page=${pageNumber}`);
+    window.scrollTo(0, 0);
   };
 
   // Loading State
@@ -182,8 +195,10 @@ function ProductCard({ product, navigate }) {
   const [isHovered, setIsHovered] = useState(false);
 
   const handleClick = () => {
-  navigate(`/product/${product.slug}`);
-};
+    const page = new URLSearchParams(window.location.search).get('page') || '1';
+    sessionStorage.setItem(`scroll-latest-${page}`, window.scrollY);
+    navigate(`/product/${product.slug}`);
+  };
 
   const mainImage = product.images?.[0] || product.image;
   const hoverImage = product.images?.[1] || product.hoverImage || mainImage;
@@ -191,7 +206,7 @@ function ProductCard({ product, navigate }) {
   return (
     <div
       onClick={handleClick}
-      onMouseEnter={() => setIsHovered(true)}
+      onMouseEnter={() => { if (window.matchMedia('(hover: hover)').matches) setIsHovered(true); }}
       onMouseLeave={() => setIsHovered(false)}
       className="cursor-pointer group"
     >
