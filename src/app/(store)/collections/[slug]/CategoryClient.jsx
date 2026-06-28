@@ -352,7 +352,7 @@ function ProductGridItem({ product, navigate, variants }) {
     <motion.div
       variants={variants}
       onClick={() => navigate(`/product/${product.slug}`)}
-      onMouseEnter={() => setIsHovered(true)}
+      onMouseEnter={() => { if (window.matchMedia('(hover: hover)').matches) setIsHovered(true); }}
       onMouseLeave={() => setIsHovered(false)}
       className="cursor-pointer group"
     >

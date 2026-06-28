@@ -121,7 +121,7 @@ function ProductCard({ product }) {
       viewport={{ once: true }}
       transition={{ duration: 0.6, ease: "easeOut" }}
       className="flex-none w-[38%] sm:w-[calc(40%-0.5rem)] lg:w-[calc(20%-1.2rem)] snap-start cursor-pointer"
-      onMouseEnter={() => setIsHovered(true)}
+     onMouseEnter={() => { if (window.matchMedia('(hover: hover)').matches) setIsHovered(true); }}
       onMouseLeave={() => setIsHovered(false)}
       onClick={() => router.push(`/product/${product.slug}`)}
     >
@@ -132,11 +132,11 @@ function ProductCard({ product }) {
   <>
     <Image src={mainImage} alt={`${product.name} – Ethiopian Habesha Dress`}
       fill sizes="(max-width: 768px) 38vw, 20vw"
-      className={`object-cover transition-all duration-500 absolute inset-0 ${isHovered ? 'opacity-0 scale-105' : 'opacity-100 scale-100'}`}
+      className={`object-cover transition-all duration-500 absolute inset-0 ${isHovered ? 'opacity-0 scale-105 hidden-on-mobile-hover' : 'opacity-100 scale-100'}`}
     />
     <Image src={hoverImage} alt={`${product.name} – hover`}
       fill sizes="(max-width: 768px) 38vw, 20vw"
-      className={`object-cover transition-all duration-500 ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
+      className={`object-cover transition-all duration-500 md:block hidden ${isHovered ? 'md:opacity-100 md:scale-100' : 'md:opacity-0 md:scale-105'}`}
     />
   </>
 ) : (
