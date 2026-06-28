@@ -1,5 +1,5 @@
 'use client'
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
@@ -45,7 +45,21 @@ export default function SearchClient() {
 
   const categories = ['all', ...new Set(results.map(p => p.category))];
 
+ useEffect(() => {
+    window.history.scrollRestoration = 'manual';
+    const savedScroll = sessionStorage.getItem('scroll-search');
+    if (savedScroll) {
+      sessionStorage.removeItem('scroll-search');
+      setTimeout(() => {
+        window.scrollTo({ top: parseInt(savedScroll), behavior: 'instant' });
+      }, 50);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, []);
+
   const goToProduct = (product) => {
+    sessionStorage.setItem('scroll-search', window.scrollY);
     router.push(`/product/${product.slug}`);
   };
 
