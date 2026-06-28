@@ -52,7 +52,7 @@ export default function Header() {
     <>
       {/* Desktop SearchBar — Added pointer-events-none to the wrapper */}
       <div 
-        className={`hidden md:block fixed top-0 right-0 z-[9999] pr-20 transition-opacity duration-300 pointer-events-none ${isCartOpen ? "opacity-0" : "opacity-100"}`}
+        className={`hidden lg:block fixed top-0 right-0 z-[9999] pr-20 transition-opacity duration-300 pointer-events-none ${isCartOpen ? "opacity-0" : "opacity-100"}`}
         style={{ top: scrolled ? '10px' : '30px', right: '40px', transition: 'top 0.5s' }}
       >
         <div className="pointer-events-auto"> {/* Re-enable clicks only for the search input */}
@@ -61,8 +61,8 @@ export default function Header() {
       </div>
 
       {/* Mobile SearchBar — Added pointer-events-none to the wrapper */}
-      <div 
-        className={`md:hidden fixed z-[9999] transition-opacity duration-300 pointer-events-none ${isCartOpen || isMobileMenuOpen ? "opacity-0" : "opacity-100"}`}
+       <div 
+        className={`lg:hidden fixed z-[9999] transition-opacity duration-300 pointer-events-none ${isCartOpen || isMobileMenuOpen ? "opacity-0" : "opacity-100"}`}
         style={{ top: scrolled ? '10px' : '28px', right: '58px', transition: 'top 0.5s' }}
       >
         <div className="pointer-events-auto">
@@ -79,7 +79,7 @@ export default function Header() {
           <div className="flex items-center justify-between h-full relative">
             
             <div className="flex items-center space-x-8">
-              <button onClick={toggleMobileMenu} className="md:hidden p-2 z-50" aria-label="Open menu">
+              <button onClick={toggleMobileMenu} className="lg:hidden p-2 z-50" aria-label="Open menu">
                 <div className="space-y-1.5">
                   <span className={`block h-0.5 w-6 bg-gray-900 transition-all ${isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
                   <span className={`block h-0.5 w-6 bg-gray-900 ${isMobileMenuOpen ? 'opacity-0' : ''}`}></span>
@@ -87,7 +87,7 @@ export default function Header() {
                 </div>
               </button>
 
-              <a href="/" onClick={handleHomeClick} className="hidden md:block" aria-label="Diamond Design home">
+              <a href="/" onClick={handleHomeClick} className="hidden lg:block" aria-label="Diamond Design home">
                 <motion.div
                   initial={{ scale: 1.5, opacity: 0 }}
                   animate={{ scale: scrolled ? 0.8 : 1, opacity: 1 }}
@@ -97,7 +97,7 @@ export default function Header() {
                 </motion.div>
               </a>
 
-              <nav className="hidden md:flex items-center space-x-8">
+              <nav className="hidden lg:flex items-center space-x-8">
                 <a href="/" onClick={handleHomeClick} className="relative group text-sm font-medium text-gray-700 py-2">
                   Home
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-brand scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
@@ -141,7 +141,7 @@ export default function Header() {
               </nav>
             </div>
 
-            <div className="md:hidden absolute left-1/2 -translate-x-1/2">
+            <div className="lg:hidden absolute left-1/2 -translate-x-1/2">
               <a href="/" onClick={handleHomeClick} aria-label="Diamond Design home">
                 <motion.div
                   initial={{ scale: 0.8 }}
@@ -154,8 +154,8 @@ export default function Header() {
 
             {/* ✅ UPDATED CART SECTION: Added relative z-[10000] to ensure it stays on top */}
             <div className="flex items-center gap-2 md:gap-4 relative z-[10000]">
-              <div className="hidden md:block w-64" />
-              <div className="md:hidden w-8" />
+              <div className="hidden lg:block w-64" />
+              <div className="lg:hidden w-8" />
               <button 
                 onClick={(e) => {
                   e.preventDefault();
