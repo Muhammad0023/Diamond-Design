@@ -2,7 +2,7 @@
 
 /* --- 1. GLOBAL DEFAULTS --- */
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
 }
 
 /* Custom Minimalist Scrollbar */
