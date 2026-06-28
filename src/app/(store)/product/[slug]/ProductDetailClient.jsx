@@ -173,6 +173,16 @@ export default function ProductDetailClient({ slug }) {
     }
   };
 
+  const relatedProducts = product ? getProductsByCategory(product.category)
+    .filter(p => p.id !== product.id)
+    .slice(0, 8) : [];
+
+  useEffect(() => {
+    if (relatedProducts.length > 0) {
+      relatedProducts.forEach(p => router.prefetch(`/product/${p.slug}`));
+    }
+  }, [relatedProducts.length]);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-white mt-20 lg:mt-32 pb-16">
@@ -250,14 +260,6 @@ export default function ProductDetailClient({ slug }) {
 
   // Keep totalImagesRef in sync so the wheel handler always has the latest count
   totalImagesRef.current = productDetail.images.length;
-
-  const relatedProducts = product ? getProductsByCategory(product.category)
-    .filter(p => p.id !== product.id)
-    .slice(0, 8) : [];
-
-  useEffect(() => {
-    if (relatedProducts.length > 0) { relatedProducts.forEach(p => router.prefetch(`/product/${p.slug}`));
-  } }, [relatedProducts.length]);
 
   return (
     <>
