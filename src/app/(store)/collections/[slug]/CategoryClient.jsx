@@ -116,13 +116,16 @@ const category = slugToCategory[slug]
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     if (!categoryData) {
       if (!loading) router.push('/');
       return;
     }
     setProducts(getProductsByCategory(category));
     setCurrentPage(1);
-    window.scrollTo(0, 0);
   }, [category, categoryData, router.push, getProductsByCategory, loading]);
 
   useEffect(() => {
