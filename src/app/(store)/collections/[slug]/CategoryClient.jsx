@@ -119,10 +119,10 @@ const category = slugToCategory[slug]
     window.history.scrollRestoration = 'manual';
     const savedScroll = sessionStorage.getItem(`scroll-${slug}`);
     if (savedScroll) {
+      sessionStorage.removeItem(`scroll-${slug}`);
       setTimeout(() => {
-        window.scrollTo(0, parseInt(savedScroll));
-        sessionStorage.removeItem(`scroll-${slug}`);
-      }, 300);
+        window.scrollTo({ top: parseInt(savedScroll), behavior: 'instant' });
+      }, 50);
     } else {
       window.scrollTo(0, 0);
     }
