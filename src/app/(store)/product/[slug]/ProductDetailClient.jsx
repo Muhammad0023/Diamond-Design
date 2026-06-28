@@ -255,6 +255,10 @@ export default function ProductDetailClient({ slug }) {
     .filter(p => p.id !== product.id)
     .slice(0, 8);
 
+  useEffect(() => {
+    relatedProducts.forEach(p => router.prefetch(`/product/${p.slug}`));
+  }, [relatedProducts]);
+
   return (
     <>
       <div className="min-h-screen bg-white">
