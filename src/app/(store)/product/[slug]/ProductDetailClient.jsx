@@ -25,6 +25,10 @@ export default function ProductDetailClient({ slug }) {
   const product = products?.find(p => p.id === productId || p.slug === slug);
   
   const [selectedImage, setSelectedImage] = useState(0);
+
+  useEffect(() => {
+    setSelectedImage(0);
+  }, [slug]);
   const [selectedSize, setSelectedSize] = useState('S');
   const [showModal, setShowModal] = useState(false); 
   const [modalZoom, setModalZoom] = useState(1);
