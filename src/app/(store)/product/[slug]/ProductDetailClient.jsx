@@ -61,8 +61,6 @@ export default function ProductDetailClient({ slug }) {
     } else {
       document.body.style.overflow = 'unset';
       setModalZoom(1);
-      setPanPos({ x: 0, y: 0 });
-      panOffset.current = { x: 0, y: 0 };
     }
     return () => {
       document.body.style.overflow = 'unset';
@@ -119,12 +117,7 @@ export default function ProductDetailClient({ slug }) {
   // Touch swipe handlers for main image (mobile only)
   const touchStartX = useRef(null);
     // Mobile pinch-zoom refs
-  const pinchStartDist = useRef(null);
-  const pinchStartZoom = useRef(1);
-  const panOffset = useRef({ x: 0, y: 0 });
-  const panStart = useRef({ x: 0, y: 0 });
   const modalTouchStartX = useRef(null);
-  const [panPos, setPanPos] = useState({ x: 0, y: 0 });
 
   const handleTouchStart = (e) => {
     touchStartX.current = e.touches[0].clientX;
@@ -289,8 +282,6 @@ export default function ProductDetailClient({ slug }) {
                   e.stopPropagation();
                  setSelectedImage(prev => (prev - 1 + productDetail.images.length) % productDetail.images.length);
                   setModalZoom(1);
-                  setPanPos({ x: 0, y: 0 });
-                  panOffset.current = { x: 0, y: 0 };
                 }}
                 className="absolute left-5 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md"
                 style={{ zIndex: 100000 }}
@@ -304,8 +295,6 @@ export default function ProductDetailClient({ slug }) {
                   e.stopPropagation();
                   setSelectedImage(prev => (prev + 1) % productDetail.images.length);
                   setModalZoom(1);
-                  setPanPos({ x: 0, y: 0 });
-                  panOffset.current = { x: 0, y: 0 };
                 }}
                 className="absolute right-5 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md"
                 style={{ zIndex: 100000 }}
@@ -316,46 +305,14 @@ export default function ProductDetailClient({ slug }) {
        {/* MOBILE: pinch-zoom + pan + swipe nav */}
 <div
   ref={modalScrollRef}
-  className={`w-full h-full overflow-auto flex ${modalZoom > 1 ? 'items-start justify-start' : 'items-center justify-center'}`}
-  style={{ touchAction: 'none' }}
+  className="w-full h-full flex items-center justify-center overflow-auto"
   onTouchStart={(e) => {
-    if (e.touches.length === 2) {
-      const dx = e.touches[0].clientX - e.touches[1].clientX;
-      const dy = e.touches[0].clientY - e.touches[1].clientY;
-      pinchStartDist.current = Math.sqrt(dx * dx + dy * dy);
-      pinchStartZoom.current = modalZoom;
-    } else if (e.touches.length === 1) {
-      if (modalZoom > 1) {
-        panStart.current = {
-          x: e.touches[0].clientX - panOffset.current.x,
-          y: e.touches[0].clientY - panOffset.current.y,
-        };
-      } else {
-        modalTouchStartX.current = e.touches[0].clientX;
-      }
-    }
-  }}
-  onTouchMove={(e) => {
-    e.preventDefault();
-    if (e.touches.length === 2 && pinchStartDist.current) {
-      const dx = e.touches[0].clientX - e.touches[1].clientX;
-      const dy = e.touches[0].clientY - e.touches[1].clientY;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      const newZoom = Math.min(Math.max((dist / pinchStartDist.current) * pinchStartZoom.current, 1), 4);
-      setModalZoom(newZoom);
-      if (newZoom <= 1) {
-        panOffset.current = { x: 0, y: 0 };
-        setPanPos({ x: 0, y: 0 });
-      }
-    } else if (e.touches.length === 1 && modalZoom > 1) {
-      const newX = e.touches[0].clientX - panStart.current.x;
-      const newY = e.touches[0].clientY - panStart.current.y;
-      panOffset.current = { x: newX, y: newY };
-      setPanPos({ x: newX, y: newY });
+    if (e.touches.length === 1) {
+      modalTouchStartX.current = e.touches[0].clientX;
     }
   }}
   onTouchEnd={(e) => {
-    if (e.changedTouches.length === 1 && modalZoom <= 1 && modalTouchStartX.current !== null) {
+    if (e.changedTouches.length === 1 && modalTouchStartX.current !== null) {
       const diff = modalTouchStartX.current - e.changedTouches[0].clientX;
       if (Math.abs(diff) > 50) {
         if (diff > 0) {
@@ -363,15 +320,11 @@ export default function ProductDetailClient({ slug }) {
         } else {
           setSelectedImage(prev => (prev - 1 + productDetail.images.length) % productDetail.images.length);
         }
-        setPanPos({ x: 0, y: 0 });
-        panOffset.current = { x: 0, y: 0 };
       }
+      modalTouchStartX.current = null;
     }
-    pinchStartDist.current = null;
-    modalTouchStartX.current = null;
   }}
 >
-  {/* ✅ ORIGINAL DESKTOP IMG — UNCHANGED */}
   <img
     src={productDetail.images[selectedImage]}
     alt="Zoomed View"
