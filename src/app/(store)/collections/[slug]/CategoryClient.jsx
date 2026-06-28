@@ -144,7 +144,7 @@ const handlePageChange = (pageNumber) => {
   setCurrentPage(pageNumber);
   // Use setTimeout to ensure scroll happens after state update
   setTimeout(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo(0, 0);
   }, 100);
 };
 
