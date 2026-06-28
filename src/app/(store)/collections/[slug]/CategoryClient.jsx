@@ -274,7 +274,7 @@ const handlePageChange = (pageNumber) => {
               className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
             >
               {currentProducts.map((product) => (
-                <ProductGridItem key={product.id} product={product} navigate={router.push} variants={itemVariants} />
+                 <ProductGridItem key={product.id} product={product} navigate={router.push} variants={itemVariants} slug={slug} currentPage={currentPage} />
               ))}
             </motion.div>
 
@@ -353,7 +353,7 @@ const handlePageChange = (pageNumber) => {
   );
 }
 
-function ProductGridItem({ product, navigate, variants }) {
+function ProductGridItem({ product, navigate, variants, slug, currentPage }) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
