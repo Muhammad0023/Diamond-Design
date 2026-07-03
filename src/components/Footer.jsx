@@ -94,7 +94,7 @@ export default function Footer() {
                 { name: "About Us",   path: "/about" },
                 { name: "Contact Us", path: "/contact" },
                 { name: "FAQs",       path: "/faqs" },
-                { name: "Size Guide", path: "/size-guide" }
+                { name: "Size Guide", path: "/size-guide" },
                  { name: "Return & Exchange Policy", path: "/return-exchange-policy" }
               ].map((item) => (
                 <li key={item.name}>
