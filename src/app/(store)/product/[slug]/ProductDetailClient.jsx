@@ -11,7 +11,7 @@ import { useCart } from '../../../../context/CartContext'
 import { useProducts } from '../../../../context/ProductsContext'
 
 
-export default function ProductDetailClient({ slug }) {
+export default function ProductDetailClient({ slug, initialProduct }) {
   const router = useRouter()
   const { addToCart } = useCart();
   const { products, getProductsByCategory, loading } = useProducts();
@@ -22,7 +22,7 @@ export default function ProductDetailClient({ slug }) {
   };
 
   const productId = getIdFromSlug(slug);
-  const product = products?.find(p => p.id === productId || p.slug === slug);
+  const product = products?.find(p => p.id === productId || p.slug === slug) ?? initialProduct;
   
   const [selectedImage, setSelectedImage] = useState(0);
 
@@ -187,8 +187,7 @@ export default function ProductDetailClient({ slug }) {
     }
   }, [relatedProducts.length]);
 
-  if (loading) {
-    return (
+  if (loading && !initialProduct) {  return (
       <div className="min-h-screen bg-white mt-20 lg:mt-32 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
