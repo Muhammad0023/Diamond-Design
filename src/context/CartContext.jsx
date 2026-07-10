@@ -15,6 +15,7 @@ export function CartProvider({ children }) {
   // 1. INITIALIZE FROM LOCAL STORAGE
   // Instead of starting with [], we check if there's a saved cart first
   const [cartItems, setCartItems] = useState(() => {
+    if (typeof window === 'undefined') return [];
     const savedCart = localStorage.getItem('diamond_cart');
     return savedCart ? JSON.parse(savedCart) : [];
   });
