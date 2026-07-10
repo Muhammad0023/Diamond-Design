@@ -178,6 +178,7 @@ export const getProductsByCategoryLimited = async (category, maxCount = 8) => {
     const q = query(
       collection(db, PRODUCTS_COLLECTION),
       where('category', '==', category),
+      orderBy('updatedAt', 'desc'),
       limit(maxCount)
     );
     const snapshot = await getDocs(q);
@@ -194,6 +195,7 @@ export const getLatestProductsLimited = async (maxCount = 13) => {
     const q = query(
       collection(db, PRODUCTS_COLLECTION),
       where('isNew', '==', true),
+      orderBy('updatedAt', 'desc'),
       limit(maxCount)
     );
     const snapshot = await getDocs(q);
