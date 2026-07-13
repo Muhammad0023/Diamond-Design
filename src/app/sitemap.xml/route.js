@@ -1,3 +1,4 @@
+import { toProxyImageUrl } from '../../utils/proxyImage'
 import { initializeApp, getApps } from 'firebase/app'
 import { getFirestore, collection, getDocs, query, orderBy } from 'firebase/firestore'
 
@@ -71,8 +72,8 @@ export async function GET() {
       const lastMod = data.updatedAt?.toDate?.() || new Date()
 
       const images = []
-      if (data.image) images.push(data.image)
-      if (data.hoverImage && data.hoverImage !== data.image) images.push(data.hoverImage)
+      if (data.image) images.push(toProxyImageUrl(data.image))
+      if (data.hoverImage && data.hoverImage !== data.image) images.push(toProxyImageUrl(data.hoverImage))
 
       return {
         url: `${baseUrl}/product/${slug}`,

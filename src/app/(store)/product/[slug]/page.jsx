@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic'
 import ProductDetailClient from './ProductDetailClient'
 import JsonLd from '../../../../components/JsonLd'
 import { getProductById } from '../../../../firebase/productService'
+import { toProxyImageUrl } from '../../../../utils/proxyImage'
 
 export async function generateMetadata({ params }) {
   const { slug } = await params
@@ -18,7 +19,7 @@ export async function generateMetadata({ params }) {
     openGraph: {
       title: `${productName} | Diamond Design`,
       type: 'website',
-      images: product?.image ? [{ url: product.image }] : [],
+      images: product?.image ? [{ url: toProxyImageUrl(product.image) }] : [],
     },
   }
 }
@@ -30,7 +31,7 @@ export default async function ProductDetailPage({ params }) {
 
   const productName = product?.name ?? slug.replace(/-[^-]*$/, '').replace(/-/g, ' ')
   const productPrice = product?.price ?? null
-  const productImage = product?.image ?? null
+  const productImage = toProxyImageUrl(product?.image) ?? null
   const productDescription = product?.description ?? 'Authentic handcrafted Habesha dress from Diamond Design.'
   const productUrl = `https://www.diamonddesignstore.com/product/${slug}`
 
