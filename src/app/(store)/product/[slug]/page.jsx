@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic'
 import ProductDetailClient from './ProductDetailClient'
 import JsonLd from '../../../../components/JsonLd'
 import { getProductById } from '../../../../firebase/productService'
+import { notFound } from 'next/navigation'
 import { toProxyImageUrl } from '../../../../utils/proxyImage'
 
 export async function generateMetadata({ params }) {
@@ -28,6 +29,9 @@ export default async function ProductDetailPage({ params }) {
   const { slug } = await params
   const productId = slug.split('-').at(-1)
   const product = await getProductById(productId)
+  if (!product) {
+    notFound()
+  }
 
   const productName = product?.name ?? slug.replace(/-[^-]*$/, '').replace(/-/g, ' ')
   const productPrice = product?.price ?? null
