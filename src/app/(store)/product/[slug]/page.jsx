@@ -9,6 +9,9 @@ export async function generateMetadata({ params }) {
   const { slug } = await params
   const productId = slug.split('-').at(-1)
   const product = await getProductById(productId)
+  if (!product) {
+    return { title: "Product Not Found | Diamond Design", robots: { index: false, follow: false } }
+  }
   const productName = product?.name ?? slug.replace(/-[^-]*$/, '').replace(/-/g, ' ')
 
   return {
