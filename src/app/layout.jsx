@@ -13,6 +13,9 @@ export const metadata = {
   description: 'Shop Diamond Design\'s online collection of Habesha Kemis. Elegant Habesha, Ethiopian, and Eritrean dresses designed for weddings, holidays, and special occasions.',
   keywords: 'Habesha Kemis, Habesha Dress, Ethiopian Dress, Eritrean Dress, Ethiopian Wedding Dress, Traditional Habesha Clothing, Diamond Design',
   robots: 'index, follow',
+  other: {
+    'p:domain_verify': '83d6370c60a575dcaf2873ffbc4bb26e',
+  },
   openGraph: {
     title: 'Habesha Kemis | Authentic Ethiopian & Eritrean Dresses',
     description: 'Authentic Habesha Kemis and elegant Ethiopian and Eritrean dresses crafted for weddings, holidays, and unforgettable moments.',
