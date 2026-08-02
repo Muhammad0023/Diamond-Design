@@ -1,6 +1,7 @@
 import Providers from './providers'
 import { Roboto } from 'next/font/google'
 import './globals.css'
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 const roboto = Roboto({
   weight: ['300', '400', '500', '700', '900'],
@@ -58,6 +59,7 @@ export default function RootLayout({ children }) {
         <Providers>
           {children}
         </Providers>
+        <GoogleAnalytics gaId="G-60GHQBEX6X" />
       </body>
     </html>
   )
