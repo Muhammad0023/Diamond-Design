@@ -54,19 +54,13 @@ export default function ReturnExchangeClient() {
 
           <motion.div variants={itemVariants} className="bg-gray-50 p-8 rounded-2xl border-l-4 border-brand">
             <h3 className="text-xl font-semibold text-gray-900 mb-4">Returns</h3>
-            <p className="mb-4">We accept returns only in the following cases:</p>
-            <ul className="list-disc pl-6 space-y-2 mb-4">
-              <li>The item is defective or damaged upon arrival</li>
-              <li>You received the wrong item</li>
-            </ul>
-            <p className="mb-4">To request a return, please contact us within 14 days of receiving your order.</p>
+            <p className="mb-4">We accept returns within 14 days of receiving your order.</p>
             <p className="mb-2">To be eligible for a return:</p>
             <ul className="list-disc pl-6 space-y-2 mb-4">
-              <li>Items must be unused and unworn</li>
-              <li>Items must be in their original packaging and condition</li>
-              <li>Proof of purchase is required</li>
+              <li>Items must be unused, unworn, and in their original condition.</li>
+              <li>Items must be in their original packaging.</li>
+              <li>Proof of purchase is required.</li>
             </ul>
-            <p>We do not accept returns for change of mind or incorrect size selection.</p>
           </motion.div>
 
           <motion.div variants={itemVariants} className="bg-gray-50 p-8 rounded-2xl border-l-4 border-brand">
