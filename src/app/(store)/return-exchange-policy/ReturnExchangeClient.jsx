@@ -66,9 +66,8 @@ export default function ReturnExchangeClient() {
           <motion.div variants={itemVariants} className="bg-gray-50 p-8 rounded-2xl border-l-4 border-brand">
             <h3 className="text-xl font-semibold text-gray-900 mb-4">Return Shipping</h3>
             <ul className="list-disc pl-6 space-y-2">
-              <li>Customers are responsible for return shipping costs</li>
-              <li>Shipping costs from the original order are non-refundable</li>
-              <li>We recommend using a trackable shipping service for returns</li>
+              <li>Customers are responsible for paying their own return shipping costs.</li>
+              <li>We recommend using a trackable shipping service to ensure your return is safely delivered to us.</li>
             </ul>
           </motion.div>
 
