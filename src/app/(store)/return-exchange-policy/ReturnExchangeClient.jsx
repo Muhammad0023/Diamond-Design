@@ -54,12 +54,12 @@ export default function ReturnExchangeClient() {
 
           <motion.div variants={itemVariants} className="bg-gray-50 p-8 rounded-2xl border-l-4 border-brand">
             <h3 className="text-xl font-semibold text-gray-900 mb-4">Returns</h3>
-            <p className="mb-4">We accept returns within 14 days of receiving your order.</p>
-            <p className="mb-2">To be eligible for a return:</p>
+            <p className="mb-4">We want you to be completely satisfied with your purchase. We accept returns for eligible items within 14 days of receiving your order.</p>
+            <p className="mb-2">Eligibility Criteria: To qualify for a return, please ensure that:</p>
             <ul className="list-disc pl-6 space-y-2 mb-4">
-              <li>Items must be unused, unworn, and in their original condition.</li>
-              <li>Items must be in their original packaging.</li>
-              <li>Proof of purchase is required.</li>
+              <li>Items are unused, unworn, unwashed, and in their original condition.</li>
+              <li>Items are returned in their original packaging with all tags attached.</li>
+              <li>You provide a valid proof of purchase (such as your order confirmation or receipt).</li>
             </ul>
           </motion.div>
 
