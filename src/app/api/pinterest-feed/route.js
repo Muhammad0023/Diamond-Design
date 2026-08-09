@@ -28,6 +28,14 @@ function generateSlug(name, id) {
   return `${namePart}-${id}`
 }
 
+function getMimeType(url) {
+  const clean = (url || '').split('?')[0].toLowerCase()
+  if (clean.endsWith('.webp')) return 'image/webp'
+  if (clean.endsWith('.png')) return 'image/png'
+  if (clean.endsWith('.gif')) return 'image/gif'
+  return 'image/jpeg'
+}
+
 function escapeXml(str) {
   if (str === null || str === undefined) return ''
   return String(str)
@@ -92,7 +100,7 @@ export async function GET(request) {
     <description>${escapeXml(product.description || `Authentic handcrafted Habesha dress from Diamond Design.`)}</description>
     <pubDate>${pubDate}</pubDate>
     <media:content url="${escapeXml(mainImage)}" medium="image" />
-    <enclosure url="${escapeXml(mainImage)}" type="image/jpeg" />
+    <enclosure url="${escapeXml(mainImage)}" type="${getMimeType(mainImage)}" />
   </item>`
     })
     .join('')
