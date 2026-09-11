@@ -24,26 +24,25 @@ const wipeVariants = {
   },
 };
 
-// Soft fade for subtitle and button
-const fadeFromLeft = {
-  hidden: { opacity: 0, x: -40 },
+// Plain fade for subtitle
+const fadeIn = {
+  hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    x: 0,
     transition: { duration: 0.7, ease: "easeOut" }
   },
 };
 
-const fadeFromRight = {
-  hidden: { opacity: 0, x: 40 },
+// Plain fade for button, delayed slightly after subtitle
+const fadeInDelayed = {
+  hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    x: 0,
-   transition: { duration: 1.2, ease: "easeOut", delay: 0.6 }
+    transition: { duration: 1.2, ease: "easeOut", delay: 0.6 }
   },
 };
   return (
-    <section 
+    <section
       className="relative w-full h-screen overflow-hidden bg-[#F7F5F2]"
       // ✅ ADDED: aria-label so screen readers & Google understand the section
       aria-label="Diamond Design – Habesha Kemis Collection Hero"
@@ -65,10 +64,10 @@ const fadeFromRight = {
       <div className="relative z-10 w-full h-full">
         <div className="max-w-[1920px] mx-auto h-full px-6 lg:px-20">
           <div className="grid grid-cols-1 md:grid-cols-12 h-full items-center">
-            
+
             <div className="hidden md:block md:col-span-6 lg:col-span-6"></div>
 
-            <motion.div 
+            <motion.div
               variants={containerVariants}
               initial="hidden"
               animate="visible"
@@ -79,17 +78,17 @@ const fadeFromRight = {
                   <motion.span variants={wipeVariants} className="block">HABESHA KEMIS</motion.span>
                   <motion.span variants={wipeVariants} className="block">Designs</motion.span>
                 </h1>
-                
-               <motion.p 
-                  variants={fadeFromLeft}
+
+               <motion.p
+                  variants={fadeIn}
                   className="font-sans font-light text-gray-600 tracking-[0.2em] text-xs sm:text-sm uppercase mt-2"
                 >
                   Elegance and Beauty for a Queen
                 </motion.p>
               </div>
 
-               <motion.div variants={fadeFromRight}>
-                <button 
+               <motion.div variants={fadeInDelayed}>
+                <button
                   onClick={() => document.getElementById('shop-now')?.scrollIntoView({ behavior: 'smooth' })}
                   className="bg-[#A67C00] text-white px-10 py-3.5 rounded-full text-sm font-bold tracking-[0.2em] shadow-2xl hover:bg-[#8B6508] hover:shadow-brand/50 transition-all duration-300 active:scale-95"
                 >
@@ -102,13 +101,13 @@ const fadeFromRight = {
       </div>
 
       {/* SCROLL LINE */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.5, duration: 1 }}
         className="absolute bottom-0 right-10 md:right-20 flex flex-col items-center"
       >
-        <motion.div 
+        <motion.div
           animate={{ y: [0, 15, 0] }}
           transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
           className="w-[1px] h-24 bg-gradient-to-b from-[#D29E0E] to-transparent"
