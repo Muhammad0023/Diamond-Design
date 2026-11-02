@@ -4,13 +4,17 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '../../../context/AuthContext'
 import { getAllProducts, deleteProduct } from '../../../firebase/productService'
 import { deleteImage } from '../../../firebase/imageService'
-import { HiPlus, HiPencil, HiTrash, HiLogout, HiHome } from 'react-icons/hi';
+import { HiPlus, HiPencil, HiTrash, HiLogout, HiHome, HiClipboardList, HiSearch } from 'react-icons/hi';
 
 export default function DashboardPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [activeCategory, setActiveCategory] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const PAGE_SIZE = 30;
   
   const { logout, currentUser } = useAuth();
   const router = useRouter()
@@ -32,6 +36,27 @@ export default function DashboardPage() {
       setLoading(false);
     }
   };
+
+  // Dynamic category counts — computed from whatever categories
+  // actually exist in the data, not hardcoded to a fixed list.
+  const categoryCounts = Object.entries(
+    products.reduce((acc, p) => {
+      const cat = p.category || 'uncategorized';
+      acc[cat] = (acc[cat] || 0) + 1;
+      return acc;
+    }, {})
+  ).map(([category, count]) => ({ category, count }))
+   .sort((a, b) => b.count - a.count);
+
+  const filteredProducts = products
+    .filter(p => activeCategory === 'all' || p.category === activeCategory)
+    .filter(p => p.name?.toLowerCase().includes(searchQuery.toLowerCase()));
+
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / PAGE_SIZE));
+  const paginatedProducts = filteredProducts.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
 
   const handleLogout = async () => {
     try {
@@ -94,6 +119,14 @@ export default function DashboardPage() {
             
             <div className="flex gap-3">
               <button
+                onClick={() => router.push('/abulhabesh/orders')}
+                className="flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                style={{ fontFamily: 'Roboto, sans-serif' }}
+              >
+                <HiClipboardList className="w-5 h-5" />
+                Orders
+              </button>
+              <button
                 onClick={() => router.push('/')}
                 className="flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
                 style={{ fontFamily: 'Roboto, sans-serif' }}
@@ -117,24 +150,41 @@ export default function DashboardPage() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-xl shadow-sm">
-            <p className="text-sm text-gray-600 mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>Total Products</p>
-            <p className="text-3xl font-bold text-gray-900" style={{ fontFamily: 'Roboto, sans-serif' }}>{products.length}</p>
-          </div>
-          <div className="bg-white p-6 rounded-xl shadow-sm">
-            <p className="text-sm text-gray-600 mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>Simple Dresses</p>
-            <p className="text-3xl font-bold text-gray-900" style={{ fontFamily: 'Roboto, sans-serif' }}>{products.filter(p => p.category === 'simple').length}</p>
-          </div>
-          <div className="bg-white p-6 rounded-xl shadow-sm">
-            <p className="text-sm text-gray-600 mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>Wedding</p>
-            <p className="text-3xl font-bold text-gray-900" style={{ fontFamily: 'Roboto, sans-serif' }}>{products.filter(p => p.category === 'wedding').length}</p>
-          </div>
-          <div className="bg-white p-6 rounded-xl shadow-sm">
-            <p className="text-sm text-gray-600 mb-1" style={{ fontFamily: 'Roboto, sans-serif' }}>Other Categories</p>
-            <p className="text-3xl font-bold text-gray-900" style={{ fontFamily: 'Roboto, sans-serif' }}>{products.filter(p => !['simple', 'wedding'].includes(p.category)).length}</p>
-          </div>
+        {/* Category stat cards — dynamic, clickable to filter */}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
+          <button
+            onClick={() => { setActiveCategory('all'); setCurrentPage(1); }}
+            className={`p-5 rounded-xl shadow-sm text-left transition-colors ${
+              activeCategory === 'all' ? 'bg-brand text-white' : 'bg-white text-gray-900 hover:bg-gray-50'
+            }`}
+          >
+            <p className="text-sm mb-1 opacity-80" style={{ fontFamily: 'Roboto, sans-serif' }}>All Products</p>
+            <p className="text-2xl font-bold" style={{ fontFamily: 'Roboto, sans-serif' }}>{products.length}</p>
+          </button>
+          {categoryCounts.map(({ category, count }) => (
+            <button
+              key={category}
+              onClick={() => { setActiveCategory(category); setCurrentPage(1); }}
+              className={`p-5 rounded-xl shadow-sm text-left transition-colors capitalize ${
+                activeCategory === category ? 'bg-brand text-white' : 'bg-white text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              <p className="text-sm mb-1 opacity-80" style={{ fontFamily: 'Roboto, sans-serif' }}>{category}</p>
+              <p className="text-2xl font-bold" style={{ fontFamily: 'Roboto, sans-serif' }}>{count}</p>
+            </button>
+          ))}
+        </div>
+
+        {/* Search bar */}
+        <div className="relative mb-6 max-w-md">
+          <HiSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+            placeholder="Search products by name..."
+            className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:border-brand focus:outline-none bg-white"
+          />
         </div>
 
         {/* Add Product Button */}
@@ -156,7 +206,7 @@ export default function DashboardPage() {
               <div className="w-12 h-12 border-4 border-brand border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
               <p className="text-gray-600">Loading products...</p>
             </div>
-          ) : products.length === 0 ? (
+          ) : filteredProducts.length === 0 ? (
             <div className="p-12 text-center">
               <div className="text-6xl mb-4">📦</div>
               <h3 className="text-xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Roboto, sans-serif' }}>
@@ -186,7 +236,7 @@ export default function DashboardPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {products.map((product) => (
+                  {paginatedProducts.map((product) => (
                     <tr key={product.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-4">
@@ -248,6 +298,33 @@ export default function DashboardPage() {
             </div>
           )}
         </div>
+
+        {!loading && filteredProducts.length > 0 && totalPages > 1 && (
+          <div className="flex items-center justify-between mt-6">
+            <p className="text-sm text-gray-600" style={{ fontFamily: 'Roboto, sans-serif' }}>
+              Showing {(currentPage - 1) * PAGE_SIZE + 1}–{Math.min(currentPage * PAGE_SIZE, filteredProducts.length)} of {filteredProducts.length}
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-semibold disabled:opacity-40 hover:bg-gray-50"
+              >
+                Previous
+              </button>
+              <span className="px-4 py-2 text-sm text-gray-700" style={{ fontFamily: 'Roboto, sans-serif' }}>
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-semibold disabled:opacity-40 hover:bg-gray-50"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

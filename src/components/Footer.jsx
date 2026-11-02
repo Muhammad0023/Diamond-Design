@@ -130,18 +130,18 @@ export default function Footer() {
                 HayaHulet, Addis Ababa, Ethiopia
               </a>
             </li>
-              <li className="flex items-center gap-3 text-gray-400 group">
+              <li className="flex items-center gap-3 text-gray-400 group min-w-0">
                 <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-brand transition-colors duration-300">
                   <MdOutlineEmail className="w-5 h-5 text-brand group-hover:text-white" />
                 </div>
                                 <a 
-                  href="mailto:diamonddesign907@gmail.com" 
+                  href="mailto:diamonddesign.habesha@gmail.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-brand transition-colors" 
+                  className="hover:text-brand transition-colors break-all min-w-0"
                   style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}
                 >
-                  diamonddesign907@gmail.com
+                  diamonddesign.habesha@gmail.com
                 </a>
               </li>
               <li className="flex items-center gap-3 text-gray-400 group">

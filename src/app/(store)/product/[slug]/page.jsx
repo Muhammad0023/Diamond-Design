@@ -1,14 +1,14 @@
 export const dynamic = 'force-dynamic'
 import ProductDetailClient from './ProductDetailClient'
 import JsonLd from '../../../../components/JsonLd'
-import { getProductById } from '../../../../firebase/productService'
+import { getProductByIdAdmin } from '../../../../firebase/orderService'
 import { notFound } from 'next/navigation'
 import { toProxyImageUrl } from '../../../../utils/proxyImage'
 
 export async function generateMetadata({ params }) {
   const { slug } = await params
   const productId = slug.split('-').at(-1)
-  const product = await getProductById(productId)
+  const product = await getProductByIdAdmin(productId)
   if (!product) {
     return { title: "Product Not Found | Diamond Design", robots: { index: false, follow: false } }
   }
@@ -31,7 +31,7 @@ export async function generateMetadata({ params }) {
 export default async function ProductDetailPage({ params }) {
   const { slug } = await params
   const productId = slug.split('-').at(-1)
-  const product = await getProductById(productId)
+  const product = await getProductByIdAdmin(productId)
   if (!product) {
     notFound()
   }

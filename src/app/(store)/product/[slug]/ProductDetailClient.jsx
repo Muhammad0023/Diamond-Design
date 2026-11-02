@@ -5,17 +5,27 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { HiOutlineMagnifyingGlassPlus } from 'react-icons/hi2';
 import { HiZoomIn, HiX, HiShare } from 'react-icons/hi';
-import { FaWhatsapp } from 'react-icons/fa';
+import { FaWhatsapp, FaCreditCard, FaShoppingBag } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../../../../context/CartContext'
 import { useProducts } from '../../../../context/ProductsContext'
 
+const MEASUREMENT_FIELDS = [
+  { key: 'chest', label: 'Chest' },
+  { key: 'bust', label: 'Bust' },
+  { key: 'waist', label: 'Waist' },
+  { key: 'shoulderToBust', label: 'Shoulder to Bust (Apex)' },
+  { key: 'shoulderToWaist', label: 'Shoulder to Waist' },
+  { key: 'height', label: 'Height (Waist to Floor)' },
+  { key: 'shoulderWidth', label: 'Shoulder Width' },
+  { key: 'sleeveLength', label: 'Sleeve Length' },
+];
 
 export default function ProductDetailClient({ slug, initialProduct }) {
   const router = useRouter()
   const { addToCart } = useCart();
   const { products, getProductsByCategory, loading } = useProducts();
-  
+
   const getIdFromSlug = (slug) => {
     const parts = slug.split('-');
     return parts[parts.length - 1];
@@ -23,16 +33,23 @@ export default function ProductDetailClient({ slug, initialProduct }) {
 
   const productId = getIdFromSlug(slug);
   const product = products?.find(p => p.id === productId || p.slug === slug) ?? initialProduct;
-  
+
   const [selectedImage, setSelectedImage] = useState(0);
 
   useEffect(() => {
     setSelectedImage(0);
   }, [slug]);
   const [selectedSize, setSelectedSize] = useState('S');
-  const [showModal, setShowModal] = useState(false); 
+  const [showModal, setShowModal] = useState(false);
   const [modalZoom, setModalZoom] = useState(1);
   const [shareCopied, setShareCopied] = useState(false);
+  const [customMeasurements, setCustomMeasurements] = useState({});
+  const [useCustomMeasurements, setUseCustomMeasurements] = useState(false);
+  const [descriptionExpanded, setDescriptionExpanded] = useState(false);
+
+  const updateMeasurement = (key, value) => {
+    setCustomMeasurements(prev => ({ ...prev, [key]: value }));
+  };
 
   // Thumbnail carousel scroll ref
   const thumbsRef = useRef(null);
@@ -72,7 +89,6 @@ export default function ProductDetailClient({ slug, initialProduct }) {
   }, [showModal]);
 
   // Non-passive wheel listener on main image
-  // Scroll down = next image, scroll up = prev image
   useEffect(() => {
     const el = mainImageRef.current;
     if (!el) return;
@@ -89,25 +105,25 @@ export default function ProductDetailClient({ slug, initialProduct }) {
     return () => el.removeEventListener('wheel', onWheel);
   }, []);
 
-  // Desktop mouse wheel zoom inside modal — non-passive to prevent page scroll
+  // Desktop mouse wheel zoom inside modal
   useEffect(() => {
     if (!showModal) return;
     const timer = setTimeout(() => {
       const el = modalScrollRef.current;
       if (!el) return;
-      
+
       const onWheel = (e) => {
         if (e.ctrlKey) {
           e.preventDefault();
-          const zoomDelta = e.deltaY * -0.01; 
+          const zoomDelta = e.deltaY * -0.01;
           setModalZoom(prev => Math.min(Math.max(prev + zoomDelta, 1), 4));
         }
       };
-      
+
       el.addEventListener('wheel', onWheel, { passive: false });
       el._onWheel = onWheel;
     }, 50);
-    
+
     return () => {
       clearTimeout(timer);
       const el = modalScrollRef.current;
@@ -118,9 +134,7 @@ export default function ProductDetailClient({ slug, initialProduct }) {
     };
   }, [showModal]);
 
-  // Touch swipe handlers for main image (mobile only)
   const touchStartX = useRef(null);
-    // Mobile pinch-zoom refs
   const modalTouchStartX = useRef(null);
 
   const handleTouchStart = (e) => {
@@ -145,17 +159,29 @@ export default function ProductDetailClient({ slug, initialProduct }) {
     const rawUrl = window.location.href;
     const brokenUrl = rawUrl.replace('https://', 'https://\u200B');
     const message = encodeURIComponent(
-      `Hi Diamond Design! 👋\n` +
-      `I'd like to order this design:\n\n` +
-      `${productDetail.name} | Size: ${selectedSize} | Price: $${productDetail.price}\n\n` +
-      `🔗 ${brokenUrl}\n\n` +
-      `Is this available? 💎`
+      `Hi, I'm interested in this product:\n${brokenUrl}`
     );
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };
-              
+
   const handleAddToCart = () => {
-    addToCart(productDetail, selectedSize);
+    addToCart(productDetail, selectedSize, useCustomMeasurements ? customMeasurements : null);
+  };
+
+  // "Buy now" bypasses CartContext entirely — stashes a single item
+  // in sessionStorage and sends the customer straight to /checkout.
+  const handleBuyNow = () => {
+    const buyNowItem = {
+      productId: productDetail.id,
+      name: productDetail.name,
+      image: productDetail.image,
+      price: productDetail.price,
+      size: selectedSize,
+      customMeasurements: useCustomMeasurements ? customMeasurements : null,
+      qty: 1,
+    };
+    sessionStorage.setItem('buyNowItem', JSON.stringify(buyNowItem));
+    router.push('/checkout?mode=buynow');
   };
 
   const handleShare = async () => {
@@ -261,7 +287,6 @@ export default function ProductDetailClient({ slug, initialProduct }) {
     sizes: product.sizes || ['S', 'M', 'L', 'XL', 'XXL']
   };
 
-  // Keep totalImagesRef in sync so the wheel handler always has the latest count
   totalImagesRef.current = productDetail.images.length;
 
   return (
@@ -276,7 +301,6 @@ export default function ProductDetailClient({ slug, initialProduct }) {
               exit={{ opacity: 0 }}
               style={{ zIndex: 99999, position: 'fixed', inset: 0, background: 'black' }}
             >
-              {/* Close button */}
               <button
                 onClick={() => { setShowModal(false); setModalZoom(1); }}
                 className="absolute top-5 right-5 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md"
@@ -285,7 +309,6 @@ export default function ProductDetailClient({ slug, initialProduct }) {
                 <HiX className="w-6 h-6" />
               </button>
 
-              {/* FIX 2: Previous Button */}
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -298,7 +321,6 @@ export default function ProductDetailClient({ slug, initialProduct }) {
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
               </button>
 
-              {/* FIX 2: Next Button */}
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -311,7 +333,6 @@ export default function ProductDetailClient({ slug, initialProduct }) {
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
               </button>
 
-       {/* MOBILE: pinch-zoom + pan + swipe nav */}
 <div
   ref={modalScrollRef}
   className="w-full h-full flex items-center justify-center overflow-auto"
@@ -354,15 +375,14 @@ export default function ProductDetailClient({ slug, initialProduct }) {
         {/* MAIN CONTENT */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 lg:mt-32 pb-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-            
-            {/* LEFT: IMAGE GALLERY (5/12 SIZE) */}
-            <motion.div 
+
+            {/* LEFT: IMAGE GALLERY */}
+            <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
               className="lg:col-span-5 w-full"
             >
-              {/* Main image */}
               <div
                 ref={mainImageRef}
                 className="relative bg-gray-100 overflow-hidden mb-4 cursor-pointer group aspect-[3/4]"
@@ -374,15 +394,15 @@ export default function ProductDetailClient({ slug, initialProduct }) {
                 onTouchEnd={(e) => handleTouchEnd(e, productDetail.images.length)}
               >
                 <AnimatePresence initial={false}>
-                  <motion.img 
+                  <motion.img
                     key={selectedImage}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.4, ease: "easeInOut" }}
-                    src={productDetail.images[selectedImage]} 
+                    src={productDetail.images[selectedImage]}
                     alt={`${productDetail.name} - Featured`}
-                    className="absolute inset-0 w-full h-full object-cover" 
+                    className="absolute inset-0 w-full h-full object-cover"
                   />
                 </AnimatePresence>
                 <div className="absolute top-4 left-4 pointer-events-none z-10">
@@ -390,9 +410,8 @@ export default function ProductDetailClient({ slug, initialProduct }) {
                     <HiOutlineMagnifyingGlassPlus className="w-5 h-5 text-white" />
                   </div>
                 </div>
-              </div> 
+              </div>
 
-              {/* FIX 3: Added 'snap-x snap-mandatory' to parent and 'snap-start' to items for flawless mobile snapping */}
               <div
                 ref={thumbsRef}
                 className="flex gap-2 overflow-x-auto scroll-smooth snap-x snap-mandatory"
@@ -420,43 +439,63 @@ export default function ProductDetailClient({ slug, initialProduct }) {
               </div>
             </motion.div>
 
-            {/* RIGHT: INFO SECTION (7/12 SIZE) */}
-            <motion.div 
+            {/* RIGHT: INFO SECTION */}
+            <motion.div
               variants={staggerContainer}
               initial="hidden"
               animate="visible"
               className="lg:col-span-7"
             >
-              <motion.h1 variants={fadeUp} className="text-3xl md:text-3xl font-medium text-gray-900 mb-4" style={{ fontFamily: 'Roboto, sans-serif' }}>{productDetail.name}</motion.h1>
-             <motion.p variants={fadeUp} className="text-2xl font-bold text-brand mb-2" style={{ fontFamily: 'Roboto, sans-serif' }}>${productDetail.price}</motion.p>
+              <motion.h1 variants={fadeUp} className="text-xl md:text-2xl font-normal text-gray-900 mb-4" style={{ fontFamily: 'Roboto, sans-serif' }}>{productDetail.name}</motion.h1>
+             <motion.p variants={fadeUp} className="text-2xl font-normal text-brand mb-2" style={{ fontFamily: 'Roboto, sans-serif' }}>${productDetail.price}</motion.p>
               <motion.div variants={fadeUp} className="mb-8">
-                <span className="inline-block px-3 py-1 rounded-full text-white text-xs font-semibold" style={{ backgroundColor: '#D4AF37' }}>
+                <span className="inline-block px-3 py-1 rounded-full text-white text-xs font-normal" style={{ backgroundColor: '#D4AF37' }}>
                   Free Shipping
                 </span>
               </motion.div>
-              
-              <motion.div variants={fadeUp} className="mb-10 max-w-2xl">
+
+              <motion.div variants={fadeUp} className="mb-8 max-w-2xl">
                 <h3 className="font-bold text-sm mb-2 text-gray-500 tracking-wider" style={{ fontFamily: 'Roboto, sans-serif' }}>
                   ABOUT THIS STYLE
                 </h3>
-                <p className="text-gray-600 leading-relaxed text-lg" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
+                <p
+                  className={`text-gray-600 leading-relaxed text-sm ${descriptionExpanded ? '' : 'line-clamp-2'}`}
+                  style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}
+                >
                   {productDetail.description || "Beautiful handcrafted Habes traditional dress featuring intricate embroidery and premium fabric."}
                 </p>
+                <button
+                  onClick={() => setDescriptionExpanded(prev => !prev)}
+                  className="text-xs font-semibold text-gray-500 mt-1 hover:underline hover:text-gray-700"
+                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                >
+                  {descriptionExpanded ? 'Show less' : 'Read more'}
+                </button>
               </motion.div>
 
+              {/* WHATSAPP — kept between About and Select size */}
+              <motion.button
+                variants={fadeUp}
+                onClick={handleWhatsAppOrder}
+                className="w-full mb-10 max-w-2xl bg-[#25D366] text-white py-4 rounded-xl font-bold border border-white/60 hover:brightness-90 shadow-[0_4px_14px_0_rgba(37,211,102,0.39)] hover:shadow-[0_6px_20px_0_rgba(37,211,102,0.5)] transition-all flex items-center justify-center gap-3 uppercase tracking-[0.2em] active:scale-[0.98]"
+                style={{ fontFamily: 'Roboto, sans-serif' }}
+              >
+                <FaWhatsapp className="w-5 h-5" /> Order with WhatsApp
+              </motion.button>
+
               {/* SIZE CIRCLES */}
-             <motion.div variants={fadeUp} className="mb-12">
-                <h3 
-                  className="font-bold text-sm mb-4 text-gray-500 uppercase tracking-wider" 
+             <motion.div variants={fadeUp} className="mb-6">
+                <h3
+                  className="font-bold text-sm mb-4 text-gray-500 uppercase tracking-wider"
                   style={{ fontFamily: 'Roboto, sans-serif' }}>
                   Select Size
                 </h3>
-                        
+
                <div className="flex flex-wrap gap-3">
                   {productDetail.sizes.map((size) => (
-                    <button 
-                      key={size} 
-                      onClick={() => setSelectedSize(size)} 
+                    <button
+                      key={size}
+                      onClick={() => setSelectedSize(size)}
                       className={`w-11 h-11 rounded-full border-2 font-semibold transition-all flex items-center justify-center text-sm ${selectedSize === size ? 'border-brand bg-brand text-white shadow-md' : 'border-gray-300 text-gray-700 hover:border-brand'}`}
                     >
                       {size}
@@ -486,21 +525,49 @@ export default function ProductDetailClient({ slug, initialProduct }) {
                 </Link>
               </motion.div>
 
+              {/* CUSTOM MEASUREMENTS */}
+              <motion.div variants={fadeUp} className="mb-10 max-w-2xl">
+                <details
+                  className="border border-gray-200 rounded-lg px-4 py-3"
+                  onToggle={(e) => setUseCustomMeasurements(e.target.open)}
+                >
+                  <summary
+                    className="cursor-pointer font-semibold text-sm text-gray-800 flex items-center justify-between list-none"
+                    style={{ fontFamily: 'Roboto, sans-serif' }}
+                  >
+                    Custom measurements
+                    <span className="text-xs text-gray-400">▼</span>
+                  </summary>
+                  <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3">
+                    {MEASUREMENT_FIELDS.map((field) => (
+                      <div key={field.key}>
+                        <label className="block text-xs text-gray-500 mb-1">{field.label} (cm)</label>
+                        <input
+                          type="number"
+                          value={customMeasurements[field.key] || ''}
+                          onChange={(e) => updateMeasurement(field.key, e.target.value)}
+                          className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:border-brand focus:outline-none"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </details>
+              </motion.div>
+
               {/* BUTTONS */}
               <motion.div variants={fadeUp} className="space-y-4 w-full max-w-2xl">
-                <button 
+                <button
                   onClick={handleAddToCart}
-                  className="w-full bg-brand text-white py-5 rounded-full font-bold border border-white/60 hover:brightness-90 shadow-[0_4px_14px_0_rgba(37,211,102,0.39)] hover:shadow-[0_6px_20px_0_rgba(37,211,102,0.5)] transition-all flex items-center justify-center uppercase tracking-widest active:scale-[0.98] backdrop-blur-sm drop-shadow-sm bg-gradient-to-b from-brand/80 to-brand"
+                  className="w-full bg-white text-brand border-2 border-brand py-5 rounded-xl font-bold hover:bg-brand/5 transition-all flex items-center justify-center uppercase tracking-widest active:scale-[0.98]"
                 >
                   Add to Cart
                 </button>
 
-                <button 
-                  onClick={handleWhatsAppOrder} 
-                  className="w-full bg-[#25D366] text-white py-5 rounded-full font-bold border border-white/60 hover:brightness-90 shadow-[0_4px_14px_0_rgba(37,211,102,0.39)] hover:shadow-[0_6px_20px_0_rgba(37,211,102,0.5)] transition-all flex items-center justify-center gap-3 uppercase tracking-[0.2em] active:scale-[0.98] backdrop-blur-sm drop-shadow-sm bg-gradient-to-b from-[#2edf6e] to-[#25D366]"
-                  style={{ fontFamily: 'Roboto, sans-serif' }}
+                <button
+                  onClick={handleBuyNow}
+                  className="w-full bg-brand text-white py-5 rounded-xl font-bold hover:brightness-90 transition-all flex items-center justify-center uppercase tracking-widest active:scale-[0.98]"
                 >
-                  <FaWhatsapp className="w-6 h-6" /> Order with WhatsApp
+                  Buy Now
                 </button>
 
                 <div className="flex justify-center pt-1">
@@ -522,17 +589,17 @@ export default function ProductDetailClient({ slug, initialProduct }) {
         {relatedProducts.length > 0 && (
           <div className="bg-gray-50 py-20 mt-10">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <motion.h2 
+              <motion.h2
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="text-2xl md:text-3xl font-medium text-gray-900 mb-10" 
+                className="text-2xl md:text-3xl font-normal text-gray-900 mb-10"
                 style={{ fontFamily: 'Roboto, sans-serif' }}
               >
                 You May Also Like
               </motion.h2>
-              
-              <motion.div 
+
+              <motion.div
                 variants={staggerContainer}
                 initial="hidden"
                 whileInView="visible"
@@ -540,10 +607,10 @@ export default function ProductDetailClient({ slug, initialProduct }) {
                 className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
               >
                 {relatedProducts.map((relProduct) => (
-                  <motion.div 
-                    key={relProduct.id} 
+                  <motion.div
+                    key={relProduct.id}
                     variants={fadeUp}
-                    className="cursor-pointer group" 
+                    className="cursor-pointer group"
                     onClick={() => { router.push(`/product/${relProduct.slug}`); window.scrollTo(0, 0); }}
                   >
                     <div className="bg-white overflow-hidden shadow-sm mb-4 relative aspect-[3/4]">

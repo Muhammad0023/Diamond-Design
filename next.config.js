@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  allowedDevOrigins: ['remix-spur-radiated.ngrok-free.dev'],
   async redirects() {
     return [
       {
@@ -21,7 +22,6 @@ const nextConfig = {
   },
   experimental: {
     optimizePackageImports: ['framer-motion', 'react-icons'],
-    optimizeCss: true,
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',

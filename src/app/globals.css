@@ -21,7 +21,7 @@ html {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #d29e0e; /* Changes to your brand color on hover */
+  background: #a3a3a3; /* Darker gray on hover, no brand color */
 }
 
 /* --- 2. THEME VARIABLES --- */
