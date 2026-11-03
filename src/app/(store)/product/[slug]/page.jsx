@@ -109,7 +109,7 @@ export default async function ProductDetailPage({ params }) {
   return (
     <>
       <JsonLd data={jsonLd} />
-      <ProductDetailClient slug={slug} initialProduct={product} />
+      <ProductDetailClient slug={slug} initialProduct={JSON.parse(JSON.stringify(product))} />
     </>
   )
 }
