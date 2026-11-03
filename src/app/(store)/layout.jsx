@@ -4,6 +4,7 @@ import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 import CartSidebar from '../../components/CartSidebar'
 import ScrollToTopButton from '../../components/ScrollToTop'
+import WhatsAppFloat from '../../components/WhatsAppFloat'
 
 export default function StoreLayout({ children }) {
   return (
@@ -15,6 +16,7 @@ export default function StoreLayout({ children }) {
         {children}
       </main>
       <Footer />
+      <WhatsAppFloat />
     </>
   )
 }

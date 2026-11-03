@@ -44,7 +44,7 @@ export default function ScrollToTop() {
             backgroundColor: "rgba(210, 158, 14, 0.6)" 
           }}
 
-          className="fixed bottom-6 right-6 z-50 
+          className="fixed bottom-24 right-6 z-40 
                      w-10 h-10 
                      flex items-center justify-center 
                      rounded-full border border-white/20
