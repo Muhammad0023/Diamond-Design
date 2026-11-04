@@ -1,6 +1,6 @@
 'use client'
 import { createContext, useContext, useState, useEffect } from 'react';
-import { getAllProducts, getProductsByCategoryLimited, getLatestProductsLimited } from '../firebase/productService';
+import { getAllProducts } from '../firebase/productService';
 
 const ProductsContext = createContext();
 
@@ -45,18 +45,18 @@ export function ProductsProvider({ children }) {
         setProducts(sanitizedProducts);
         setError(null);
 
-        // Fetch limited products for homepage
-        const [latest, simple, wedding, chiffon, holiday, group, mens, couples] = await Promise.all([
-          getLatestProductsLimited(13),
-          getProductsByCategoryLimited('simple', 8),
-          getProductsByCategoryLimited('wedding', 8),
-          getProductsByCategoryLimited('chiffon', 8),
-          getProductsByCategoryLimited('holiday', 8),
-          getProductsByCategoryLimited('group', 8),
-          getProductsByCategoryLimited('mens', 8),
-          getProductsByCategoryLimited('couples', 8),
-        ]);
-        setHomeProducts({ latest, simple, wedding, chiffon, holiday, group, mens, couples });
+        // Build homepage sections from the already-loaded list (newest first)
+        const pick = (cat) => sanitizedProducts.filter(p => p.category === cat).slice(0, 8);
+        setHomeProducts({
+          latest: sanitizedProducts.filter(p => p.isNew === true).slice(0, 13),
+          simple: pick('simple'),
+          wedding: pick('wedding'),
+          chiffon: pick('chiffon'),
+          holiday: pick('holiday'),
+          group: pick('group'),
+          mens: pick('mens'),
+          couples: pick('couples'),
+        });
       } catch (err) {
         console.error('Error fetching products:', err);
         setError('Failed to load products. Please refresh the page.');
