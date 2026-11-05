@@ -5,6 +5,7 @@ import {
   getDownloadURL,
   deleteObject
 } from "firebase/storage";
+import { compressImage } from '../utils/compressImage';
 
 // ─── UPLOAD SINGLE IMAGE ────────────────────────────
 // Upload one image and return download URL
@@ -12,11 +13,12 @@ export const uploadImage = async (file, folder = 'products') => {
   try {
     // Create unique filename
     const timestamp = Date.now();
-    const fileName = `${folder}/${timestamp}_${file.name}`;
+    const prepared = await compressImage(file);
+    const fileName = `${folder}/${timestamp}_${prepared.name}`;
     const storageRef = ref(storage, fileName);
 
     // Upload file
-    const uploadTask = uploadBytesResumable(storageRef, file);
+    const uploadTask = uploadBytesResumable(storageRef, prepared);
 
     // Wait for upload to complete
     await new Promise((resolve, reject) => {
