@@ -11,6 +11,12 @@ import { useCart } from '../../../../context/CartContext'
 import { useProducts } from '../../../../context/ProductsContext'
 
 
+const slideVariants = {
+  enter: (dir) => ({ x: dir > 0 ? '100%' : '-100%' }),
+  center: { x: 0 },
+  exit: (dir) => ({ x: dir > 0 ? '-100%' : '100%' }),
+};
+
 export default function ProductDetailClient({ slug, initialProduct }) {
   const router = useRouter()
   const { addToCart } = useCart();
@@ -45,6 +51,7 @@ export default function ProductDetailClient({ slug, initialProduct }) {
 
   // Keep a ref to total images count so the wheel handler can always read the latest value
   const totalImagesRef = useRef(1);
+  const directionRef = useRef(1);
 
   const fadeUp = {
     hidden: { opacity: 0, y: 20 },
@@ -76,14 +83,29 @@ export default function ProductDetailClient({ slug, initialProduct }) {
   useEffect(() => {
     const el = mainImageRef.current;
     if (!el) return;
+    let accum = 0;
+    let lastTime = 0;
+    let lockedUntil = 0;
     const onWheel = (e) => {
       e.preventDefault();
-      const total = totalImagesRef.current;
-      if (e.deltaY > 0) {
-        setSelectedImage(prev => (prev + 1) % total);
-      } else {
-        setSelectedImage(prev => (prev - 1 + total) % total);
+      const now = Date.now();
+      // Ignore leftover trackpad momentum until the gesture has really stopped
+      if (now < lockedUntil) {
+        lockedUntil = Math.max(lockedUntil, now + 120);
+        return;
       }
+      // Use whichever axis the swipe mostly moves on (sideways swipe = deltaX)
+      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if (now - lastTime > 150) accum = 0;
+      lastTime = now;
+      accum += delta;
+      if (Math.abs(accum) < 40) return;
+      const dir = accum > 0 ? 1 : -1;
+      accum = 0;
+      lockedUntil = now + 450;
+      const total = totalImagesRef.current;
+      directionRef.current = dir;
+      setSelectedImage(prev => (prev + dir + total) % total);
     };
     el.addEventListener('wheel', onWheel, { passive: false });
     return () => el.removeEventListener('wheel', onWheel);
@@ -132,9 +154,9 @@ export default function ProductDetailClient({ slug, initialProduct }) {
     const diff = touchStartX.current - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 40) {
       if (diff > 0) {
-        setSelectedImage(prev => (prev + 1) % totalImages);
+        directionRef.current = 1; setSelectedImage(prev => (prev + 1) % totalImages);
       } else {
-        setSelectedImage(prev => (prev - 1 + totalImages) % totalImages);
+        directionRef.current = -1; setSelectedImage(prev => (prev - 1 + totalImages) % totalImages);
       }
     }
     touchStartX.current = null;
@@ -186,6 +208,16 @@ export default function ProductDetailClient({ slug, initialProduct }) {
       relatedProducts.forEach(p => router.prefetch(`/product/${p.slug}`));
     }
   }, [relatedProducts.length]);
+
+  // Preload every gallery image so slides never wait on the network
+  useEffect(() => {
+    if (!product) return;
+    const list = [product.image, product.hoverImage, ...(product.images || [])].filter(Boolean);
+    list.forEach((src) => {
+      const img = new window.Image();
+      img.src = src;
+    });
+  }, [product?.id]);
 
   if (loading && !initialProduct) {  return (
       <div className="min-h-screen bg-white mt-20 lg:mt-32 pb-16">
@@ -365,7 +397,7 @@ export default function ProductDetailClient({ slug, initialProduct }) {
               {/* Main image */}
               <div
                 ref={mainImageRef}
-                className="relative bg-gray-100 overflow-hidden mb-4 cursor-pointer group aspect-[3/4]"
+                className="relative bg-gray-100 overflow-hidden mb-4 cursor-pointer group aspect-[3/4] overscroll-x-contain"
                 onClick={() => {
                   setModalZoom(1);
                   setShowModal(true);
@@ -373,13 +405,15 @@ export default function ProductDetailClient({ slug, initialProduct }) {
                 onTouchStart={handleTouchStart}
                 onTouchEnd={(e) => handleTouchEnd(e, productDetail.images.length)}
               >
-                <AnimatePresence initial={false}>
+                <AnimatePresence initial={false} custom={directionRef.current}>
                   <motion.img 
                     key={selectedImage}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.4, ease: "easeInOut" }}
+                    custom={directionRef.current}
+                    variants={slideVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ type: 'tween', duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
                     src={productDetail.images[selectedImage]} 
                     alt={`${productDetail.name} - Featured`}
                     className="absolute inset-0 w-full h-full object-cover" 
@@ -405,7 +439,7 @@ export default function ProductDetailClient({ slug, initialProduct }) {
                 {productDetail.images.map((img, index) => (
                   <button
                     key={index}
-                    onClick={() => setSelectedImage(index)}
+                    onClick={() => { directionRef.current = index > selectedImage ? 1 : -1; setSelectedImage(index); }}
                     className={`snap-start flex-shrink-0 w-16 h-16 overflow-hidden border-2 transition-all rounded-sm ${
                       selectedImage === index ? 'border-brand' : 'border-gray-200 hover:border-brand'
                     }`}
