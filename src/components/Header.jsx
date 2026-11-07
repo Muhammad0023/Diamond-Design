@@ -63,7 +63,7 @@ export default function Header() {
       {/* Mobile SearchBar — Added pointer-events-none to the wrapper */}
        <div 
         className={`lg:hidden fixed z-[9999] transition-opacity duration-300 pointer-events-none ${isCartOpen || isMobileMenuOpen ? "opacity-0" : "opacity-100"}`}
-        style={{ top: scrolled ? '10px' : '28px', right: '58px', transition: 'top 0.5s' }}
+        style={{ top: scrolled ? '12px' : '28px', right: '58px', transition: 'top 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s' }}
       >
         <div className="pointer-events-auto">
           <SearchBar isMobile={true} />
