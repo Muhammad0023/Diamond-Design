@@ -9,6 +9,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../../../../context/CartContext'
 import { useProducts } from '../../../../context/ProductsContext'
+import ImageZoomModal from '../../../../components/ImageZoomModal'
 
 
 const slideVariants = {
@@ -299,7 +300,7 @@ export default function ProductDetailClient({ slug, initialProduct }) {
   return (
     <>
       <div className="min-h-screen bg-white">
-        {/* FULL SCREEN MODAL */}
+        {/* FULL SCREEN IMAGE VIEWER */}
         <AnimatePresence>
           {showModal && (
             <motion.div
@@ -308,77 +309,12 @@ export default function ProductDetailClient({ slug, initialProduct }) {
               exit={{ opacity: 0 }}
               style={{ zIndex: 99999, position: 'fixed', inset: 0, background: 'black' }}
             >
-              {/* Close button */}
-              <button
-                onClick={() => { setShowModal(false); setModalZoom(1); }}
-                className="absolute top-5 right-5 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md"
-                style={{ zIndex: 100000 }}
-              >
-                <HiX className="w-6 h-6" />
-              </button>
-
-              {/* FIX 2: Previous Button */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                 setSelectedImage(prev => (prev - 1 + productDetail.images.length) % productDetail.images.length);
-                  setModalZoom(1);
-                }}
-                className="absolute left-5 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md"
-                style={{ zIndex: 100000 }}
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
-              </button>
-
-              {/* FIX 2: Next Button */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setSelectedImage(prev => (prev + 1) % productDetail.images.length);
-                  setModalZoom(1);
-                }}
-                className="absolute right-5 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md"
-                style={{ zIndex: 100000 }}
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
-              </button>
-
-       {/* MOBILE: pinch-zoom + pan + swipe nav */}
-<div
-  ref={modalScrollRef}
-  className="w-full h-full flex items-center justify-center overflow-auto"
-  onTouchStart={(e) => {
-    if (e.touches.length === 1) {
-      modalTouchStartX.current = e.touches[0].clientX;
-    }
-  }}
-  onTouchEnd={(e) => {
-    if (e.changedTouches.length === 1 && modalTouchStartX.current !== null) {
-      const diff = modalTouchStartX.current - e.changedTouches[0].clientX;
-      if (Math.abs(diff) > 50) {
-        if (diff > 0) {
-          setSelectedImage(prev => (prev + 1) % productDetail.images.length);
-        } else {
-          setSelectedImage(prev => (prev - 1 + productDetail.images.length) % productDetail.images.length);
-        }
-      }
-      modalTouchStartX.current = null;
-    }
-  }}
->
-  <img
-    src={productDetail.images[selectedImage]}
-    alt="Zoomed View"
-    style={{
-      width: `${modalZoom * 100}%`,
-      maxWidth: 'none',
-      height: 'auto',
-      display: 'block',
-      cursor: modalZoom > 1 ? 'grab' : 'zoom-in',
-    }}
-    onClick={() => setModalZoom(prev => prev >= 3 ? 1 : prev + 1)}
-  />
-</div>
+              <ImageZoomModal
+                images={productDetail.images}
+                startIndex={selectedImage}
+                name={productDetail.name}
+                onClose={() => { setShowModal(false); setModalZoom(1); }}
+              />
             </motion.div>
           )}
         </AnimatePresence>
