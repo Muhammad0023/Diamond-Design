@@ -58,7 +58,7 @@ export default function ContactClient() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.1 }}
-              className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow"
+              className="bg-white p-8 lg:px-4 rounded-2xl shadow-sm border border-gray-100 text-center min-w-0 hover:shadow-md transition-shadow"
             >
               <div className="w-12 h-12 bg-brand/10 text-brand rounded-full flex items-center justify-center mx-auto mb-6">
                 {item.icon}
@@ -71,10 +71,10 @@ export default function ContactClient() {
     href={item.link} 
     target={item.isExternal ? "_blank" : "_self"} 
     rel={item.isExternal ? "noopener noreferrer" : ""}
-    className="text-gray-600 hover:text-brand transition-colors" 
+    className="block text-center text-gray-600 hover:text-brand transition-colors break-words" 
     style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}
   >
-    {item.content}
+    {item.content.includes('@') ? (<>{item.content.split('@')[0]}<wbr />@{item.content.split('@')[1]}</>) : item.content}
   </a>
 ) : (
   <p className="text-gray-600" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}>
