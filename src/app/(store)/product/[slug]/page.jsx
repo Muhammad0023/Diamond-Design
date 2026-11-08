@@ -1,9 +1,13 @@
 export const dynamic = 'force-dynamic'
 import ProductDetailClient from './ProductDetailClient'
 import JsonLd from '../../../../components/JsonLd'
-import { getProductById } from '../../../../firebase/productService'
+import { cache } from 'react'
+import { getProductById as fetchProductById } from '../../../../firebase/productService'
 import { notFound } from 'next/navigation'
 import { toProxyImageUrl } from '../../../../utils/proxyImage'
+
+// One fetch per request, shared by generateMetadata and the page
+const getProductById = cache(fetchProductById)
 
 export async function generateMetadata({ params }) {
   const { slug } = await params

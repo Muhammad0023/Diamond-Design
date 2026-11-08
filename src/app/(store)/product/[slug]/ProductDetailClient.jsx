@@ -514,7 +514,7 @@ export default function ProductDetailClient({ slug, initialProduct }) {
                     key={relProduct.id} 
                     variants={fadeUp}
                     className="cursor-pointer group" 
-                    onClick={() => { router.push(`/product/${relProduct.slug}`); window.scrollTo(0, 0); }}
+                    onClick={() => router.push(`/product/${relProduct.slug}`)}
                   >
                     <div className="bg-white overflow-hidden shadow-sm mb-4 relative aspect-[3/4]">
                       {relProduct.hoverImage && relProduct.hoverImage !== relProduct.image ? (
