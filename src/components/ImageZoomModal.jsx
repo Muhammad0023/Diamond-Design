@@ -217,7 +217,7 @@ function TouchViewer({ src, alt }) {
   }, [cw])
 
   const clamp = (s, x, y) => {
-    const ns = Math.min(Math.max(s, 1), MAX)
+    const ns = Math.min(Math.max(s, s0), MAX)
     const maxX = Math.max(0, (cw * ns - vw) / 2)
     const maxY = Math.max(0, (ch * ns - vh) / 2)
     return { s: ns, x: Math.min(Math.max(x, -maxX), maxX), y: Math.min(Math.max(y, -maxY), maxY) }
@@ -267,7 +267,7 @@ function TouchViewer({ src, alt }) {
       const [a, b] = pts
       const d = Math.hypot(a.x - b.x, a.y - b.y) || 1
       const { cx, cy } = center(a, b)
-      const s = Math.min(Math.max((g.s * d) / g.d, 1), MAX)
+      const s = Math.min(Math.max((g.s * d) / g.d, s0), MAX)
       setT(clamp(s, cx - g.px * s, cy - g.py * s))
     }
   }
