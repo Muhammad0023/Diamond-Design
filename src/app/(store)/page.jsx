@@ -24,7 +24,7 @@ export default function HomePage() {
       addressCountry: 'ET',
     },
     telephone: '+251988503333',
-    email: 'diamonddesign907@gmail.com',
+    email: 'diamonddesign.habesha@gmail.com',
     sameAs: [
       'https://www.instagram.com/diamond__design_',
       'https://web.facebook.com/profile.php?id=61583397116912',

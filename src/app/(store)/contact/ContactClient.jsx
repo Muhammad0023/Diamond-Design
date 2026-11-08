@@ -23,8 +23,8 @@ export default function ContactClient() {
     {
       icon: <MdOutlineEmail className="w-6 h-6" />,
       title: "Email Us",
-      content: "diamonddesign907@gmail.com",
-      link: "mailto:diamonddesign907@gmail.com",
+      content: "diamonddesign.habesha@gmail.com",
+      link: "mailto:diamonddesign.habesha@gmail.com",
       isExternal: true 
     },
     {

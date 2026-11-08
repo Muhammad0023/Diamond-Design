@@ -135,13 +135,13 @@ export default function Footer() {
                   <MdOutlineEmail className="w-5 h-5 text-brand group-hover:text-white" />
                 </div>
                                 <a 
-                  href="mailto:diamonddesign907@gmail.com" 
+                  href="mailto:diamonddesign.habesha@gmail.com" 
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-brand transition-colors" 
                   style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '300' }}
                 >
-                  diamonddesign907@gmail.com
+                  diamonddesign.habesha@gmail.com
                 </a>
               </li>
               <li className="flex items-center gap-3 text-gray-400 group">
