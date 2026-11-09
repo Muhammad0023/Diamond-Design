@@ -1,5 +1,6 @@
 export const dynamic = 'force-dynamic'
 import CategoryClient from './CategoryClient'
+import { getProductsByCategory } from '../../../../firebase/productService'
 import JsonLd from '../../../../components/JsonLd'
 
 const slugMetadata = {
@@ -45,8 +46,41 @@ export async function generateMetadata({ params }) {
   }
 }
 
+const slugToCategory = {
+  'habesha-kemis-simple': 'simple',
+  'habesha-wedding-dresses': 'wedding',
+  'habesha-chiffon-dresses': 'chiffon',
+  'event-holiday-habesha-dresses': 'holiday',
+  'habesha-family-group-outfits': 'group',
+  'habesha-mens-traditional-clothing': 'mens',
+  'matching-habesha-couples': 'couples',
+}
+
 export default async function CategoryPage({ params }) {
   const { slug } = await params
+
+  // Load this category's products on the server so Google gets real product links and images
+  let initialProducts = []
+  const category = slugToCategory[slug]
+  if (category) {
+    try {
+      const all = await getProductsByCategory(category)
+      initialProducts = all
+        .sort((a, b) => (b.updatedAt?.seconds ?? 0) - (a.updatedAt?.seconds ?? 0))
+        .map((p) => ({
+          id: p.id,
+          slug: p.slug ?? null,
+          name: p.name ?? '',
+          price: p.price ?? null,
+          image: p.image ?? null,
+          hoverImage: p.hoverImage ?? null,
+          isNew: p.isNew ?? false,
+          category: p.category ?? null,
+        }))
+    } catch (err) {
+      console.error('Error loading collection products:', err)
+    }
+  }
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -59,7 +93,7 @@ export default async function CategoryPage({ params }) {
   return (
     <>
       <JsonLd data={jsonLd} />
-      <CategoryClient slug={slug} />
+      <CategoryClient slug={slug} initialProducts={initialProducts} />
     </>
   )
 }

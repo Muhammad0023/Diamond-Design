@@ -91,14 +91,14 @@ const categoryConfig = {
 
 const BASE_URL = 'https://www.diamonddesignstore.com';
 
-export default function CategoryClient({ slug }) {
+export default function CategoryClient({ slug, initialProducts = [] }) {
   const router = useRouter()
   const { getProductsByCategory, loading } = useProducts();
 
   // ✅ Resolve which category key we're dealing with
 const category = slugToCategory[slug]
   const [sortBy, setSortBy] = useState('default');
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(initialProducts);
   const searchParams = useSearchParams();
   const currentPage = parseInt(searchParams.get('page') || '1');
   const [skipAnimation, setSkipAnimation] = useState(false);
@@ -136,16 +136,17 @@ const category = slugToCategory[slug]
       if (!loading) router.push('/');
       return;
     }
-     setProducts(getProductsByCategory(category));  }, [category, categoryData, router.push, getProductsByCategory, loading]);
+     if (!loading) setProducts(getProductsByCategory(category));  }, [category, categoryData, router.push, getProductsByCategory, loading]);
 
   useEffect(() => {
     if (!categoryData) return;
-    let sorted = [...getProductsByCategory(category)];
+    const live = getProductsByCategory(category);
+    let sorted = [...(live.length > 0 ? live : initialProducts)];
     if (sortBy === 'price-low') sorted.sort((a, b) => a.price - b.price);
     else if (sortBy === 'price-high') sorted.sort((a, b) => b.price - a.price);
     else if (sortBy === 'name') sorted.sort((a, b) => a.name.localeCompare(b.name));
     setProducts(sorted);
-  }, [sortBy, category, categoryData, getProductsByCategory]);
+  }, [sortBy, category, categoryData, getProductsByCategory, initialProducts]);
 
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
@@ -158,7 +159,7 @@ const handlePageChange = (pageNumber) => {
 
   if (!categoryData) return null;
 
- if (loading) {
+ if (loading && initialProducts.length === 0) {
     return (
       <div className="min-h-screen bg-white pt-24 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -359,13 +360,11 @@ function ProductGridItem({ product, navigate, variants, slug, currentPage }) {
   return (
     <motion.div
       variants={variants}
-      onClick={() => {
-        sessionStorage.setItem(`scroll-${slug}-${currentPage}`, window.scrollY);
-        navigate(`/product/${product.slug}`);
-      }}      onMouseEnter={() => { if (window.matchMedia('(hover: hover)').matches) setIsHovered(true); }}
+      onMouseEnter={() => { if (window.matchMedia('(hover: hover)').matches) setIsHovered(true); }}
       onMouseLeave={() => setIsHovered(false)}
       className="cursor-pointer group"
     >
+      <Link href={`/product/${product.slug}`} onClick={() => sessionStorage.setItem(`scroll-${slug}-${currentPage}`, window.scrollY)} className="block">
       <div className="bg-white overflow-hidden shadow-sm mb-3 group-hover:shadow-xl transition-all duration-500">
         <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
           {product.hoverImage && product.hoverImage !== product.image ? (
@@ -399,6 +398,7 @@ function ProductGridItem({ product, navigate, variants, slug, currentPage }) {
       <span className="inline-block mt-1 px-2 py-0.5 rounded-full text-white text-[10px] font-semibold" style={{ backgroundColor: '#D4AF37' }}>
          Free Shipping
       </span>
+    </Link>
     </motion.div>
   );
 }
