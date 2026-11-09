@@ -71,9 +71,14 @@ export async function GET() {
       const slug = generateSlug(data.name, doc.id)
       const lastMod = data.updatedAt?.toDate?.() || new Date()
 
-      const images = []
-      if (data.image) images.push(toProxyImageUrl(data.image))
-      if (data.hoverImage && data.hoverImage !== data.image) images.push(toProxyImageUrl(data.hoverImage))
+      const rawImages = [
+        data.image,
+        ...(data.hoverImage && data.hoverImage !== data.image ? [data.hoverImage] : []),
+        ...(data.images || []).filter((img) => img !== data.image && img !== data.hoverImage),
+      ].filter(Boolean)
+      const images = rawImages.map((src, i) =>
+        toProxyImageUrl(src, i === 0 ? data.name : `${data.name} ${i + 1}`)
+      )
 
       return {
         url: `${baseUrl}/product/${slug}`,

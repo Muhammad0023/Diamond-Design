@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../../../../context/CartContext'
 import { useProducts } from '../../../../context/ProductsContext'
 import ImageZoomModal from '../../../../components/ImageZoomModal'
+import { toProxyImageUrl } from '../../../../utils/proxyImage'
 
 
 const slideVariants = {
@@ -213,7 +214,11 @@ export default function ProductDetailClient({ slug, initialProduct }) {
   // Preload every gallery image so slides never wait on the network
   useEffect(() => {
     if (!product) return;
-    const list = [product.image, product.hoverImage, ...(product.images || [])].filter(Boolean);
+    const list = [
+      product.image,
+      ...(product.hoverImage && product.hoverImage !== product.image ? [product.hoverImage] : []),
+      ...(product.images || []).filter((img) => img !== product.image && img !== product.hoverImage),
+    ].filter(Boolean).map((src, i) => toProxyImageUrl(src, i === 0 ? product.name : `${product.name} ${i + 1}`));
     list.forEach((src) => {
       const img = new window.Image();
       img.src = src;
@@ -290,7 +295,7 @@ export default function ProductDetailClient({ slug, initialProduct }) {
       product.image,
       ...(product.hoverImage && product.hoverImage !== product.image ? [product.hoverImage] : []),
       ...(product.images || []).filter(img => img !== product.image && img !== product.hoverImage)
-    ].filter(Boolean),
+    ].filter(Boolean).map((src, i) => toProxyImageUrl(src, i === 0 ? product.name : `${product.name} ${i + 1}`)),
     sizes: product.sizes || ['S', 'M', 'L', 'XL', 'XXL']
   };
 

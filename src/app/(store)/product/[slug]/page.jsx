@@ -27,7 +27,7 @@ export async function generateMetadata({ params }) {
     openGraph: {
       title: `${productName} | Diamond Design`,
       type: 'website',
-      images: product?.image ? [{ url: toProxyImageUrl(product.image) }] : [],
+      images: product?.image ? [{ url: toProxyImageUrl(product.image, productName) }] : [],
     },
   }
 }
@@ -42,7 +42,14 @@ export default async function ProductDetailPage({ params }) {
 
   const productName = product?.name ?? slug.replace(/-[^-]*$/, '').replace(/-/g, ' ')
   const productPrice = product?.price ?? null
-  const productImage = toProxyImageUrl(product?.image) ?? null
+  const rawImages = [
+    product?.image,
+    ...(product?.hoverImage && product.hoverImage !== product.image ? [product.hoverImage] : []),
+    ...(product?.images || []).filter((img) => img !== product?.image && img !== product?.hoverImage),
+  ].filter(Boolean)
+  const productImages = rawImages.map((src, i) =>
+    toProxyImageUrl(src, i === 0 ? productName : `${productName} ${i + 1}`)
+  )
   const productDescription = product?.description ?? 'Authentic handcrafted Habesha dress from Diamond Design.'
   const productUrl = `https://www.diamonddesignstore.com/product/${slug}`
 
@@ -52,7 +59,7 @@ export default async function ProductDetailPage({ params }) {
     name: productName,
     description: productDescription,
     url: productUrl,
-    ...(productImage && { image: [productImage] }),
+    ...(productImages.length > 0 && { image: productImages }),
     brand: {
       '@type': 'Brand',
       name: 'Diamond Design',
