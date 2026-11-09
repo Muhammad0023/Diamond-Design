@@ -27,7 +27,14 @@ export async function generateMetadata({ params }) {
     openGraph: {
       title: `${productName} | Diamond Design`,
       type: 'website',
+      url: `https://www.diamonddesignstore.com/product/${slug}`,
+      siteName: 'Diamond Design',
       images: product?.image ? [{ url: toProxyImageUrl(product.image, productName) }] : [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${productName} | Diamond Design`,
+      images: product?.image ? [toProxyImageUrl(product.image, productName)] : [],
     },
   }
 }

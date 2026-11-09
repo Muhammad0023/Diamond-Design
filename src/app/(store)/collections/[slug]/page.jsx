@@ -37,11 +37,27 @@ const slugMetadata = {
 export async function generateMetadata({ params }) {
   const { slug } = await params
   const meta = slugMetadata[slug]
+  const title = meta?.title || `${slug.replace(/-/g, ' ')} | Diamond Design`
+  const description = meta?.description || `Shop our ${slug.replace(/-/g, ' ')} collection at Diamond Design.`
+  const url = `https://www.diamonddesignstore.com/collections/${slug}`
+  const image = 'https://www.diamonddesignstore.com/og-image.jpg'
   return {
-    title: meta?.title || `${slug.replace(/-/g, ' ')} | Diamond Design`,
-    description: meta?.description || `Shop our ${slug.replace(/-/g, ' ')} collection at Diamond Design.`,
-    alternates: {
-      canonical: `https://www.diamonddesignstore.com/collections/${slug}`,
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: 'Diamond Design',
+      type: 'website',
+      images: [{ url: image, width: 1200, height: 630, alt: title }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [image],
     },
   }
 }
