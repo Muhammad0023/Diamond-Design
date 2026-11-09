@@ -94,14 +94,11 @@ function ProductCardItem({ product, navigate, itemVariants }) {
   return (
     <motion.div
       variants={itemVariants}
-     onClick={() => {
-        sessionStorage.setItem('scroll-home', window.scrollY);
-        navigate(`/product/${product.slug}`);
-      }}
       onMouseEnter={() => { if (!isTouchDevice()) setIsHovered(true); }}
       onMouseLeave={() => { if (!isTouchDevice()) setIsHovered(false); }}
       className="cursor-pointer group"
     >
+      <Link href={`/product/${product.slug}`} onClick={() => sessionStorage.setItem('scroll-home', window.scrollY)} className="block">
       <div className="bg-white overflow-hidden shadow-sm mb-3 group-hover:shadow-xl transition-all duration-300">
         
         <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
@@ -141,6 +138,7 @@ function ProductCardItem({ product, navigate, itemVariants }) {
       <span className="inline-block mt-1 px-2 py-0.5 rounded-full text-white text-[10px] font-semibold" style={{ backgroundColor: '#D4AF37' }}>
          Free Shipping
       </span>
+    </Link>
     </motion.div>
   );
 }
