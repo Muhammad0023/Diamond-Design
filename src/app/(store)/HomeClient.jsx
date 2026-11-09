@@ -6,7 +6,7 @@ import ProductGrid from '../../components/ProductGrid'
 import { useEffect } from 'react';
 import { useProducts } from '../../context/ProductsContext'
 
-export default function HomeClient() {  
+export default function HomeClient({ initialHome = null }) {  
   const { loading, error, homeProducts } = useProducts();
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export default function HomeClient() {
       window.scrollTo(0, 0);
     }
   }, []);
-  const productGroups = homeProducts;
+  const productGroups = homeProducts ?? initialHome;
 
   return (
     <div className="overflow-hidden bg-white">
@@ -63,20 +63,20 @@ export default function HomeClient() {
           >
                      <ProductCarousel
                   title="Latest Styles"
-                  products={loading || !productGroups ? null : productGroups.latest}
+                  products={!productGroups ? null : productGroups.latest}
                   viewAllLink="/latest-habesha-styles"
                 />
           </motion.div>
           
           <div className="space-y-4">
                       {[
-            { title: "Simple Dresses", products: loading || !productGroups ? null : productGroups.simple, link: "/collections/habesha-kemis-simple" },
-            { title: "Wedding Dresses", products: loading || !productGroups ? null : productGroups.wedding, link: "/collections/habesha-wedding-dresses" },
-            { title: "Chiffon", products: loading || !productGroups ? null : productGroups.chiffon, link: "/collections/habesha-chiffon-dresses" },
-            { title: "Holidays", products: loading || !productGroups ? null : productGroups.holiday, link: "/collections/event-holiday-habesha-dresses" },
-            { title: "Group Outfits", products: loading || !productGroups ? null : productGroups.group, link: "/collections/habesha-family-group-outfits" },
-            { title: "Men's", products: loading || !productGroups ? null : productGroups.mens, link: "/collections/habesha-mens-traditional-clothing" },
-            { title: "Couples", products: loading || !productGroups ? null : productGroups.couples, link: "/collections/matching-habesha-couples" },
+            { title: "Simple Dresses", products: !productGroups ? null : productGroups.simple, link: "/collections/habesha-kemis-simple" },
+            { title: "Wedding Dresses", products: !productGroups ? null : productGroups.wedding, link: "/collections/habesha-wedding-dresses" },
+            { title: "Chiffon", products: !productGroups ? null : productGroups.chiffon, link: "/collections/habesha-chiffon-dresses" },
+            { title: "Holidays", products: !productGroups ? null : productGroups.holiday, link: "/collections/event-holiday-habesha-dresses" },
+            { title: "Group Outfits", products: !productGroups ? null : productGroups.group, link: "/collections/habesha-family-group-outfits" },
+            { title: "Men's", products: !productGroups ? null : productGroups.mens, link: "/collections/habesha-mens-traditional-clothing" },
+            { title: "Couples", products: !productGroups ? null : productGroups.couples, link: "/collections/matching-habesha-couples" },
           ].map((group) => (
             <motion.div
               key={group.title}
@@ -87,7 +87,7 @@ export default function HomeClient() {
             >
               <ProductGrid 
                 title={group.title} 
-                products={loading ? null : group.products} 
+                products={group.products} 
                 viewAllLink={group.link} 
               />
             </motion.div>

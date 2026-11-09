@@ -1,5 +1,6 @@
 'use client'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { useState, useRef } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
@@ -53,13 +54,11 @@ export default function ProductCarousel({ title, products, viewAllLink = "#" }) 
             <h2 className="text-xl md:text-2xl font-bold text-gray-900" style={{ fontFamily: 'Roboto, sans-serif' }}>
                 {title}
               </h2>
-          <button
-            onClick={() => router.push(viewAllLink)}
-            className="text-brand font-semibold hover:text-brand-dark transition-colors flex items-center gap-1 cursor-pointer group"
+          <Link href={viewAllLink} className="text-brand font-semibold hover:text-brand-dark transition-colors flex items-center gap-1 cursor-pointer group"
             style={{ fontFamily: 'Roboto, sans-serif' }}
           >
             View All {hasMoreProducts && `(${products.length})`} <span className="transform group-hover:translate-x-1 transition-transform"></span>
-          </button>
+          </Link>
         </div>
 
         <div className="relative group">
@@ -81,16 +80,13 @@ export default function ProductCarousel({ title, products, viewAllLink = "#" }) 
             ))}
             
             {hasMoreProducts && (
-              <div 
-                className="flex-none w-[38%] sm:w-[calc(40%-0.5rem)] lg:w-[calc(20%-1.2rem)] snap-start cursor-pointer"
-                onClick={() => router.push(viewAllLink)}
-              >
+              <Link href={viewAllLink} className="flex-none w-[38%] sm:w-[calc(40%-0.5rem)] lg:w-[calc(20%-1.2rem)] snap-start cursor-pointer">
                 <div className="bg-brand h-full flex flex-col items-center justify-center p-8 hover:bg-brand-dark transition-colors">
                   <span className="text-white text-4xl mb-2">+{products.length - 13}</span>
                   <p className="text-white font-semibold text-center">More Products</p>
                   <p className="text-white text-sm mt-2">View All →</p>
                 </div>
-              </div>
+              </Link>
             )}
           </div>
 
@@ -123,12 +119,8 @@ function ProductCard({ product }) {
       className="flex-none w-[38%] sm:w-[calc(40%-0.5rem)] lg:w-[calc(20%-1.2rem)] snap-start cursor-pointer"
      onMouseEnter={() => { if (window.matchMedia('(hover: hover)').matches) setIsHovered(true); }}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={() => {
-        const key = window.location.pathname === '/' ? 'scroll-home' : `scroll-${window.location.pathname.split('/').pop()}`;
-        sessionStorage.setItem(key, window.scrollY);
-        router.push(`/product/${product.slug}`);
-      }}
     >
+      <Link href={`/product/${product.slug}`} className="block" onClick={() => { const key = window.location.pathname === '/' ? 'scroll-home' : `scroll-${window.location.pathname.split('/').pop()}`; sessionStorage.setItem(key, window.scrollY); }}>
       <div className="bg-white overflow-hidden shadow-sm transition-shadow duration-300 hover:shadow-lg">
         <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
 
@@ -174,6 +166,7 @@ function ProductCard({ product }) {
            Free Shipping
         </span>
       </div>
+    </Link>
     </motion.div>
   );
 }
