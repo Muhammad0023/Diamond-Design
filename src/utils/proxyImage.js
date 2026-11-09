@@ -1,9 +1,11 @@
 const BASE = 'https://www.diamonddesignstore.com'
 
 function encodeBase64Url(str) {
-  // Node uses Buffer; the browser uses btoa (these URLs are plain ASCII, so the output is identical)
-  if (typeof Buffer !== 'undefined') return Buffer.from(str, 'utf-8').toString('base64url')
-  return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+  // Same result on the server and in the browser (the browser's Buffer does not know "base64url")
+  const b64 = typeof Buffer !== 'undefined'
+    ? Buffer.from(str, 'utf-8').toString('base64')
+    : btoa(str)
+  return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
 }
 
 function slugify(text) {
